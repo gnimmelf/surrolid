@@ -4,15 +4,31 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.12",
+    "cssnano": "^5.1.13",
+    "postcss-nested": "^6.0.0",
+    "postcss-nesting": "^10.2.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.9",
     "vite-plugin-solid": "^2.3.0"
   },
   "dependencies": {
     "solid-js": "^1.4.2"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/surrolid.umd.cjs",
+  "module": "./dist/surrolid.js",
+  "exports": {
+    ".": {
+      "import": "./dist/surrolid.js",
+      "require": "./dist/surrolid.umd.cjs"
+    }
   }
 }

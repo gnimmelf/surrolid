@@ -1,0 +1,6 @@
+section {
+  background: green;
+  &.membership-widget {
+    background: red;
+  }
+}
