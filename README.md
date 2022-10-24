@@ -1,5 +1,8 @@
 # SurrealDB
 
+Sombody else's notes:
+https://gist.github.com/koakh/fbbc37cde630bedcf57acfd4d6a6956b
+
 ## Server
 
 ```
@@ -52,8 +55,8 @@ CREATE user SET email='flemming@intergate.io', pass = 'flemming';
 
 ```
 curl --request POST \
-  --url http://localhost:3000/surrealdb/signin \
+  --url http://localhost:8000/signin \
   --header 'content-type: application/json' \
   --header 'user-agent: vscode-restclient' \
-  --data '{"ns": "intergate","db": "test","sc": "allusers","email": "flemming@intergate.io","pass": "flemming"}'
+  --data '{"ns": "intergate","db": "test","sc": "account","email": "flemming@intergate.io","pass": "flemming"}'
 ```
