@@ -17,7 +17,7 @@ const doFetch = async (urlPath, { headers = {}, body = {} } = {}) => {
     }),
   });
   const result = response.json();
-  console.log(urlPath, { result });
+  console.info(urlPath, { result });
   return result;
 };
 
@@ -27,4 +27,8 @@ export const signin = async (credentials) => {
 
 export const signup = async (credentials) => {
   return await doFetch('signup', { body: credentials });
+};
+
+export const userCount = async () => {
+  return await doFetch('sql', { body: credentials });
 };

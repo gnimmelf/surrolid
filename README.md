@@ -17,6 +17,8 @@ surreal sql --conn http://localhost:8000 -u admin -p gnimmelf --ns intergate  --
 
 ## Setup
 
+**Schemas**
+
 ```
 DEFINE TABLE user SCHEMAFULL
   PERMISSIONS
@@ -27,23 +29,21 @@ DEFINE FIELD pass ON user TYPE string;
 DEFINE INDEX idx_user ON user COLUMNS email UNIQUE;
 ```
 
-### SCOPE
+**Enable scope authentication directly in SurrealDB**
 
 ```
--- Enable scope authentication directly in SurrealDB
--- With encryption
+-- With pwd encryption
 DEFINE SCOPE account
 	SESSION 24h
 	SIGNUP ( CREATE user SET email = $email, pass = crypto::argon2::generate($pass) )
 	SIGNIN ( SELECT * FROM user WHERE email = $email AND crypto::argon2::compare(pass, $pass) )
 ;
 
-CREATE user SET email='flemming@intergate.io', pass = crypto::argon2::generate($pass);
+CREATE user SET email='flemming@intergate.io', pass = crypto::argon2::generate('flemming');
 ```
 
 ```
--- Enable scope authentication directly in SurrealDB
--- No encryption
+-- No pwd encryption
 DEFINE SCOPE account
 	SESSION 24h
 	SIGNUP ( CREATE user SET email = $email, pass = $pass )
@@ -52,6 +52,8 @@ DEFINE SCOPE account
 
 CREATE user SET email='flemming@intergate.io', pass = 'flemming';
 ```
+
+## Testing
 
 ```
 curl --request POST \

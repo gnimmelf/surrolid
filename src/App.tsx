@@ -8,6 +8,8 @@ import {
 } from 'solid-js';
 import { signin, signup } from './lib/db';
 
+import { ButtonPrimary } from './atoms/ButtonPrimary';
+
 const defaultCredentials = {
   email: 'flemming@intergate.io',
   pass: 'flemming',
@@ -46,55 +48,68 @@ const App: Component = () => {
     }
   };
 
+  console.info({ action, signinReq, signupReq });
+
   return (
-    <>
-      <p>
-        <label for="email">Email</label>
-        <input
-          name="email"
-          type="text"
-          value={credentials().email}
-          onInput={(e) =>
-            setCredentials((prev) => ({
-              ...prev,
-              email: e.currentTarget.value,
-            }))
-          }
-        />
-      </p>
+    <div class="flex flex-column center">
+      <div class="flex flex-wrap mt2">
+        <div class="w-25">
+          <label for="email">Email</label>
+        </div>
+        <div class="w-25">
+          <input
+            name="email"
+            type="text"
+            value={credentials().email}
+            onInput={(e) =>
+              setCredentials((prev) => ({
+                ...prev,
+                email: e.currentTarget.value,
+              }))
+            }
+          />
+        </div>
+      </div>
 
-      <p>
-        <label for="pass">Pass</label>
-        <input
-          name="pass"
-          type="text"
-          value={credentials().pass}
-          onInput={(e) =>
-            setCredentials((prev) => ({
-              ...prev,
-              pass: e.currentTarget.value,
-            }))
-          }
-        />
-      </p>
+      <div class="flex flex-wrap mt2">
+        <div class="w-25">
+          <label for="pass">Pass</label>
+        </div>
+        <div class="w-25">
+          <input
+            name="pass"
+            type="text"
+            value={credentials().pass}
+            onInput={(e) =>
+              setCredentials((prev) => ({
+                ...prev,
+                pass: e.currentTarget.value,
+              }))
+            }
+          />
+        </div>
+      </div>
 
-      <For each={Object.entries(ACTIONS)}>
-        {([key, value], i) => (
-          <button onClick={() => doAction(key)}>{value}</button>
-        )}
-      </For>
+      <div class="center mv-50 ma3">
+        <For each={Object.values(ACTIONS)}>
+          {(value, i) => (
+            <ButtonPrimary onClick={() => doAction(value)}>
+              {value}
+            </ButtonPrimary>
+          )}
+        </For>
+      </div>
 
       <Suspense fallback={<Loading>{credentials.action}</Loading>}>
-        <Show when={action === ACTIONS.SIGNIN}>
+        <Show when={action() === ACTIONS.SIGNIN}>
           <pre>{JSON.stringify(signinReq(), null, 2)}</pre>
         </Show>
 
-        <Show when={action === ACTIONS.SIGNUP}>
+        <Show when={action() === ACTIONS.SIGNUP}>
           <pre>{JSON.stringify(signupReq(), null, 2)}</pre>
         </Show>
       </Suspense>
-      <div>{action}</div>
-    </>
+    </div>
   );
 };
 
