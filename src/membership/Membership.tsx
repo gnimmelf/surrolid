@@ -22,25 +22,23 @@ const ACTIONS = Object.freeze({
   SIGNIN: 'SIGNIN',
 });
 
-const Loading = ({ children }) => <span>{children || 'Loading'}</span>;
+const Loading: Component<{ children: string | undefined }> = (props) => (
+  <span>{props.children || 'Loading'}</span>
+);
 
-interface IProps {
-  title: string;
-}
-
-const Membership: Component<IProps> = ({ title }) => {
+const Membership: Component<{ title: string }> = (props) => {
   const [credentials, setCredentials] = createSignal(defaultCredentials);
 
-  const [action, setAction] = createSignal();
+  const [action, setAction] = createSignal<string>();
   const [signinSrc, setSigninSrc] = createSignal();
   const [signupSrc, setSignupSrc] = createSignal();
 
   const [signinReq] = createResource(signinSrc, signin);
   const [signupReq] = createResource(signupSrc, signup);
 
-  const doAction = (action) => {
-    setAction(action);
-    switch (action) {
+  const doAction = (value: string) => {
+    setAction(value);
+    switch (value) {
       case ACTIONS.SIGNIN:
         setSigninSrc({
           ...credentials(),
@@ -54,18 +52,19 @@ const Membership: Component<IProps> = ({ title }) => {
     }
   };
 
-  console.info({ action, signinReq, signupReq });
+  console.info(action());
 
   return (
-    <section class="membership-widget">
+    <section class="flex-col mx-auto">
       <style>{styles}</style>
       <div>
-        <h1>{title}</h1>
-        <div class="input email">
-          <div class="">
+        <h1 class="text-2xl">{props.title}</h1>
+
+        <div class="grid grid-cols-2 place-content-center mb-4">
+          <div class="max-w-sm">
             <label for="email">Email</label>
           </div>
-          <div class="">
+          <div class="max-w-sm">
             <input
               name="email"
               type="text"
@@ -78,13 +77,12 @@ const Membership: Component<IProps> = ({ title }) => {
               }
             />
           </div>
-        </div>
 
-        <div class="">
-          <div class="">
+          <div class="max-w-sm">
             <label for="pass">Pass</label>
           </div>
-          <div class="">
+
+          <div class="max-w-sm">
             <input
               name="pass"
               type="text"
@@ -99,9 +97,9 @@ const Membership: Component<IProps> = ({ title }) => {
           </div>
         </div>
 
-        <div class="">
+        <div class="flex space-x-4">
           <For each={Object.values(ACTIONS)}>
-            {(value, i) => (
+            {(value) => (
               <ButtonPrimary onClick={() => doAction(value)}>
                 {value}
               </ButtonPrimary>
@@ -109,7 +107,7 @@ const Membership: Component<IProps> = ({ title }) => {
           </For>
         </div>
 
-        <Suspense fallback={<Loading>{credentials.action}</Loading>}>
+        <Suspense fallback={<Loading>{action()}</Loading>}>
           <Show when={action() === ACTIONS.SIGNIN}>
             <pre>{JSON.stringify(signinReq(), null, 2)}</pre>
           </Show>

@@ -37,3 +37,20 @@ DEFINE SCOPE account\n	SESSION 24h\n	SIGNUP ( CREATE user SET email = $email, pa
 INFO FOR TABLE user;
 SELECT * FROM user;
 CREATE user SET email='flemming@intergate.io', pass = 'flemming';
+INFO FOR KV
+DEFINE SCOPE account\n	SESSION 24h\n	SIGNUP ( CREATE user SET email = $email, pass = crypto::argon2::generate($pass) )\n	SIGNIN ( SELECT * FROM user WHERE email = $email AND crypto::argon2::compare(pass, $pass) )\n;\n\nCREATE user SET email='flemming@intergate.io', pass = crypto::argon2::generate($pass);
+CREATE user SET email='flemming@intergate.io', pass = 'flemming';
+SELECT * FROM User
+SELECT * FROM user
+DEFINE SCOPE account\n	SESSION 24h\n	SIGNUP ( CREATE user SET email = $email, pass = $pass )\n	SIGNIN ( SELECT * FROM user WHERE email = $email AND pass = $pass )\n;\n
+UPDATE user SET email='flemming@intergate.io', pass = 'flemming';
+SELECT * FROM user
+DELETE FROM user;
+CREATE user SET email='flemming@intergate.io', pass = 'flemming';
+DEFINE SCOPE account\n	SESSION 24h\n	SIGNUP ( CREATE user SET email = $email, pass = crypto::argon2::generate($pass) )\n	SIGNIN ( SELECT * FROM user WHERE email = $email AND crypto::argon2::compare(pass, $pass) )\n;
+CREATE user SET email='flemming@intergate.io', pass = crypto::argon2::generate($pass);
+SELECT * FROM user
+DELETE FROM user
+CREATE user SET email='flemming@intergate.io', pass = crypto::argon2::generate($pass);
+CREATE user SET email='flemming3@intergate.io', pass = crypto::argon2::generate('flemming');
+DELETE FROM user
