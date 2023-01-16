@@ -1,34 +1,81 @@
-const defaultParams = {
-  ns: 'intergate',
-  db: 'test',
-  sc: 'account',
+export type Auth = {
+  method: string;
+  email: string;
+  pass: string;
 };
 
-const doFetch = async (urlPath, { headers = {}, body = {} } = {}) => {
+const NAMESPACE = 'intergate';
+const DATABASE = 'test';
+const SCOPE = 'account';
+
+const parseMeta = (
+  response: Response
+): {
+  meta: Pick<
+    Response,
+    'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'
+  >;
+} => {
+  const { headers, ok, redirected, status, statusText, type, url } = response;
+  return {
+    meta: {
+      headers,
+      ok,
+      redirected,
+      status,
+      statusText,
+      type,
+      url,
+    },
+  };
+};
+
+const doFetch = async (urlPath: string, { headers = {}, body = {} } = {}) => {
   const response = await fetch(`http://localhost:8000/${urlPath}`, {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
       ...headers,
+      Accept: 'application/json',
     },
-    body: JSON.stringify({
-      ...body,
-      ...defaultParams,
-    }),
+    body: typeof body === 'string' ? body : JSON.stringify(body),
   });
-  const result = response.json();
-  console.info(urlPath, { result });
-  return result;
+
+  if (response.status >= 500) {
+    throw new Error(
+      `Could not fetch ${response.url}: ${response.status} - ${response.statusText}`
+    );
+  }
+  return response;
 };
 
-export const signin = async (credentials) => {
-  return await doFetch('signin', { body: credentials });
+export const fetchToken = async (auth: Auth) => {
+  const response: Response = await doFetch(auth.method, {
+    body: {
+      email: auth.email,
+      pass: auth.pass,
+      ns: NAMESPACE,
+      db: DATABASE,
+      sc: SCOPE,
+    },
+  });
+  return {
+    ...parseMeta(response),
+    ...(await response.json()),
+  };
 };
 
-export const signup = async (credentials) => {
-  return await doFetch('signup', { body: credentials });
-};
-
-export const userCount = async () => {
-  return await doFetch('sql', { body: credentials });
+export const fetchQuery = async (authToken: string, query: string) => {
+  const response = await doFetch('sql', {
+    headers: {
+      NS: NAMESPACE,
+      DB: DATABASE,
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: query,
+  });
+  const result = await response.json();
+  return {
+    ...parseMeta(response),
+    ...result,
+  };
 };
