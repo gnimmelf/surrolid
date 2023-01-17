@@ -23,4 +23,13 @@ declare module 'solid-js' {
   }
 }
 
-customElement('membership-widget', { title: 'Membership portal' }, Membership);
+customElement(
+  'membership-widget',
+  {
+    title: 'Membership portal',
+    namespace: 'test',
+    database: 'test',
+    scope: 'test',
+  },
+  Membership
+);

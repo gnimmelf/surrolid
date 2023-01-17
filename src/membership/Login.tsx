@@ -1,47 +1,19 @@
-import { Component, createSignal, createResource, Show, For } from 'solid-js';
+import { Component, createSignal } from 'solid-js';
 import { useService } from './service';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
-
-import { fetchToken, fetchQuery, Auth } from '../lib/db';
 
 const defaultCredentials = {
   email: 'flemming@intergate.io',
   pass: 'flemming',
 };
 
-const ACTIONS = Object.freeze({
-  SIGNUP: 'SIGNUP',
-  SIGNIN: 'SIGNIN',
-});
-
 export const Login: Component<{ title: string }> = (props) => {
-  const { actions } = useService();
+  const { state, actions } = useService();
 
-  const [credentials$, setCredentials] = createSignal(defaultCredentials);
+  const [credentials, setCredentials] = createSignal(defaultCredentials);
 
-  const [action$, setAction] = createSignal<string>('');
-  const [auth$, setAuth$] = createSignal<Auth | undefined>();
-
-  const [authTokenRes] = createResource(auth$, fetchToken);
-
-  const [userRes] = createResource(authTokenRes, (result, info) => {
-    console.log({ result, info });
-    return fetchQuery(result.token, 'select email from user');
-  });
-
-  const doAction = (value: string) => {
-    setAction(value);
-    switch (value) {
-      case ACTIONS.SIGNUP:
-      case ACTIONS.SIGNIN:
-        setAuth$({
-          method: value.toLowerCase(),
-          ...credentials$(),
-        });
-        break;
-    }
-  };
+  const [action, setAction] = createSignal<string>('');
 
   return (
     <div>
@@ -54,7 +26,7 @@ export const Login: Component<{ title: string }> = (props) => {
           <input
             name="email"
             type="text"
-            value={credentials$().email}
+            value={credentials().email}
             onInput={(e) =>
               setCredentials((prev) => ({
                 ...prev,
@@ -72,7 +44,7 @@ export const Login: Component<{ title: string }> = (props) => {
           <input
             name="pass"
             type="text"
-            value={credentials$().pass}
+            value={credentials().pass}
             onInput={(e) =>
               setCredentials((prev) => ({
                 ...prev,
@@ -84,26 +56,22 @@ export const Login: Component<{ title: string }> = (props) => {
       </div>
 
       <div>
-        <For each={Object.values(ACTIONS)}>
-          {(value) => (
-            <sl-button onClick={() => doAction(value)} variant="primary">
-              {value}
-            </sl-button>
-          )}
-        </For>
+        <sl-button
+          onClick={() => actions.signin(credentials())}
+          variant="primary"
+        >
+          Signin
+        </sl-button>
+
+        <sl-button
+          onClick={() => actions.signup(credentials())}
+          variant="secondary"
+        >
+          Signup
+        </sl-button>
       </div>
 
-      <Show when={auth$()}>
-        <pre>auth$: {JSON.stringify(auth$(), null, 2)}</pre>
-      </Show>
-
-      <Show when={authTokenRes()}>
-        <pre>authTokenRes: {JSON.stringify(authTokenRes(), null, 2)}</pre>
-      </Show>
-
-      <Show when={authTokenRes() && userRes()}>
-        <pre>userRes: {JSON.stringify(userRes(), null, 2)}</pre>
-      </Show>
+      <pre>{JSON.stringify(state, null, 2)}</pre>
     </div>
   );
 };

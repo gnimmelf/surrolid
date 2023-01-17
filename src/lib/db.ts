@@ -1,12 +1,15 @@
+export type Connection = {
+  namespace: string;
+  database: string;
+  scope: string;
+  token: string | null | undefined;
+};
+
 export type Auth = {
   method: string;
   email: string;
   pass: string;
-};
-
-const NAMESPACE = 'intergate';
-const DATABASE = 'test';
-const SCOPE = 'account';
+} & Connection;
 
 const parseMeta = (
   response: Response
@@ -53,9 +56,9 @@ export const fetchToken = async (auth: Auth) => {
     body: {
       email: auth.email,
       pass: auth.pass,
-      ns: NAMESPACE,
-      db: DATABASE,
-      sc: SCOPE,
+      ns: auth.namespace,
+      db: auth.database,
+      sc: auth.scope,
     },
   });
   return {
@@ -64,12 +67,12 @@ export const fetchToken = async (auth: Auth) => {
   };
 };
 
-export const fetchQuery = async (authToken: string, query: string) => {
+export const fetchQuery = async (conn: Connection, query: string) => {
   const response = await doFetch('sql', {
     headers: {
-      NS: NAMESPACE,
-      DB: DATABASE,
-      Authorization: `Bearer ${authToken}`,
+      NS: conn.namespace,
+      DB: conn.database,
+      Authorization: `Bearer ${conn.token}`,
     },
     body: query,
   });
