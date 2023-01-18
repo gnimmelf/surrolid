@@ -1,6 +1,12 @@
-import { Component, createContext, JSXElement, useContext } from 'solid-js';
+import {
+  Component,
+  createContext,
+  JSXElement,
+  useContext,
+  batch,
+} from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { fetchToken, fetchQuery, Auth } from '../lib/db';
+import { fetchToken, fetchQuery } from '../lib/db';
 
 type Credentials = {
   email: string;
@@ -16,11 +22,12 @@ export const ServiceProvider: Component<{
   children: JSXElement;
 }> = (props) => {
   const [state, setState] = createStore({
+    authenticated: false,
     conn: {
       namespace: props.namespace,
       database: props.database,
       scope: props.scope,
-      token: localStorage.getItem('accessToken'),
+      token: '',
     },
     profile: {
       email: '',
@@ -32,14 +39,16 @@ export const ServiceProvider: Component<{
   });
 
   const actions = {
-    async ping() {},
     async signup(credentials: Credentials) {
       const result = await fetchToken({
         ...credentials,
         ...state.conn,
         method: 'signup',
       });
-      setState('conn', 'token', result.token);
+      batch(() => {
+        setState('authenticated', true);
+        setState('conn', 'token', result.token);
+      });
     },
     async signin(credentials: Credentials) {
       const result = await fetchToken({
@@ -47,15 +56,23 @@ export const ServiceProvider: Component<{
         ...state.conn,
         method: 'signin',
       });
-      setState('conn', 'token', result.token);
+      batch(() => {
+        setState('authenticated', true);
+        setState('conn', 'token', result.token);
+      });
     },
     async getProfile() {
       const result = await fetchQuery(state.conn, 'select email from user');
       setState('profile', result[0].result[0]);
     },
-    signout() {
-      console.log('Logout!');
-      setState('conn', 'token', '');
+    async signout() {
+      batch(() => {
+        setState('authenticated', false);
+        setState('conn', 'token', '');
+      });
+    },
+    async ping() {
+      const result = await poll();
     },
   };
   const service = { state, actions };
@@ -68,8 +85,8 @@ export const ServiceProvider: Component<{
 };
 
 type Service = {
-  actions: { [x]: Function };
-  state: { [x]: unknown };
+  actions: Record<string, Function>;
+  state: Record<string, unknown>;
 };
 
 export const useService = () => {

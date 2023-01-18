@@ -1,7 +1,8 @@
-import { Component, createSignal } from 'solid-js';
+import { Component, createSignal, Show } from 'solid-js';
 import { useService } from './service';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import { AuthenticationError } from '../lib/errors';
 
 const defaultCredentials = {
   email: 'flemming@intergate.io',
@@ -9,11 +10,20 @@ const defaultCredentials = {
 };
 
 export const Login: Component<{ title: string }> = (props) => {
-  const { state, actions } = useService();
+  const { actions } = useService();
 
   const [credentials, setCredentials] = createSignal(defaultCredentials);
+  const [error, setError] = createSignal('');
 
-  const [action, setAction] = createSignal<string>('');
+  const handleSubmit = (method: 'signup' | 'signin'): void => {
+    actions[method](credentials()).catch((err) => {
+      if (err instanceof AuthenticationError) {
+        setError(err.message);
+      } else {
+        throw err;
+      }
+    });
+  };
 
   return (
     <div>
@@ -55,23 +65,17 @@ export const Login: Component<{ title: string }> = (props) => {
         </div>
       </div>
 
+      <Show when={error()}>{error()}</Show>
+
       <div>
-        <sl-button
-          onClick={() => actions.signin(credentials())}
-          variant="primary"
-        >
+        <sl-button onClick={() => handleSubmit('signin')} variant="primary">
           Signin
         </sl-button>
 
-        <sl-button
-          onClick={() => actions.signup(credentials())}
-          variant="secondary"
-        >
+        <sl-button onClick={() => handleSubmit('signup')} variant="secondary">
           Signup
         </sl-button>
       </div>
-
-      <pre>{JSON.stringify(state, null, 2)}</pre>
     </div>
   );
 };

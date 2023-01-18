@@ -1,8 +1,10 @@
+import { AuthenticationError, RecordError, ServiceError } from './errors';
+
 export type Connection = {
   namespace: string;
   database: string;
   scope: string;
-  token: string | null | undefined;
+  token: string;
 };
 
 export type Auth = {
@@ -44,7 +46,7 @@ const doFetch = async (urlPath: string, { headers = {}, body = {} } = {}) => {
   });
 
   if (response.status >= 500) {
-    throw new Error(
+    throw new ServiceError(
       `Could not fetch ${response.url}: ${response.status} - ${response.statusText}`
     );
   }
@@ -61,9 +63,13 @@ export const fetchToken = async (auth: Auth) => {
       sc: auth.scope,
     },
   });
+  const result = await response.json();
+  if (!response.ok) {
+    throw new AuthenticationError(result.details);
+  }
   return {
     ...parseMeta(response),
-    ...(await response.json()),
+    ...result,
   };
 };
 
@@ -77,6 +83,9 @@ export const fetchQuery = async (conn: Connection, query: string) => {
     body: query,
   });
   const result = await response.json();
+  if (!response.ok) {
+    throw new RecordError(result.details);
+  }
   return {
     ...parseMeta(response),
     ...result,
