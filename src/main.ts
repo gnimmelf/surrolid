@@ -15,9 +15,9 @@ declare module 'solid-js' {
       // Add both the element's prefixed properties and the attributes
       [K in keyof T]: Props<T[K]> & HTMLAttributes<T[K]>;
     };
-    // Prefixes all properties with prop: to match Solid's property setting syntax
+    // Prefixes all properties with attr: to match Solid's property setting syntax
     type Props<T> = {
-      [K in keyof T as `prop:${string & K}`]?: T[K];
+      [K in keyof T as `attr:${string & K}`]?: T[K];
     };
     interface IntrinsicElements extends ElementProps<HTMLElementTagNameMap> {}
   }

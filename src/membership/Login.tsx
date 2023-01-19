@@ -1,7 +1,7 @@
 import { Component, createSignal, Show } from 'solid-js';
 import { useService } from './service';
 
-import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/button/button';
 import { AuthenticationError } from '../lib/errors';
 
 const defaultCredentials = {
@@ -68,11 +68,17 @@ export const Login: Component<{ title: string }> = (props) => {
       <Show when={error()}>{error()}</Show>
 
       <div>
-        <sl-button onClick={() => handleSubmit('signin')} variant="primary">
+        <sl-button
+          onClick={() => handleSubmit('signin')}
+          attr:variant="primary"
+        >
           Signin
         </sl-button>
 
-        <sl-button onClick={() => handleSubmit('signup')} variant="secondary">
+        <sl-button
+          onClick={() => handleSubmit('signup')}
+          attr:variant="neutral"
+        >
           Signup
         </sl-button>
       </div>

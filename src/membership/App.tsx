@@ -1,4 +1,4 @@
-import { Component, Show, onError, Suspense } from 'solid-js';
+import { Component, Show, onError, Suspense, createComputed } from 'solid-js';
 
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import '@shoelace-style/shoelace/dist/components/tab/tab';
@@ -27,6 +27,7 @@ const App: Component<{
   title: string;
 }> = (props) => {
   const { state } = useService();
+
   return (
     <section>
       <style>{styles}</style>
@@ -38,24 +39,25 @@ const App: Component<{
           </Show>
           <Show when={state.authenticated}>
             <Logout />
+
             <sl-tab-group>
-              <sl-tab slot="nav" panel="profile">
+              <sl-tab slot="nav" attr:panel="profile">
                 Profile
               </sl-tab>
-              <sl-tab slot="nav" panel="account">
+              <sl-tab slot="nav" attr:panel="account">
                 Account
               </sl-tab>
-              <sl-tab slot="nav" panel="contact">
+              <sl-tab slot="nav" attr:panel="contact">
                 Contact
               </sl-tab>
 
-              <sl-tab-panel name="profile">
+              <sl-tab-panel attr:name="profile">
                 <Profile />
               </sl-tab-panel>
-              <sl-tab-panel name="account">
+              <sl-tab-panel attr:name="account">
                 <TBD title="Account" />
               </sl-tab-panel>
-              <sl-tab-panel name="contact">
+              <sl-tab-panel attr:name="contact">
                 <TBD title="Contact" />
               </sl-tab-panel>
             </sl-tab-group>
@@ -74,7 +76,7 @@ const AppWrapper: Component<{
   database: string;
   scope: string;
 }> = (props) => {
-  onError((error) => console.warn(`onError: ${error}`));
+  // onError((error) => console.warn(`onError: ${error}`));
 
   return (
     <ServiceProvider

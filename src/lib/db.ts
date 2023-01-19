@@ -63,13 +63,13 @@ export const fetchToken = async (auth: Auth) => {
       sc: auth.scope,
     },
   });
-  const result = await response.json();
+  const payload = await response.json();
   if (!response.ok) {
-    throw new AuthenticationError(result.details);
+    throw new AuthenticationError(payload.details);
   }
   return {
     ...parseMeta(response),
-    ...result,
+    ...payload,
   };
 };
 
@@ -82,12 +82,17 @@ export const fetchQuery = async (conn: Connection, query: string) => {
     },
     body: query,
   });
-  const result = await response.json();
+  const payload = await response.json();
   if (!response.ok) {
-    throw new RecordError(result.details);
+    throw new RecordError(payload.details);
   }
+
+  const data = payload.map((dataSet) => dataSet.result);
+
+  console.log({ payload, data });
+
   return {
     ...parseMeta(response),
-    ...result,
+    data: data.length === 1 ? data[0] : data,
   };
 };
