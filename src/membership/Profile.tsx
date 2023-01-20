@@ -1,6 +1,5 @@
-import { Component, createEffect } from 'solid-js';
+import { Component, createEffect, createRenderEffect } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { createFormGroup, formGroup, Validators as V } from 'solar-forms';
 
 import { useService } from './service';
 
@@ -12,36 +11,26 @@ const Profile: Component = () => {
   const { state, actions } = useService();
   const { profile } = state;
 
-  //   createEffect(() => actions.loadUser());
+  const [values, setValues] = createStore(profile);
 
-  const [values, setValues] = createStore(state);
+  const initials = createRenderEffect(() =>
+    (values.firstName[0] + values.lastName[0] || '').toUpperCase()
+  );
 
-  const updateState = (key) => (ev) => setState(key, ev.target.value);
+  const updateValues = (key: string) => (evt: KeyboardEvent) => {
+    console.log(key, evt.target.value);
+    setValues(key, evt.target.value);
+  };
 
-  const fg = createFormGroup({
-    email: [state.email, { validators: [V.required] }],
-    firstName: [state.firstName, { validators: [V.required] }],
-    lastName: [state.lastName, { validators: [V.required] }],
-    address: state.address,
-    phone: state.phone,
-  });
-
-  const [form, setForm] = fg.value;
-  const validAll = fg.validAll;
-
-  const handleSubmit = (evt) => {
+  const handleSubmit = (evt: Event) => {
     evt.preventDefault();
-    console.log({ evt });
+    actions.saveProfile({ ...values });
   };
 
   return (
     <section>
       <h2>Profile</h2>
-      <sl-avatar
-        attr:initials={(
-          profile.firstName[0] + profile.lastName[0] || ''
-        ).toUpperCase()}
-      />
+      <sl-avatar attr:initials={initials} />
       <form onSubmit={handleSubmit}>
         <sl-input
           attr:name="firstName"
@@ -49,13 +38,17 @@ const Profile: Component = () => {
           attr:clearable={true}
           attr:filled={true}
           attr:required={true}
+          attr:value={values.firstName}
+          on:sl-change={updateValues('firstName')}
         />
         <sl-input
-          attr:name="email"
-          attr:label="Email"
+          attr:name="lastName"
+          attr:label="Last name"
           attr:clearable={true}
           attr:filled={true}
           attr:required={true}
+          attr:value={values.lastName}
+          on:sl-change={updateValues('lastName')}
         />
 
         <sl-button attr:variant="primary" attr:type="submit">

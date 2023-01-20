@@ -26,6 +26,11 @@ DEFINE TABLE user SCHEMAFULL
     FOR create, delete NONE;
 DEFINE FIELD email ON user TYPE string;
 DEFINE FIELD pass ON user TYPE string;
+DEFINE FIELD firstName ON user TYPE string;
+DEFINE FIELD lastName ON user TYPE string;
+DEFINE FIELD phone ON user TYPE string;
+DEFINE FIELD address ON user TYPE string;
+
 DEFINE INDEX idx_user ON user COLUMNS email UNIQUE;
 ```
 
@@ -39,7 +44,7 @@ DEFINE SCOPE account
 	SIGNIN ( SELECT * FROM user WHERE email = $email AND crypto::argon2::compare(pass, $pass) )
 ;
 
-CREATE user SET email='flemming@intergate.io', pass = crypto::argon2::generate('flemming');
+CREATE user SET email='flemming@intergate.io', pass = crypto::argon2::generate('flemming'), phone = '90066044;
 ```
 
 ```
