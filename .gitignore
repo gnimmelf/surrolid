@@ -9,6 +9,7 @@ lerna-debug.log*
 
 # Dev DB
 surrealData.db/*
+history.txt
 
 node_modules
 dist

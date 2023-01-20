@@ -1,9 +1,16 @@
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 import solidPlugin from 'vite-plugin-solid';
 
 export default defineConfig({
-  plugins: [solidPlugin()],
+  server: {
+    port: 3030,
+  },
+  preview: {
+    port: 8080,
+  },
+  plugins: [solidPlugin(), basicSsl()],
   build: {
     lib: {
       // Could also be a dictionary or array of multiple entry points

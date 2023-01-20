@@ -29,9 +29,9 @@ const App: Component<{
   const { state } = useService();
 
   return (
-    <section>
+    <main class="app">
       <style>{styles}</style>
-      <div>
+      <div class="sl-theme-dark">
         <h1>{props.title}</h1>
         <Suspense fallback={<Loading />}>
           <Show when={!state.authenticated}>
@@ -66,7 +66,7 @@ const App: Component<{
       </div>
       <hr />
       <pre>{JSON.stringify(state, null, 2)}</pre>
-    </section>
+    </main>
   );
 };
 

@@ -54,3 +54,11 @@ DELETE FROM user
 CREATE user SET email='flemming@intergate.io', pass = crypto::argon2::generate($pass);
 CREATE user SET email='flemming3@intergate.io', pass = crypto::argon2::generate('flemming');
 DELETE FROM user
+SELECT * FROM user
+use ns intergate
+use db test
+SELECT * FROM user
+info for db
+info for ns
+SELECT * FROM user
+DEFINE TABLE user SCHEMAFULL\n  PERMISSIONS\n    FOR select, update WHERE id = $auth.id,\n    FOR create, delete NONE;\nDEFINE FIELD email ON user TYPE string;\nDEFINE FIELD pass ON user TYPE string;\nDEFINE FIELD firstName ON user TYPE string;\nDEFINE FIELD lastName ON user TYPE string;\nDEFINE FIELD phone ON user TYPE string;\nDEFINE FIELD address ON user TYPE string;\n\nDEFINE INDEX idx_user ON user COLUMNS email UNIQUE;
