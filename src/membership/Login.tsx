@@ -65,14 +65,14 @@ export const Login: Component<{ title: string }> = (props) => {
           onClick={() => handleSubmit('signup')}
           attr:variant="neutral"
         >
-          Signup
+          Sign up
         </sl-button>
 
         <sl-button
           onClick={() => handleSubmit('signin')}
           attr:variant="primary"
         >
-          Signin
+          Sign in
         </sl-button>
       </div>
     </div>

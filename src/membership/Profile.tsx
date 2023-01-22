@@ -1,25 +1,30 @@
-import { Component, createEffect, createRenderEffect } from 'solid-js';
+import {
+  Component,
+  createComputed,
+  createEffect,
+  createMemo,
+  createSignal,
+  on,
+} from 'solid-js';
 import { createStore } from 'solid-js/store';
 
-import { useService } from './service';
+import { useService, Profile } from './service';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 import '@shoelace-style/shoelace/dist/components/input/input';
 
+const parseInitials = ({ firstName, lastName }) =>
+  `${(firstName || '')[0]}${(lastName || '')[0]}`;
+
 const Profile: Component = () => {
   const { state, actions } = useService();
   const { profile } = state;
 
-  const [values, setValues] = createStore(profile);
+  const [values, setValues] = createStore<Profile>(state.profile);
 
-  const initials = createRenderEffect(() =>
-    (values.firstName[0] + values.lastName[0] || '').toUpperCase()
-  );
-
-  const updateValues = (key: string) => (evt: KeyboardEvent) => {
-    console.log(key, evt.target.value);
-    setValues(key, evt.target.value);
+  const updateValues = (key: keyof Profile) => (evt: Event) => {
+    setValues(key, (evt.target as HTMLInputElement).value);
   };
 
   const handleSubmit = (evt: Event) => {
@@ -27,10 +32,12 @@ const Profile: Component = () => {
     actions.saveProfile({ ...values });
   };
 
+  const initials = createMemo(() => parseInitials(values));
+
   return (
     <section>
       <h2>Profile</h2>
-      <sl-avatar attr:initials={initials} />
+      <sl-avatar attr:initials={initials()} />
       <form onSubmit={handleSubmit}>
         <sl-input
           attr:name="firstName"

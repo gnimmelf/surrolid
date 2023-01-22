@@ -7,4 +7,7 @@ main.app {
   sl-input {
     @apply px-1 mb-2;
   }
+  sl-button {
+    @apply pr-4;
+  }
 }
