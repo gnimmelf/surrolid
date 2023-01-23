@@ -1,13 +1,7 @@
 /* @refresh reload */
 import { customElement } from 'solid-element';
 
-import '@shoelace-style/shoelace/dist/themes/dark.css';
-import '@shoelace-style/shoelace/dist/themes/light.css';
-import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-
 import Membership from './membership/App';
-
-setBasePath('@shoelace-style/shoelace/dist');
 
 declare module 'solid-js' {
   namespace JSX {

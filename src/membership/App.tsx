@@ -1,4 +1,14 @@
-import { Component, Show, onError, Suspense, createComputed } from 'solid-js';
+import { Component, Show, Suspense, onError } from 'solid-js';
+import {
+  I18nContext,
+  createI18nContext,
+  useI18n,
+} from '@solid-primitives/i18n';
+
+import noTexts from '../locale/no-nb.json';
+
+import theme from '@shoelace-style/shoelace/dist/themes/light.css?inline';
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import '@shoelace-style/shoelace/dist/components/tab/tab';
@@ -14,6 +24,8 @@ import { Loading } from './Loading';
 
 import styles from './app.css?inline';
 
+setBasePath('@shoelace-style/shoelace/dist');
+
 const TBD = (props: { title: string }) => {
   return (
     <section>
@@ -26,11 +38,16 @@ const TBD = (props: { title: string }) => {
 const App: Component<{
   title: string;
 }> = (props) => {
+  const [t] = useI18n();
   const { state } = useService();
 
   return (
     <main class="app">
-      <style>{styles}</style>
+      <style>
+        {theme}
+        @unocss-placeholder
+        {styles}
+      </style>
       <div class="sl-theme-dark">
         <h1>{props.title}</h1>
         <Suspense fallback={<Loading />}>
@@ -42,23 +59,23 @@ const App: Component<{
 
             <sl-tab-group>
               <sl-tab slot="nav" attr:panel="profile">
-                Profile
+                {t('Profile')}
               </sl-tab>
               <sl-tab slot="nav" attr:panel="account">
-                Account
+                {t('Account')}
               </sl-tab>
               <sl-tab slot="nav" attr:panel="contact">
-                Contact
+                {t('Contact')}
               </sl-tab>
 
               <sl-tab-panel attr:name="profile">
                 <Profile />
               </sl-tab-panel>
               <sl-tab-panel attr:name="account">
-                <TBD title="Account" />
+                <TBD title={t('Account')} />
               </sl-tab-panel>
               <sl-tab-panel attr:name="contact">
-                <TBD title="Contact" />
+                <TBD title={t('Contact')} />
               </sl-tab-panel>
             </sl-tab-group>
           </Show>
@@ -78,14 +95,20 @@ const AppWrapper: Component<{
 }> = (props) => {
   // onError((error) => console.warn(`onError: ${error}`));
 
+  const value = createI18nContext({
+    no: noTexts,
+  });
+
   return (
-    <ServiceProvider
-      namespace={props.namespace}
-      database={props.database}
-      scope={props.scope}
-    >
-      <App title={props.title} />
-    </ServiceProvider>
+    <I18nContext.Provider value={value}>
+      <ServiceProvider
+        namespace={props.namespace}
+        database={props.database}
+        scope={props.scope}
+      >
+        <App title={props.title} />
+      </ServiceProvider>
+    </I18nContext.Provider>
   );
 };
 

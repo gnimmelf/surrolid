@@ -1,13 +1,18 @@
 main.app {
   background-color: var(--sl-color-primary-50);
   border-color: var(--sl-color-primary-200);
-  @apply p-5 rounded-lg border-4 border-solid;
-  @apply max-w-lg mx-auto overflow-hidden;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 2px;
+  max-width: 780px;
+  margin: auto;
+  @apply p-1;
+}
 
-  sl-input {
-    @apply px-1 mb-2;
-  }
-  sl-button {
-    @apply pr-4;
-  }
+sl-input {
+  @apply mb-1;
+}
+
+sl-button {
+  @apply mr-1;
 }

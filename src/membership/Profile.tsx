@@ -1,12 +1,6 @@
-import {
-  Component,
-  createComputed,
-  createEffect,
-  createMemo,
-  createSignal,
-  on,
-} from 'solid-js';
+import { Component, createMemo } from 'solid-js';
 import { createStore } from 'solid-js/store';
+import { useI18n } from '@solid-primitives/i18n';
 
 import { useService, TProfile } from './service';
 
@@ -15,11 +9,14 @@ import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 import '@shoelace-style/shoelace/dist/components/input/input';
 
 const parseInitials = ({ firstName, lastName }) =>
-  `${(firstName || '')[0]}${(lastName || '')[0]}`;
+  [firstName, lastName].reduce((acc, name) => {
+    acc = acc + (name.length ? name[0] : '');
+    return acc;
+  }, '');
 
 const Profile: Component = () => {
+  const [t] = useI18n();
   const { state, actions } = useService();
-  const { profile } = state;
 
   const [values, setValues] = createStore(state.profile);
 
@@ -36,30 +33,47 @@ const Profile: Component = () => {
 
   return (
     <section>
-      <h2>Profile</h2>
+      <h2>{t('Profile')}</h2>
       <sl-avatar attr:initials={initials()} />
       <form onSubmit={handleSubmit}>
         <sl-input
-          attr:name="firstName"
-          attr:label="First name"
+          attr:label={t('First name')}
+          attr:inputmode="text"
+          attr:autocapitalize="words"
+          attr:spellcheck={false}
           attr:clearable={true}
-          attr:filled={true}
           attr:required={true}
           attr:value={values.firstName}
           on:sl-change={updateValues('firstName')}
         />
         <sl-input
-          attr:name="lastName"
-          attr:label="Last name"
+          attr:label={t('Last name')}
+          attr:inputmode="text"
+          attr:autocapitalize="words"
+          attr:spellcheck={false}
           attr:clearable={true}
-          attr:filled={true}
           attr:required={true}
           attr:value={values.lastName}
           on:sl-change={updateValues('lastName')}
         />
-
+        <sl-input
+          attr:label={t('Address')}
+          attr:inputmode="text"
+          attr:autocapitalize="words"
+          attr:spellcheck={false}
+          attr:clearable={true}
+          attr:value={values.address}
+          on:sl-change={updateValues('address')}
+        />
+        <sl-input
+          attr:label={t('Phone')}
+          attr:inputmode="numeric"
+          attr:clearable={true}
+          attr:value={values.phone}
+          on:sl-change={updateValues('phone')}
+        />
         <sl-button attr:variant="primary" attr:type="submit">
-          Submit
+          {t('Save')}
         </sl-button>
       </form>
     </section>

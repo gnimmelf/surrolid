@@ -1,4 +1,6 @@
 import { Component, createSignal, Show } from 'solid-js';
+import { useI18n } from '@solid-primitives/i18n';
+
 import { useService } from './service';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
@@ -11,6 +13,7 @@ const defaultCredentials = {
 };
 
 export const Login: Component<{ title: string }> = (props) => {
+  const [t] = useI18n();
   const { actions } = useService();
 
   const [values, setValues] = createStore<{ email: string; pass: string }>(
@@ -35,23 +38,19 @@ export const Login: Component<{ title: string }> = (props) => {
 
   return (
     <div>
-      <h1>{props.title}</h1>
+      <h2>{props.title}</h2>
       <div>
         <sl-input
-          attr:name="email"
-          attr:label="Email"
+          attr:label={t('Email')}
           attr:clearable={true}
-          attr:filled={true}
           attr:required={true}
           attr:value={values.email}
           on:sl-change={updateValues('email')}
         />
 
         <sl-input
-          attr:name="pass"
-          attr:label="Password"
+          attr:label={t('Password')}
           attr:clearable={true}
-          attr:filled={true}
           attr:required={true}
           attr:value={values.pass}
           on:sl-change={updateValues('pass')}
@@ -65,14 +64,14 @@ export const Login: Component<{ title: string }> = (props) => {
           onClick={() => handleSubmit('signup')}
           attr:variant="neutral"
         >
-          Sign up
+          {t('Sign up')}
         </sl-button>
 
         <sl-button
           onClick={() => handleSubmit('signin')}
           attr:variant="primary"
         >
-          Sign in
+          {t('Sign in')}
         </sl-button>
       </div>
     </div>
