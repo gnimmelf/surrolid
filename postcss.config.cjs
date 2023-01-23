@@ -6,7 +6,7 @@ module.exports = {
             content: ["./src/**/*.tsx"],
         },
         'autoprefixer': {},
-        // 'cssnano': {}
+        'cssnano': {}
     },
     extract: false,
     modules: false,

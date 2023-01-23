@@ -8,7 +8,7 @@ import {
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
-import { useService, Profile } from './service';
+import { useService, TProfile } from './service';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
@@ -21,9 +21,9 @@ const Profile: Component = () => {
   const { state, actions } = useService();
   const { profile } = state;
 
-  const [values, setValues] = createStore<Profile>(state.profile);
+  const [values, setValues] = createStore(state.profile);
 
-  const updateValues = (key: keyof Profile) => (evt: Event) => {
+  const updateValues = (key: keyof TProfile) => (evt: Event) => {
     setValues(key, (evt.target as HTMLInputElement).value);
   };
 
@@ -62,7 +62,6 @@ const Profile: Component = () => {
           Submit
         </sl-button>
       </form>
-      <pre>{JSON.stringify(profile, null, 2)}</pre>
     </section>
   );
 };

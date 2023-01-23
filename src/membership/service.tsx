@@ -11,17 +11,25 @@ import {
 import { createStore } from 'solid-js/store';
 import { fetchToken, fetchQuery } from '../lib/db';
 
-type Credentials = {
+type TCredentials = {
   email: string;
   pass: string;
 };
 
-type Profile = {
+export type TProfile = {
   email: string;
   firstName: string;
   lastName: string;
   phone: string;
   address?: string;
+};
+
+type TService = {
+  actions: Record<string, Function>;
+  state: {
+    authenticated: boolean;
+    profile: TProfile;
+  };
 };
 
 const ServiceContext = createContext();
@@ -63,7 +71,7 @@ export const ServiceProvider: Component<{
   };
 
   const actions = {
-    async signup(credentials: Credentials) {
+    async signup(credentials: TCredentials) {
       const result = await fetchToken({
         ...credentials,
         ...state.conn,
@@ -71,7 +79,7 @@ export const ServiceProvider: Component<{
       });
       authenticate(result);
     },
-    async signin(credentials: Credentials) {
+    async signin(credentials: TCredentials) {
       const result = await fetchToken({
         ...credentials,
         ...state.conn,
@@ -104,7 +112,7 @@ export const ServiceProvider: Component<{
         setState('profile', profile);
       });
     },
-    async saveProfile(profile: Profile) {
+    async saveProfile(profile: TProfile) {
       const query = `UPDATE ${state.account.id} MERGE ${JSON.stringify(
         profile
       )}`;
@@ -155,11 +163,6 @@ export const ServiceProvider: Component<{
   );
 };
 
-type Service = {
-  actions: Record<string, Function>;
-  state: Record<string, unknown>;
-};
-
-export const useService = () => {
-  return useContext(ServiceContext) as Service;
+export const useService = (): TService => {
+  return useContext(ServiceContext) as TService;
 };

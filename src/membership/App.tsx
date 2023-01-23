@@ -14,7 +14,7 @@ import { Loading } from './Loading';
 
 import styles from './app.css?inline';
 
-const TBD = (props) => {
+const TBD = (props: { title: string }) => {
   return (
     <section>
       <h2>{props.title}</h2>
