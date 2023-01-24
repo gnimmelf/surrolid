@@ -7,6 +7,8 @@ import {
 
 import noTexts from '../locale/no-nb.json';
 
+import { getBrowserLocales } from '../lib/utils';
+
 import theme from '@shoelace-style/shoelace/dist/themes/light.css?inline';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 
@@ -20,11 +22,28 @@ import { Login } from './Login';
 import { Logout } from './Logout';
 import { Profile } from './Profile';
 
+import { Locale } from './Locale';
 import { Loading } from './Loading';
 
 import styles from './app.css?inline';
 
 setBasePath('@shoelace-style/shoelace/dist');
+
+const LOCALES = Object.freeze([
+  {
+    code: 'no',
+    name: 'norsk',
+    dict: noTexts,
+  },
+  {
+    code: 'en',
+    name: 'english',
+    dict: Object.keys(noTexts).reduce(
+      (acc, key) => ({ ...acc, [key]: key }),
+      []
+    ),
+  },
+]);
 
 const TBD = (props: { title: string }) => {
   return (
@@ -51,6 +70,7 @@ const App: Component<{
       <div class="sl-theme-dark">
         <h1>{props.title}</h1>
         <Suspense fallback={<Loading />}>
+          <Locale />
           <Show when={!state.authenticated}>
             <Login title="Login" />
           </Show>
@@ -81,8 +101,10 @@ const App: Component<{
           </Show>
         </Suspense>
       </div>
-      <hr />
-      <pre>{JSON.stringify(state, null, 2)}</pre>
+      <Show when={localStorage.debug}>
+        <hr />
+        <pre>{JSON.stringify(state, null, 2)}</pre>
+      </Show>
     </main>
   );
 };
@@ -95,16 +117,22 @@ const AppWrapper: Component<{
 }> = (props) => {
   // onError((error) => console.warn(`onError: ${error}`));
 
-  const value = createI18nContext({
-    no: noTexts,
-  });
+  const i18nDict = LOCALES.reduce(
+    (acc, { code, dict }) => ({ ...acc, [code]: dict }),
+    {}
+  );
+
+  const i18nLangs = LOCALES.map(({ code, name }) => ({ code, name }));
+
+  console.log({ i18nDict, i18nLangs });
 
   return (
-    <I18nContext.Provider value={value}>
+    <I18nContext.Provider value={createI18nContext(i18nDict)}>
       <ServiceProvider
         namespace={props.namespace}
         database={props.database}
         scope={props.scope}
+        langs={i18nLangs}
       >
         <App title={props.title} />
       </ServiceProvider>

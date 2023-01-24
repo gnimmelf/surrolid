@@ -22,12 +22,11 @@ export const Login: Component<{ title: string }> = (props) => {
   const [error, setError] = createSignal('');
 
   const updateValues = (key: string) => (evt: KeyboardEvent) => {
-    console.log(key, evt.target.value);
     setValues(key, evt.target.value);
   };
 
   const handleSubmit = (method: 'signup' | 'signin'): void => {
-    actions[method](values).catch((err) => {
+    actions[method](values).catch((err: ErrorEvent) => {
       if (err instanceof AuthenticationError) {
         setError(err.message);
       } else {

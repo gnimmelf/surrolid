@@ -27,6 +27,7 @@ export type TProfile = {
 type TService = {
   actions: Record<string, Function>;
   state: {
+    langs: Array<{ code: string; name: string }>;
     authenticated: boolean;
     profile: TProfile;
   };
@@ -38,9 +39,11 @@ export const ServiceProvider: Component<{
   namespace: string;
   database: string;
   scope: string;
+  langs: Array<{ code: string; name: string }>;
   children: JSXElement;
 }> = (props) => {
   const [state, setState] = createStore({
+    langs: props.langs,
     authenticated: false,
     conn: {
       namespace: props.namespace,

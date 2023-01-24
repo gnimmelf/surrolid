@@ -36,7 +36,7 @@ const parseMeta = (
 };
 
 const doFetch = async (urlPath: string, { headers = {}, body = {} } = {}) => {
-  const response = await fetch(`http://localhost:8000/${urlPath}`, {
+  const response = await fetch(`https://data.intergate.io/${urlPath}`, {
     method: 'POST',
     headers: {
       ...headers,

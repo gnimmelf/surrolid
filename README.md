@@ -6,13 +6,13 @@ https://gist.github.com/koakh/fbbc37cde630bedcf57acfd4d6a6956b
 ## Server
 
 ```
-surreal start -u admin -p gnimmelf --log=full file://surrealData.db
+surreal start -u admin -p gnimmelf --log=full file://surrealData.db --bind 0.0.0.0:8055
 ```
 
 ## Sql
 
 ```
-surreal sql --conn http://localhost:8000 -u admin -p gnimmelf --ns intergate  --db test --pretty
+surreal sql --conn http://localhost:8055 -u admin -p gnimmelf --ns intergate  --db test --pretty
 ```
 
 ## Setup

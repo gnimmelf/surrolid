@@ -6,6 +6,7 @@ main.app {
   border-width: 2px;
   max-width: 780px;
   margin: auto;
+  overflow-x: hidden;
   @apply p-1;
 }
 
