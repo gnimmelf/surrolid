@@ -10,10 +10,19 @@ main.app {
   @apply p-1;
 }
 
-sl-input {
-  @apply mb-1;
+.top-bar h1 {
+  text-align: center;
+}
+.top-bar menu {
+  display: flex;
+  justify-content: space-around;
+  column-gap: 10px;
 }
 
 sl-button {
   @apply mr-1;
+}
+
+sl-input {
+  @apply mb-1;
 }

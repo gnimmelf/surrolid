@@ -7,8 +7,6 @@ import {
 
 import noTexts from '../locale/no-nb.json';
 
-import { getBrowserLocales } from '../lib/utils';
-
 import theme from '@shoelace-style/shoelace/dist/themes/light.css?inline';
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
 
@@ -19,11 +17,9 @@ import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
 import { ServiceProvider, useService } from './service';
 
 import { Login } from './Login';
-import { Logout } from './Logout';
-import { Profile } from './Profile';
-
-import { Locale } from './Locale';
 import { Loading } from './Loading';
+import { Profile } from './Profile';
+import { TopBar } from './TopBar';
 
 import styles from './app.css?inline';
 
@@ -62,21 +58,16 @@ const App: Component<{
 
   return (
     <main class="app">
-      <style>
-        {theme}
-        @unocss-placeholder
-        {styles}
-      </style>
-      <div class="sl-theme-dark">
-        <h1>{props.title}</h1>
+      <style data-name="theme">{theme}</style>
+      <style data-name="unocss">@unocss-placeholder</style>
+      <style data-name="custom">{styles}</style>
+      <div>
         <Suspense fallback={<Loading />}>
-          <Locale />
           <Show when={!state.authenticated}>
             <Login title="Login" />
           </Show>
           <Show when={state.authenticated}>
-            <Logout />
-
+            <TopBar title={props.title} />
             <sl-tab-group>
               <sl-tab slot="nav" attr:panel="profile">
                 {t('Profile')}

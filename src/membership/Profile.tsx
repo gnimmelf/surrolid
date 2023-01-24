@@ -1,4 +1,4 @@
-import { Component, createMemo } from 'solid-js';
+import { Component } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 
@@ -7,12 +7,6 @@ import { useService, TProfile } from './service';
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 import '@shoelace-style/shoelace/dist/components/input/input';
-
-const parseInitials = ({ firstName, lastName }) =>
-  [firstName, lastName].reduce((acc, name) => {
-    acc = acc + (name.length ? name[0] : '');
-    return acc;
-  }, '');
 
 const Profile: Component = () => {
   const [t] = useI18n();
@@ -29,12 +23,10 @@ const Profile: Component = () => {
     actions.saveProfile({ ...values });
   };
 
-  const initials = createMemo(() => parseInitials(values));
-
   return (
     <section>
       <h2>{t('Profile')}</h2>
-      <sl-avatar attr:initials={initials()} />
+
       <form onSubmit={handleSubmit}>
         <sl-input
           attr:label={t('First name')}
