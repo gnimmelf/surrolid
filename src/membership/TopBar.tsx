@@ -1,9 +1,5 @@
 import { Component, Show, createMemo } from 'solid-js';
-import {
-  I18nContext,
-  createI18nContext,
-  useI18n,
-} from '@solid-primitives/i18n';
+import { useI18n } from '@solid-primitives/i18n';
 
 import { useService } from './service';
 
@@ -17,6 +13,7 @@ const parseInitials = ({ firstName, lastName }) =>
   }, '');
 
 export const TopBar: Component<{ title: string }> = (props) => {
+  const [t] = useI18n();
   const { state } = useService();
 
   const initials = createMemo(() => parseInitials(state.profile));
@@ -24,13 +21,15 @@ export const TopBar: Component<{ title: string }> = (props) => {
   return (
     <div class="top-bar">
       <menu>
-        <sl-avatar attr:initials={initials()} />
+        <Show when={state.authenticated}>
+          <sl-avatar attr:initials={initials()} />
+        </Show>
         <Locale />
         <Show when={state.authenticated}>
           <Logout />
         </Show>
       </menu>
-      <h1>{props.title}</h1>
+      <h1>{t(props.title)}</h1>
     </div>
   );
 };

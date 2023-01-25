@@ -37,7 +37,7 @@ export const Login: Component<{ title: string }> = (props) => {
 
   return (
     <div>
-      <h2>{props.title}</h2>
+      <h2>{t('Sign in')}</h2>
       <div>
         <sl-input
           attr:label={t('Email')}

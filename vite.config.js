@@ -3,6 +3,7 @@ import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import solidPlugin from 'vite-plugin-solid';
 import UnoCSS from 'unocss/vite';
+import unoPreset from '@unocss/preset-mini'
 import transformerDirectives from '@unocss/transformer-directives';
 
 export default defineConfig({
@@ -17,13 +18,14 @@ export default defineConfig({
     basicSsl(),
     UnoCSS({
       mode: 'shadow-dom',
+      presets: [unoPreset()],
       transformers: [transformerDirectives()],
       rules: [
         ['p-1', { padding: '1rem' }],
         ['mb-1', { 'margin-bottom': '1rem' }],
         ['mr-1', { 'margin-right': '1rem' }],
+        ['mx-auto', { 'margin-right': 'auto', 'margin-left': 'auto' }],
       ],
-      presets: [],
     }),
   ],
   build: {

@@ -1,3 +1,6 @@
+:root {
+}
+
 main.app {
   background-color: var(--sl-color-primary-50);
   border-color: var(--sl-color-primary-200);

@@ -11,5 +11,7 @@
   "First name": "Fornavn",
   "Last name": "Etternavn",
   "Address": "Adresse",
-  "Phone": "Telefonnummer"
+  "Phone": "Telefonnummer",
+  "My membership": "Mitt medlemskap",
+  "Subscription": "Avtale"
 }

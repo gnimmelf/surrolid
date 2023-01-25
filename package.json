@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@unocss/preset-mini": "^0.48.5",
     "@unocss/transformer-directives": "^0.48.4",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "typescript": "^4.6.4",
