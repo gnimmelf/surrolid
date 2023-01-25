@@ -20,12 +20,7 @@ export default defineConfig({
       mode: 'shadow-dom',
       presets: [unoPreset()],
       transformers: [transformerDirectives()],
-      rules: [
-        ['p-1', { padding: '1rem' }],
-        ['mb-1', { 'margin-bottom': '1rem' }],
-        ['mr-1', { 'margin-right': '1rem' }],
-        ['mx-auto', { 'margin-right': 'auto', 'margin-left': 'auto' }],
-      ],
+      rules: [],
     }),
   ],
   build: {

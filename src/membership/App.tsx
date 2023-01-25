@@ -26,7 +26,7 @@ import { TopBar } from './TopBar';
 
 registerIconLibrary('default', {
   resolver: (name) =>
-    `https://cdn.jsdelivr.net/npm/bootstrap-icons@1.0.0/icons/${name}.svg`,
+    `https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/icons/${name}.svg`,
 });
 
 const LOCALES = Object.freeze([
@@ -79,13 +79,15 @@ const App: Component<{
                 {t('Profile')}
               </sl-tab>
               <sl-tab slot="nav" attr:panel="account">
-                <span class="i-mdi:account-key" />
+                <sl-icon attr:name="person-lock" />
                 {t('Account')}
               </sl-tab>
               <sl-tab slot="nav" attr:panel="subscription">
+                <sl-icon attr:name="journal" />
                 {t('Subscription')}
               </sl-tab>
               <sl-tab slot="nav" attr:panel="contact">
+                <sl-icon attr:name="person-hearts" />
                 {t('Contact')}
               </sl-tab>
 
