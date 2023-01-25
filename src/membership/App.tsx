@@ -4,7 +4,8 @@ import {
   createI18nContext,
   useI18n,
 } from '@solid-primitives/i18n';
-import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+
+import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import '@shoelace-style/shoelace/dist/components/tab/tab';
 import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
@@ -23,7 +24,10 @@ import { Loading } from './Loading';
 import { Profile } from './Profile';
 import { TopBar } from './TopBar';
 
-setBasePath('@shoelace-style/shoelace/dist');
+registerIconLibrary('default', {
+  resolver: (name) =>
+    `https://cdn.jsdelivr.net/npm/bootstrap-icons@1.0.0/icons/${name}.svg`,
+});
 
 const LOCALES = Object.freeze([
   {
