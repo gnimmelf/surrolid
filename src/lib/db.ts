@@ -47,7 +47,7 @@ const doFetch = async (urlPath: string, { headers = {}, body = {} } = {}) => {
 
   if (response.status >= 500) {
     throw new ServiceError(
-      `Could not fetch ${response.url}: ${response.status} - ${response.statusText}`
+      `Error fetching ${response.url}: ${response.status} - ${response.statusText}`
     );
   }
   return response;
@@ -84,10 +84,13 @@ export const fetchQuery = async (conn: Connection, query: string) => {
   });
   const payload = await response.json();
   if (!response.ok) {
+    if (response.status === 403) {
+      throw new AuthenticationError(payload.details);
+    }
     throw new RecordError(payload.details);
   }
 
-  const data = payload.map((dataSet) => dataSet.result);
+  const data = payload.map((dataSet: { result: unknown }) => dataSet.result);
 
   console.log({ payload, data });
 

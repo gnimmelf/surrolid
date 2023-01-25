@@ -2,7 +2,7 @@ import { Component } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 
-import { useService, TProfile } from './service';
+import { useService, TProfile } from '../lib/service';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
@@ -14,11 +14,12 @@ const Profile: Component = () => {
 
   const [values, setValues] = createStore(state.profile);
 
-  const updateValues = (key: keyof TProfile) => (evt: Event) => {
-    setValues(key, (evt.target as HTMLInputElement).value);
-  };
+  const updateValues =
+    (key: keyof TProfile) => (evt: DOMEvent<HTMLInputElement>) => {
+      setValues(key, evt.target.value);
+    };
 
-  const handleSubmit = (evt: Event) => {
+  const handleSubmit = (evt: any) => {
     evt.preventDefault();
     actions.saveProfile({ ...values });
   };

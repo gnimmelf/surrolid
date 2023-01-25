@@ -1,9 +1,5 @@
 import { Component, Show, Suspense } from 'solid-js';
-import {
-  I18nContext,
-  createI18nContext,
-  useI18n,
-} from '@solid-primitives/i18n';
+import { useI18n } from '@solid-primitives/i18n';
 
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library';
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
@@ -14,10 +10,10 @@ import '@shoelace-style/shoelace/dist/components/icon/icon';
 import resetStyles from '@unocss/reset/normalize.css';
 import themeStyles from '@shoelace-style/shoelace/dist/themes/light.css?inline';
 
-import noTexts from '../locale/no-nb.json';
 import customStyles from './app.css?inline';
 
-import { ServiceProvider, useService } from './service';
+import { I18nProvider } from '../locale/I18nProvider';
+import { ServiceProvider, useService } from '../lib/service';
 
 import { Login } from './Login';
 import { Loading } from './Loading';
@@ -28,22 +24,6 @@ registerIconLibrary('default', {
   resolver: (name) =>
     `https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/icons/${name}.svg`,
 });
-
-const LOCALES = Object.freeze([
-  {
-    code: 'no',
-    name: 'norsk',
-    dict: noTexts,
-  },
-  {
-    code: 'en',
-    name: 'english',
-    dict: Object.keys(noTexts).reduce(
-      (acc, key) => ({ ...acc, [key]: key }),
-      []
-    ),
-  },
-]);
 
 const TBD = (props: { title: string }) => {
   return (
@@ -111,9 +91,6 @@ const App: Component<{
         <hr />
         <pre>{JSON.stringify(state, null, 2)}</pre>
       </Show>
-      <div class="absolute bottom-5 right-0 left-0 text-center op30 fw300">
-        UnoCss - Styled center & absolute bottom
-      </div>
     </main>
   );
 };
@@ -126,26 +103,16 @@ const AppWrapper: Component<{
 }> = (props) => {
   // onError((error) => console.warn(`onError: ${error}`));
 
-  const i18nDict = LOCALES.reduce(
-    (acc, { code, dict }) => ({ ...acc, [code]: dict }),
-    {}
-  );
-
-  const i18nLangs = LOCALES.map(({ code, name }) => ({ code, name }));
-
-  console.log({ i18nDict, i18nLangs });
-
   return (
-    <I18nContext.Provider value={createI18nContext(i18nDict)}>
+    <I18nProvider>
       <ServiceProvider
         namespace={props.namespace}
         database={props.database}
         scope={props.scope}
-        langs={i18nLangs}
       >
         <App title={props.title} />
       </ServiceProvider>
-    </I18nContext.Provider>
+    </I18nProvider>
   );
 };
 

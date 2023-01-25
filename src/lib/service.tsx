@@ -9,7 +9,7 @@ import {
   on,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { fetchToken, fetchQuery } from '../lib/db';
+import { fetchToken, fetchQuery } from './db';
 
 type TCredentials = {
   email: string;
@@ -39,18 +39,16 @@ export const ServiceProvider: Component<{
   namespace: string;
   database: string;
   scope: string;
-  langs: Array<{ code: string; name: string }>;
   children: JSXElement;
 }> = (props) => {
   const [state, setState] = createStore({
-    langs: props.langs,
     authenticated: false,
     conn: {
       namespace: props.namespace,
       database: props.database,
       scope: props.scope,
       // Getting a value for `accessToken` will kick off authetication
-      token: localStorage.getItem('accessToken') || '',
+      token: localStorage.accessToken || '',
     },
     profile: {
       firstName: '',
@@ -120,7 +118,7 @@ export const ServiceProvider: Component<{
         profile
       )}`;
       console.log({ query });
-      const result = await fetchQuery(state.conn, query);
+      await fetchQuery(state.conn, query);
     },
     async signout() {
       delete localStorage['accessToken'];

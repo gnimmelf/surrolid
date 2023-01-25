@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
-import { useService } from './service';
+import { useService } from '../lib/service';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 

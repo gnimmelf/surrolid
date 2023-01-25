@@ -1,33 +1,62 @@
 import { Component, createMemo, For } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
-import { useService } from './service';
+import { i18nLangs } from '../locale/I18nProvider';
+import { useService } from '../lib/service';
 
 import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
-import { getBrowserLocales } from '../lib/utils';
+import { DOMElement } from 'solid-js/jsx-runtime';
+
+const getBrowserLocales = (options = {}): Array<string> => {
+  const defaultOptions = {
+    languageCodeOnly: false,
+  };
+  const opt = {
+    ...defaultOptions,
+    ...options,
+  };
+  const browserLocales =
+    navigator.languages === undefined
+      ? [navigator.language]
+      : navigator.languages;
+  if (!browserLocales) {
+    return [];
+  }
+  return browserLocales.map((locale) => {
+    const trimmedLocale = locale.trim();
+    return opt.languageCodeOnly ? trimmedLocale.split(/-|_/)[0] : trimmedLocale;
+  });
+};
 
 export const Locale: Component = (props) => {
-  const [t, { locale, dict }] = useI18n();
-  const { state } = useService();
+  const [_t, { locale, dict }] = useI18n();
 
-  const browserLangs = getBrowserLocales({ languageCodeOnly: true });
-  const defaultCode = dict(browserLangs[0] || '') ? browserLangs[0] : 'no';
+  const setLocale = (langCode: string) => {
+    localStorage.langCode = langCode;
+    locale(langCode);
+  };
+
+  let langCode = localStorage.langCode;
+  if (!langCode) {
+    const langCodes = getBrowserLocales({ languageCodeOnly: true });
+    langCode = dict(langCodes[0] || '') ? langCodes[0] : 'no';
+  }
+
+  setLocale(langCode);
 
   const selectedLang = createMemo(() =>
-    state.langs.find(({ code }) => code === locale())
+    i18nLangs.find(({ code }) => code === locale())
   );
-
-  locale(selectedLang()?.code);
 
   return (
     <div>
       <sl-select
         attr:value={selectedLang()?.code}
-        on:sl-change={(evt) => {
-          locale(evt.target.value);
-        }}
+        on:sl-change={(evt: DOMEvent<HTMLSelectElement>) =>
+          setLocale(evt.target.value)
+        }
       >
-        <For each={state.langs}>
+        <For each={i18nLangs}>
           {(item) => <sl-option attr:value={item.code}>{item.name}</sl-option>}
         </For>
       </sl-select>

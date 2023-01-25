@@ -1,11 +1,13 @@
 import { Component, createSignal, Show } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
-import { useService } from './service';
+import { useService } from '../lib/service';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import { AuthenticationError } from '../lib/errors';
 import { createStore } from 'solid-js/store';
+
+type TCredentials = { email: string; pass: string };
 
 const defaultCredentials = {
   email: 'flemming@intergate.io',
@@ -16,14 +18,13 @@ export const Login: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
   const { actions } = useService();
 
-  const [values, setValues] = createStore<{ email: string; pass: string }>(
-    defaultCredentials
-  );
+  const [values, setValues] = createStore<TCredentials>(defaultCredentials);
   const [error, setError] = createSignal('');
 
-  const updateValues = (key: string) => (evt: KeyboardEvent) => {
-    setValues(key, evt.target.value);
-  };
+  const updateValues =
+    (key: keyof TCredentials) => (evt: DOMEvent<HTMLInputElement>) => {
+      setValues(key, evt.target.value);
+    };
 
   const handleSubmit = (method: 'signup' | 'signin'): void => {
     actions[method](values).catch((err: ErrorEvent) => {
