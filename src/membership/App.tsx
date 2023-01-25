@@ -1,4 +1,11 @@
-import { Component, Show, Suspense } from 'solid-js';
+import {
+  Component,
+  createEffect,
+  createSignal,
+  onMount,
+  Show,
+  Suspense,
+} from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library';
@@ -17,8 +24,9 @@ import { ServiceProvider, useService } from '../lib/service';
 
 import { Login } from './Login';
 import { Loading } from './Loading';
-import { Profile } from './Profile';
 import { TopBar } from './TopBar';
+import { Profile } from './Profile';
+import { Account } from './Account';
 
 registerIconLibrary('default', {
   resolver: (name) =>
@@ -39,6 +47,18 @@ const App: Component<{
 }> = (props) => {
   const [t] = useI18n();
   const { state } = useService();
+  const [slTabGroupEl, setSlTabGroupEl] = createSignal<HTMLElement>();
+
+  createEffect(() => {
+    const { activePanel } = localStorage;
+    const el: any = slTabGroupEl();
+    if (activePanel && el) {
+      el.updateComplete.then(() => {
+        console.log(el, el.panels.length);
+        el.show(activePanel);
+      });
+    }
+  });
 
   return (
     <main class="app">
@@ -53,7 +73,12 @@ const App: Component<{
             <Login title="Login" />
           </Show>
           <Show when={state.authenticated}>
-            <sl-tab-group>
+            <sl-tab-group
+              on:sl-tab-show={({ detail }: any) => {
+                localStorage.activePanel = detail.name;
+              }}
+              ref={(el: HTMLElement) => setSlTabGroupEl(el)}
+            >
               <sl-tab slot="nav" attr:panel="profile">
                 <sl-icon attr:name="person" />
                 {t('Profile')}
@@ -75,7 +100,7 @@ const App: Component<{
                 <Profile />
               </sl-tab-panel>
               <sl-tab-panel attr:name="account">
-                <TBD title={t('Account')} />
+                <Account />
               </sl-tab-panel>
               <sl-tab-panel attr:name="subscription">
                 <TBD title={t('Subscription')} />

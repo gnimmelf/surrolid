@@ -11,13 +11,12 @@ import {
 import { createStore } from 'solid-js/store';
 import { fetchToken, fetchQuery } from './db';
 
-type TCredentials = {
+export type TCredentials = {
   email: string;
   pass: string;
 };
 
 export type TProfile = {
-  email: string;
   firstName: string;
   lastName: string;
   phone: string;
@@ -30,6 +29,7 @@ type TService = {
     langs: Array<{ code: string; name: string }>;
     authenticated: boolean;
     profile: TProfile;
+    account: TCredentials;
   };
 };
 
@@ -59,7 +59,6 @@ export const ServiceProvider: Component<{
     account: {
       id: '',
       email: '',
-      pass: '',
     },
   });
 
@@ -121,7 +120,8 @@ export const ServiceProvider: Component<{
       await fetchQuery(state.conn, query);
     },
     async signout() {
-      delete localStorage['accessToken'];
+      delete localStorage.accessToken;
+      delete localStorage.activePanel;
       batch(() => {
         setState('authenticated', false);
         setState('conn', 'token', '');

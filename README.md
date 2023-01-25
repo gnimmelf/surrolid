@@ -1,3 +1,19 @@
+# TODO
+
+## High pri
+
+- [] Account
+
+  - [] Password-change
+  - [] TRansactional emails
+
+- []
+
+## Other
+
+- [] Contact
+- [] Subcription
+
 # SurrealDB
 
 Sombody else's notes:

@@ -8,7 +8,7 @@ import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 import '@shoelace-style/shoelace/dist/components/input/input';
 
-const Profile: Component = () => {
+export const Profile: Component = () => {
   const [t] = useI18n();
   const { state, actions } = useService();
 
@@ -72,5 +72,3 @@ const Profile: Component = () => {
     </section>
   );
 };
-
-export { Profile };

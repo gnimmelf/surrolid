@@ -1,13 +1,11 @@
 import { Component, createSignal, Show } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
-import { useService } from '../lib/service';
+import { TCredentials, useService } from '../lib/service';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import { AuthenticationError } from '../lib/errors';
 import { createStore } from 'solid-js/store';
-
-type TCredentials = { email: string; pass: string };
 
 const defaultCredentials = {
   email: 'flemming@intergate.io',
