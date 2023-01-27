@@ -75,3 +75,6 @@ info for db
 DEFINE TABLE user SCHEMAFULL\n  PERMISSIONS\n    FOR select, update WHERE id = $auth.id,\n    FOR create, delete NONE;\nDEFINE FIELD email ON user TYPE string;\nDEFINE FIELD pass ON user TYPE string;\nDEFINE FIELD firstName ON user TYPE string;\nDEFINE FIELD lastName ON user TYPE string;\nDEFINE FIELD phone ON user TYPE string;\nDEFINE FIELD address ON user TYPE string;\nDEFINE INDEX idx_user ON user COLUMNS email UNIQUE;
 DEFINE SCOPE account\n	SESSION 24h\n	SIGNUP ( CREATE user SET email = $email, pass = crypto::argon2::generate($pass) )\n	SIGNIN ( SELECT * FROM user WHERE email = $email AND crypto::argon2::compare(pass, $pass) )
 info for db
+DEFINE TABLE user SCHEMAFULL\n  PERMISSIONS\n    FOR select, update WHERE id = $auth.id,\n    FOR create, delete NONE;\nDEFINE FIELD email ON user TYPE string;\nDEFINE FIELD pass ON user TYPE string;\nDEFINE FIELD firstName ON user TYPE string;\nDEFINE FIELD lastName ON user TYPE string;\nDEFINE FIELD phone ON user TYPE string;\nDEFINE FIELD address ON user TYPE string;\n\nDEFINE INDEX idx_user ON user COLUMNS email UNIQUE;
+DEFINE SCOPE account\n	SESSION 24h\n	SIGNUP ( CREATE user SET email = $email, pass = crypto::argon2::generate($pass) )\n	SIGNIN ( SELECT * FROM user WHERE email = $email AND crypto::argon2::compare(pass, $pass) )\n;
+select * from user

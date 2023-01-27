@@ -7,8 +7,11 @@ import {
   onCleanup,
   createEffect,
   on,
+  createSignal,
+  createResource,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
+import { Account } from '../membership/Account';
 import { fetchToken, fetchQuery } from './db';
 
 export type TCredentials = {
@@ -33,6 +36,19 @@ type TService = {
   };
 };
 
+const initialState = {
+  profile: {
+    firstName: '',
+    lastName: '',
+    address: '',
+    phone: '',
+  },
+  account: {
+    id: '',
+    email: '',
+  },
+};
+
 const ServiceContext = createContext();
 
 export const ServiceProvider: Component<{
@@ -44,22 +60,13 @@ export const ServiceProvider: Component<{
   const [state, setState] = createStore({
     authenticated: false,
     conn: {
+      token: localStorage.accessToken || '',
       namespace: props.namespace,
       database: props.database,
       scope: props.scope,
-      // Getting a value for `accessToken` will kick off authetication
-      token: localStorage.accessToken || '',
     },
-    profile: {
-      firstName: '',
-      lastName: '',
-      address: '',
-      phone: '',
-    },
-    account: {
-      id: '',
-      email: '',
-    },
+    profile: { ...initialState.profile },
+    account: { ...initialState.account },
   });
 
   const authenticate = ({ token }) => {
@@ -91,8 +98,8 @@ export const ServiceProvider: Component<{
       const result = await fetchQuery(
         state.conn,
         [
-          'select id, email from user',
-          'select firstName, lastName, address, phone from user',
+          'SELECT id, email FROM user',
+          'SELECT firstName, lastName, address, phone FROM user',
         ].join(';')
       );
 
@@ -125,7 +132,28 @@ export const ServiceProvider: Component<{
       batch(() => {
         setState('authenticated', false);
         setState('conn', 'token', '');
+        setState('profile', { ...initialState.profile });
+        setState('account', { ...initialState.account });
       });
+    },
+    async saveAccount(credentials: TCredentials) {
+      const { pass, email } = credentials;
+      const queryStart = `UPDATE ${state.account.id} SET`;
+      let queryParts = [];
+
+      if (email !== state.account.email) {
+        queryParts.push(`email = '${email}'`);
+      }
+
+      if (pass) {
+        queryParts.push(`pass = crypto::argon2::generate('${pass}')`);
+      }
+
+      if (queryParts.length) {
+        const query = `${queryStart} ${queryParts.join(', ')} RETURN NONE`;
+        console.log({ query });
+        await fetchQuery(state.conn, query);
+      }
     },
   };
 
@@ -154,6 +182,11 @@ export const ServiceProvider: Component<{
       }
     )
   );
+
+  // const resources = Object.entries(actions).reduce((acc, [key, action]) => {
+  //   const signal = createSignal();
+  //   acc[key] = (signal) => createResource(signal, action);
+  // }, {});
 
   const service = { state, actions };
 

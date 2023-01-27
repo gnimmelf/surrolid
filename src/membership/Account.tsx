@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Component, createEffect } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 
@@ -11,9 +11,11 @@ export const Account: Component = () => {
   const [t] = useI18n();
   const { state, actions } = useService();
 
-  const [values, setValues] = createStore({
-    email: state.account.email,
-    pass: '',
+  const [values, setValues] = createStore({ email: '', pass: '' });
+
+  createEffect(() => {
+    const { email } = state.account;
+    setValues('email', email);
   });
 
   const updateValues =
@@ -21,14 +23,15 @@ export const Account: Component = () => {
       setValues(key, evt.target.value);
     };
 
-  const handleSubmit = (evt: any) => {
+  const handleSubmit = async (evt: any) => {
     evt.preventDefault();
-    actions.saveProfile({ ...values });
+    actions.saveAccount({ ...values });
+    setValues('pass', '');
   };
 
   return (
     <section>
-      <h2>{t('Profile')}</h2>
+      <h2>{t('Account')}</h2>
 
       <form onSubmit={handleSubmit}>
         <sl-input

@@ -2,12 +2,12 @@
 
 ## High pri
 
+- [] Suspens spinner when fetching
+- [] Check session timeout
 - [] Account
 
-  - [] Password-change
+  - [x] Password-change
   - [] TRansactional emails
-
-- []
 
 ## Other
 
