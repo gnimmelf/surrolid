@@ -31,7 +31,10 @@ export const Login: Component<{ title: string }> = (props) => {
   const [signin, setSignin] = createSignal();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
-    fieldErrors?: Record<string, any>;
+    fieldErrors?: {
+      email?: string[];
+      pass?: string[];
+    };
   }>({});
 
   const [signinData] = createResource(signin, actions.signin);
@@ -40,7 +43,10 @@ export const Login: Component<{ title: string }> = (props) => {
   createEffect(async () => {
     if (signinData.error) {
       setErrors({
-        formErrors: ['Failed signing in'],
+        formErrors: [
+          t('Failed signing in'),
+          t('Did you type your password and email correct?'),
+        ],
       });
     }
   });
@@ -48,7 +54,7 @@ export const Login: Component<{ title: string }> = (props) => {
   createEffect(async () => {
     if (signupData.error) {
       setErrors({
-        formErrors: ['Failed signing up'],
+        formErrors: [t('Failed signing up'), t('Did you already sign up?')],
       });
     }
   });
@@ -58,6 +64,7 @@ export const Login: Component<{ title: string }> = (props) => {
     if (res.success) {
       return res.data;
     } else {
+      // Remember to flatten!
       setErrors(res.error.flatten());
     }
   };
@@ -70,7 +77,7 @@ export const Login: Component<{ title: string }> = (props) => {
   return (
     <div>
       <h2>{t('Sign in')}</h2>
-      <form>
+      <form classList={{ invalid: errors().formErrors }}>
         <sl-input
           attr:type="email"
           attr:label={t('Email')}
@@ -79,22 +86,29 @@ export const Login: Component<{ title: string }> = (props) => {
           attr:required={true}
           attr:value={values.email}
           on:sl-change={updateValues('email')}
-          attr:data-invalid={errors().fieldErrors?.email}
+          attr:data-invalid={
+            !!errors().fieldErrors?.email || errors().formErrors
+          }
         />
 
         <sl-input
           attr:label={t('Password')}
           attr:type="password"
           attr:inputmode="text"
+          attr:password-toggle={true}
           attr:clearable={true}
           attr:required={true}
           attr:value={values.pass}
           on:sl-change={updateValues('pass')}
-          attr:data-invalid={errors().fieldErrors?.pass}
+          attr:data-invalid={
+            !!errors().fieldErrors?.pass || errors().formErrors
+          }
         />
-      </form>
 
-      <Show when={errors().formErrors}>{errors().formErrors?.join(',')}</Show>
+        <Show when={errors().formErrors}>
+          <div class="form-error">{errors().formErrors?.join('. ')}</div>
+        </Show>
+      </form>
 
       <div>
         <sl-button

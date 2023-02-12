@@ -2,7 +2,7 @@
 
 ## High pri
 
-- [] Suspens spinner when fetching
+- [] Suspense spinner when fetching
 - [] Check session timeout
 - [] Account
 
@@ -13,6 +13,11 @@
 
 - [] Contact
 - [] Subcription
+
+## Try
+
+- [] [Material components](https://suid.io/getting-started/installation)
+- [] [Particles](https://github.com/matteobruni/tsparticles/tree/main/components/solid)
 
 # SurrealDB
 

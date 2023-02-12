@@ -34,6 +34,16 @@ sl-tab > sl-icon {
   margin-right: 0.5rem;
 }
 
-form [data-user-invalid]::part(base) {
+form [data-invalid]::part(base) {
   border-color: var(--sl-color-danger-600);
+}
+
+form .form-error {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background-color: var(--sl-color-orange-50);
+  border-color: var(--sl-color-orange-200);
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 2px;
 }
