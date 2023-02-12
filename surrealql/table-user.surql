@@ -3,7 +3,7 @@ DEFINE TABLE user SCHEMAFULL
     FOR select, update WHERE id = $auth.id,
     FOR create, delete NONE;
 DEFINE FIELD email ON user TYPE string ASSERT is::email($value);
-DEFINE FIELD pass ON user TYPE string ASSERT $value != NONE;
+DEFINE FIELD pass ON user TYPE string ASSERT string::length(string::trim($value)) > 3 AND is::alphanum($value);
 DEFINE FIELD firstName ON user TYPE string;
 DEFINE FIELD lastName ON user TYPE string;
 DEFINE FIELD phone ON user TYPE string;

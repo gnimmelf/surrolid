@@ -33,3 +33,7 @@ sl-input {
 sl-tab > sl-icon {
   margin-right: 0.5rem;
 }
+
+form [data-user-invalid]::part(base) {
+  border-color: var(--sl-color-danger-600);
+}

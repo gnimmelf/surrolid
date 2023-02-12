@@ -28,6 +28,7 @@ export type TProfile = {
 
 type TService = {
   actions: Record<string, Function>;
+  resourceCreators: Record<string, Function>;
   state: {
     langs: Array<{ code: string; name: string }>;
     authenticated: boolean;
@@ -182,11 +183,6 @@ export const ServiceProvider: Component<{
       }
     )
   );
-
-  // const resources = Object.entries(actions).reduce((acc, [key, action]) => {
-  //   const signal = createSignal();
-  //   acc[key] = (signal) => createResource(signal, action);
-  // }, {});
 
   const service = { state, actions };
 
