@@ -13,8 +13,10 @@ import '@shoelace-style/shoelace/dist/components/button/button';
 import { TCredentials, useService } from '../lib/service';
 
 const Schema = z.object({
-  email: z.string().email(),
-  pass: z.string().min(3),
+  email: z.string().email('Must be a valid email address'),
+  pass: z
+    .string()
+    .min(3, 'Minimum 3 charcters, must contain both letters and numbers'),
 });
 
 const defaultCredentials = {
@@ -39,6 +41,8 @@ export const Login: Component<{ title: string }> = (props) => {
 
   const [signinData] = createResource(signin, actions.signin);
   const [signupData] = createResource(signup, actions.signup);
+
+  createEffect(() => console.log(values, errors()));
 
   createEffect(async () => {
     if (signinData.error) {
@@ -77,10 +81,10 @@ export const Login: Component<{ title: string }> = (props) => {
   return (
     <div>
       <h2>{t('Sign in')}</h2>
-      <form classList={{ invalid: errors().formErrors }}>
+      <form>
         <sl-input
-          attr:type="email"
           attr:label={t('Email')}
+          attr:type="text"
           attr:inputmode="email"
           attr:clearable={true}
           attr:required={true}
@@ -105,7 +109,7 @@ export const Login: Component<{ title: string }> = (props) => {
           }
         />
 
-        <Show when={errors().formErrors}>
+        <Show when={errors().formErrors?.length}>
           <div class="form-error">{errors().formErrors?.join('. ')}</div>
         </Show>
       </form>

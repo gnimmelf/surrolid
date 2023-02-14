@@ -7,10 +7,12 @@
 - [] Account
 
   - [x] Password-change
-  - [] TRansactional emails
+    - [] Require old pass to update passwd
+  - [] Transactional emails
 
 ## Other
 
+- [] A field-components that shows errors (src/components/Field.tsx) and has a slot / accepts children for form elements
 - [] Contact
 - [] Subcription
 

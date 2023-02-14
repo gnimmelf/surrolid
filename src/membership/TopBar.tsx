@@ -4,7 +4,7 @@ import { useI18n } from '@solid-primitives/i18n';
 import { useService } from '../lib/service';
 
 import { Logout } from './Logout';
-import { Locale } from './Locale';
+import { Locale } from '../components/Locale';
 
 const parseInitials = ({ firstName, lastName }) =>
   [firstName, lastName].reduce((acc, name) => {
