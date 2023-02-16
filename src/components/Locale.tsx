@@ -1,11 +1,9 @@
 import { Component, createMemo, For } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 import { i18nLangs } from '../locale/I18nProvider';
-import { useService } from '../lib/service';
 
 import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
-import { DOMElement } from 'solid-js/jsx-runtime';
 
 const getBrowserLocales = (options = {}): Array<string> => {
   const defaultOptions = {

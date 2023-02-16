@@ -2,7 +2,6 @@ import {
   Component,
   createEffect,
   createSignal,
-  onMount,
   Show,
   Suspense,
 } from 'solid-js';
@@ -14,7 +13,7 @@ import '@shoelace-style/shoelace/dist/components/tab/tab';
 import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
 import '@shoelace-style/shoelace/dist/components/icon/icon';
 
-import resetStyles from '@unocss/reset/normalize.css';
+import resetStyles from '@unocss/reset/normalize.css?inline';
 import themeStyles from '@shoelace-style/shoelace/dist/themes/light.css?inline';
 
 import customStyles from './app.css?inline';

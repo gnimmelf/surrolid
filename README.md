@@ -7,7 +7,7 @@
 - [] Account
 
   - [x] Password-change
-    - [] Require old pass to update passwd
+    - [] Require old pass to change pass
   - [] Transactional emails
 
 ## Other

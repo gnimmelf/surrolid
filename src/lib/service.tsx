@@ -9,6 +9,7 @@ import {
   on,
   createSignal,
   createResource,
+  onMount,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Account } from '../membership/Account';
@@ -61,7 +62,7 @@ export const ServiceProvider: Component<{
   const [state, setState] = createStore({
     authenticated: false,
     conn: {
-      token: localStorage.accessToken || '',
+      token: '',
       namespace: props.namespace,
       database: props.database,
       scope: props.scope,
@@ -70,22 +71,30 @@ export const ServiceProvider: Component<{
     account: { ...initialState.account },
   });
 
-  const authenticate = ({ token }) => {
-    localStorage.setItem('accessToken', token);
-    batch(() => {
-      setState('authenticated', true);
-      setState('conn', 'token', token);
-    });
-  };
-
   const actions = {
+    async setAuthenticated(value: boolean) {
+      if (value === false) {
+        delete localStorage.accessToken;
+        delete localStorage.activePanel;
+        batch(() => {
+          setState('conn', 'token', '');
+          setState('profile', { ...initialState.profile });
+          setState('account', { ...initialState.account });
+          setState('authenticated', false);
+        });
+      } else {
+        setState('authenticated', true);
+        console.log('setting accessToken');
+      }
+    },
     async signup(credentials: TCredentials) {
       const result = await fetchToken({
         ...credentials,
         ...state.conn,
         method: 'signup',
       });
-      authenticate(result);
+      setState('conn', 'token', result.token);
+      localStorage.accessToken = result.token;
     },
     async signin(credentials: TCredentials) {
       const result = await fetchToken({
@@ -93,7 +102,8 @@ export const ServiceProvider: Component<{
         ...state.conn,
         method: 'signin',
       });
-      authenticate(result);
+      setState('conn', 'token', result.token);
+      localStorage.accessToken = result.token;
     },
     async loadUser() {
       const result = await fetchQuery(
@@ -113,11 +123,10 @@ export const ServiceProvider: Component<{
         {}
       );
 
-      console.log({ result, account, profile });
-
       batch(() => {
         setState('account', account);
         setState('profile', profile);
+        setState('authenticated', true);
       });
     },
     async saveProfile(profile: TProfile) {
@@ -126,16 +135,6 @@ export const ServiceProvider: Component<{
       )}`;
       console.log({ query });
       await fetchQuery(state.conn, query);
-    },
-    async signout() {
-      delete localStorage.accessToken;
-      delete localStorage.activePanel;
-      batch(() => {
-        setState('authenticated', false);
-        setState('conn', 'token', '');
-        setState('profile', { ...initialState.profile });
-        setState('account', { ...initialState.account });
-      });
     },
     async saveAccount(credentials: TCredentials) {
       const { pass, email } = credentials;
@@ -158,31 +157,12 @@ export const ServiceProvider: Component<{
     },
   };
 
-  createEffect(
-    // Try loading user data once on authenticated
-    on(
-      () => state.authenticated,
-      (authenticated) => {
-        if (authenticated)
-          try {
-            actions.loadUser();
-          } catch (err) {
-            actions.signout();
-          }
-      }
-    )
-  );
-
-  createEffect(
-    // Kick off authentication once when token is set
-    on(
-      () => state.conn.token,
-      (token) => {
-        console.log({ token });
-        if (token) authenticate({ token });
-      }
-    )
-  );
+  onMount(() => {
+    const token = localStorage.accessToken;
+    if (token) {
+      setState('conn', 'token', token);
+    }
+  });
 
   const service = { state, actions };
 

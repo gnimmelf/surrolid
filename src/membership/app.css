@@ -26,10 +26,6 @@ sl-button {
   margin-right: 1rem;
 }
 
-sl-input {
-  margin-bottom: 1rem;
-}
-
 sl-tab > sl-icon {
   margin-right: 0.5rem;
 }
@@ -46,4 +42,8 @@ form .form-error {
   border-radius: 10px;
   border-style: solid;
   border-width: 2px;
+}
+
+form .field {
+  margin-bottom: 1rem;
 }

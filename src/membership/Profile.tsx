@@ -9,11 +9,13 @@ import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
-import { useService, TProfile } from '../lib/service';
-
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 import '@shoelace-style/shoelace/dist/components/input/input';
+
+import { useService, TProfile } from '../lib/service';
+
+import { Field } from '../components/Field';
 
 const Schema = z.object({
   firstName: z.string().min(2),
@@ -70,46 +72,54 @@ export const Profile: Component = () => {
       <h2>{t('Profile')}</h2>
 
       <form>
-        <sl-input
-          attr:label={t('First name')}
-          attr:inputmode="text"
-          attr:autocapitalize="words"
-          attr:spellcheck={false}
-          attr:clearable={true}
-          attr:required={true}
-          attr:value={values.firstName}
-          on:sl-change={updateValues('firstName')}
-          attr:data-invalid={!!errors().fieldErrors?.firstName}
-        />
-        <sl-input
-          attr:label={t('Last name')}
-          attr:inputmode="text"
-          attr:autocapitalize="words"
-          attr:spellcheck={false}
-          attr:clearable={true}
-          attr:required={true}
-          attr:value={values.lastName}
-          on:sl-change={updateValues('lastName')}
-          attr:data-invalid={!!errors().fieldErrors?.lastName}
-        />
-        <sl-input
-          attr:label={t('Address')}
-          attr:inputmode="text"
-          attr:autocapitalize="words"
-          attr:spellcheck={false}
-          attr:clearable={true}
-          attr:value={values.address}
-          on:sl-change={updateValues('address')}
-          attr:data-invalid={!!errors().fieldErrors?.address}
-        />
-        <sl-input
-          attr:label={t('Phone')}
-          attr:inputmode="numeric"
-          attr:clearable={true}
-          attr:value={values.phone}
-          on:sl-change={updateValues('phone')}
-          attr:data-invalid={!!errors().fieldErrors?.phone}
-        />
+        <Field errors={errors().fieldErrors?.firstName}>
+          <sl-input
+            attr:label={t('First name')}
+            attr:inputmode="text"
+            attr:autocapitalize="words"
+            attr:spellcheck={false}
+            attr:clearable={true}
+            attr:required={true}
+            attr:value={values.firstName}
+            on:sl-change={updateValues('firstName')}
+            attr:data-invalid={!!errors().fieldErrors?.firstName}
+          />
+        </Field>
+        <Field errors={errors().fieldErrors?.lastName}>
+          <sl-input
+            attr:label={t('Last name')}
+            attr:inputmode="text"
+            attr:autocapitalize="words"
+            attr:spellcheck={false}
+            attr:clearable={true}
+            attr:required={true}
+            attr:value={values.lastName}
+            on:sl-change={updateValues('lastName')}
+            attr:data-invalid={!!errors().fieldErrors?.lastName}
+          />
+        </Field>
+        <Field errors={errors().fieldErrors?.address}>
+          <sl-input
+            attr:label={t('Address')}
+            attr:inputmode="text"
+            attr:autocapitalize="words"
+            attr:spellcheck={false}
+            attr:clearable={true}
+            attr:value={values.address}
+            on:sl-change={updateValues('address')}
+            attr:data-invalid={!!errors().fieldErrors?.address}
+          />
+        </Field>
+        <Field errors={errors().fieldErrors?.phone}>
+          <sl-input
+            attr:label={t('Phone')}
+            attr:inputmode="numeric"
+            attr:clearable={true}
+            attr:value={values.phone}
+            on:sl-change={updateValues('phone')}
+            attr:data-invalid={!!errors().fieldErrors?.phone}
+          />
+        </Field>
 
         <Show when={errors().formErrors?.length}>
           <div class="form-error">{errors().formErrors?.join('. ')}</div>
