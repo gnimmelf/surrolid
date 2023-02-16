@@ -3,18 +3,23 @@
 ## High pri
 
 - [] Suspense spinner when fetching
+- [] Form submit: Buttons under form, use type="submit"
 - [] Check session timeout
 - [] Account
 
   - [x] Password-change
+
     - [] Require old pass to change pass
+
   - [] Transactional emails
 
 ## Other
 
-- [] A field-components that shows errors (src/components/Field.tsx) and has a slot / accepts children for form elements
+- [x] A field-component that shows errors (src/components/Field.tsx) and has a slot / accepts children for form elements
 - [] Contact
 - [] Subcription
+- [] Zod => TS, defer types from Zod schemas
+- [] Zod: Extract and import schema-types used more than once, eg `email` and `pass`
 
 ## Try
 

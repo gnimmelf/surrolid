@@ -42,8 +42,6 @@ export const Profile: Component = () => {
 
   const [saveProfile] = createResource(save, actions.saveProfile);
 
-  createEffect(() => console.log(values, errors()));
-
   createEffect(async () => {
     if (saveProfile.error) {
       setErrors({

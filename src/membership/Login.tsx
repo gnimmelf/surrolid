@@ -4,7 +4,6 @@ import {
   createSignal,
   createResource,
   Show,
-  onMount,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
@@ -34,7 +33,6 @@ export const Login: Component<{ title: string }> = (props) => {
   const [values, setValues] = createStore<TCredentials>(defaultCredentials);
   const [signup, setSignup] = createSignal();
   const [signin, setSignin] = createSignal();
-  const [autoLogin, setAutoLogin] = createSignal();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -50,9 +48,9 @@ export const Login: Component<{ title: string }> = (props) => {
   createResource(
     () => state.conn.token,
     (token) => {
-      console.log('Autologin', { token });
       if (token) {
-        return actions.loadUser();
+        console.log('Autologin', { token });
+        actions.loadUser();
       }
     }
   );

@@ -4,15 +4,9 @@ import {
   JSXElement,
   useContext,
   batch,
-  onCleanup,
-  createEffect,
-  on,
-  createSignal,
-  createResource,
   onMount,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { Account } from '../membership/Account';
 import { fetchToken, fetchQuery } from './db';
 
 export type TCredentials = {
@@ -123,6 +117,8 @@ export const ServiceProvider: Component<{
         {}
       );
 
+      console.log('loadUser', { result, account, profile });
+
       batch(() => {
         setState('account', account);
         setState('profile', profile);
@@ -133,7 +129,6 @@ export const ServiceProvider: Component<{
       const query = `UPDATE ${state.account.id} MERGE ${JSON.stringify(
         profile
       )}`;
-      console.log({ query });
       await fetchQuery(state.conn, query);
     },
     async saveAccount(credentials: TCredentials) {
@@ -151,7 +146,6 @@ export const ServiceProvider: Component<{
 
       if (queryParts.length) {
         const query = `${queryStart} ${queryParts.join(', ')} RETURN NONE`;
-        console.log({ query });
         await fetchQuery(state.conn, query);
       }
     },
@@ -160,6 +154,7 @@ export const ServiceProvider: Component<{
   onMount(() => {
     const token = localStorage.accessToken;
     if (token) {
+      console.log('Setting token from localStorage');
       setState('conn', 'token', token);
     }
   });

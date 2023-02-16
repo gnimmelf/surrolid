@@ -47,3 +47,6 @@ form .form-error {
 form .field {
   margin-bottom: 1rem;
 }
+
+form .field > .error {
+}
