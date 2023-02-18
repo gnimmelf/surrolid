@@ -10,15 +10,16 @@ import { z } from 'zod';
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/input/input';
 
-import { useService, TCredentials } from '../lib/service';
-import { Field } from '../components/Field';
+import { useService } from '../lib/service';
+import { Field, Form } from '../components/Field';
+import { email, pass } from '../schema/fields';
 
 const Schema = z.object({
-  email: z.string().email('Must be a valid email address'),
-  pass: z
-    .string()
-    .min(3, 'Minimum 3 charcters, must contain both letters and numbers'),
+  email,
+  pass,
 });
+
+type TSchema = z.infer<typeof Schema>;
 
 export const Account: Component = () => {
   const [t] = useI18n();
@@ -51,7 +52,7 @@ export const Account: Component = () => {
   });
 
   const updateValues =
-    (key: keyof TCredentials) => (evt: DOMEvent<HTMLInputElement>) => {
+    (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
       setValues(key, evt.target.value);
     };
 
@@ -69,7 +70,7 @@ export const Account: Component = () => {
     <section>
       <h2>{t('Account')}</h2>
 
-      <form>
+      <Form onSubmit={() => setSave(validateValues())}>
         <Field errors={errors().fieldErrors?.email}>
           <sl-input
             attr:label={t('Email')}
@@ -93,14 +94,11 @@ export const Account: Component = () => {
             on:sl-change={updateValues('pass')}
           />
         </Field>
-      </form>
 
-      <sl-button
-        attr:variant="primary"
-        onClick={() => setSave(validateValues())}
-      >
-        {t('Save')}
-      </sl-button>
+        <sl-button attr:type="submit" attr:variant="primary">
+          {t('Save')}
+        </sl-button>
+      </Form>
     </section>
   );
 };

@@ -13,16 +13,19 @@ import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 import '@shoelace-style/shoelace/dist/components/input/input';
 
-import { useService, TProfile } from '../lib/service';
+import { useService } from '../lib/service';
 
-import { Field } from '../components/Field';
+import { Field, Form } from '../components/Field';
+import { firstName, lastName, address, phone } from '../schema/fields';
 
 const Schema = z.object({
-  firstName: z.string().min(2),
-  lastName: z.string().min(2),
-  address: z.string().min(3).or(z.literal('')),
-  phone: z.string().min(8).or(z.literal('')),
+  firstName,
+  lastName,
+  address,
+  phone,
 });
+
+type TSchema = z.infer<typeof Schema>;
 
 export const Profile: Component = () => {
   const [t] = useI18n();
@@ -51,7 +54,7 @@ export const Profile: Component = () => {
   });
 
   const updateValues =
-    (key: keyof TProfile) => (evt: DOMEvent<HTMLInputElement>) => {
+    (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
       setValues(key, evt.target.value);
     };
 
@@ -69,7 +72,7 @@ export const Profile: Component = () => {
     <section>
       <h2>{t('Profile')}</h2>
 
-      <form>
+      <Form onSubmit={() => setSave(validateValues())}>
         <Field errors={errors().fieldErrors?.firstName}>
           <sl-input
             attr:label={t('First name')}
@@ -122,14 +125,11 @@ export const Profile: Component = () => {
         <Show when={errors().formErrors?.length}>
           <div class="form-error">{errors().formErrors?.join('. ')}</div>
         </Show>
-      </form>
 
-      <sl-button
-        attr:variant="primary"
-        onClick={() => setSave(validateValues())}
-      >
-        {t('Save')}
-      </sl-button>
+        <sl-button attr:type="submit" attr:variant="primary">
+          {t('Save')}
+        </sl-button>
+      </Form>
     </section>
   );
 };

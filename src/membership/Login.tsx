@@ -10,16 +10,17 @@ import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 import '@shoelace-style/shoelace/dist/components/button/button';
 
-import { TCredentials, useService } from '../lib/service';
+import { useService } from '../lib/service';
 
-import { Field } from '../components/Field';
+import { Field, Form } from '../components/Field';
+import { email, pass } from '../schema/fields';
 
 const Schema = z.object({
-  email: z.string().email('Must be a valid email address'),
-  pass: z
-    .string()
-    .min(3, 'Minimum 3 charcters, must contain both letters and numbers'),
+  email,
+  pass,
 });
+
+type TSchema = z.infer<typeof Schema>;
 
 const defaultCredentials = {
   email: 'flemming@intergate.io',
@@ -30,7 +31,7 @@ export const Login: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
   const { actions, state } = useService();
 
-  const [values, setValues] = createStore<TCredentials>(defaultCredentials);
+  const [values, setValues] = createStore<TSchema>(defaultCredentials);
   const [signup, setSignup] = createSignal();
   const [signin, setSignin] = createSignal();
   const [errors, setErrors] = createSignal<{
@@ -85,14 +86,14 @@ export const Login: Component<{ title: string }> = (props) => {
   };
 
   const updateValues =
-    (key: keyof TCredentials) => (evt: DOMEvent<HTMLInputElement>) => {
+    (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
       setValues(key, evt.target.value);
     };
 
   return (
     <div>
       <h2>{t('Sign in')}</h2>
-      <form>
+      <Form onSubmit={() => setSignin(validateValues())}>
         <Field errors={errors().fieldErrors?.email}>
           <sl-input
             attr:label={t('Email')}
@@ -127,23 +128,20 @@ export const Login: Component<{ title: string }> = (props) => {
         <Show when={errors().formErrors?.length}>
           <div class="form-error">{errors().formErrors?.join('. ')}</div>
         </Show>
-      </form>
 
-      <div>
-        <sl-button
-          onClick={() => setSignup(validateValues())}
-          attr:variant="neutral"
-        >
-          {t('Sign up')}
-        </sl-button>
+        <div>
+          <sl-button
+            onClick={() => setSignup(validateValues())}
+            attr:variant="neutral"
+          >
+            {t('Sign up')}
+          </sl-button>
 
-        <sl-button
-          onClick={() => setSignin(validateValues())}
-          attr:variant="primary"
-        >
-          {t('Sign in')}
-        </sl-button>
-      </div>
+          <sl-button attr:type="submit" attr:variant="primary">
+            {t('Sign in')}
+          </sl-button>
+        </div>
+      </Form>
     </div>
   );
 };

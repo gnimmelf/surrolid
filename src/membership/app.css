@@ -4,7 +4,7 @@
 main.app {
   background-color: var(--sl-color-primary-50);
   border-color: var(--sl-color-primary-200);
-  border-radius: 10px;
+  border-radius: 8px;
   border-style: solid;
   border-width: 2px;
   max-width: 780px;
@@ -45,8 +45,12 @@ form .form-error {
 }
 
 form .field {
-  margin-bottom: 1rem;
+  margin: 0rem 0.2rem 1rem;
 }
 
 form .field > .error {
+  display: flex;
+  column-gap: 0.2rem;
+  padding: 0.5rem 0;
+  color: var(--sl-color-danger-600);
 }

@@ -7,30 +7,9 @@ import {
   onMount,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
+import { TCredentials, TProfile, TService } from '../schema/typings';
+
 import { fetchToken, fetchQuery } from './db';
-
-export type TCredentials = {
-  email: string;
-  pass: string;
-};
-
-export type TProfile = {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  address?: string;
-};
-
-type TService = {
-  actions: Record<string, Function>;
-  resourceCreators: Record<string, Function>;
-  state: {
-    langs: Array<{ code: string; name: string }>;
-    authenticated: boolean;
-    profile: TProfile;
-    account: TCredentials;
-  };
-};
 
 const initialState = {
   profile: {
