@@ -4,6 +4,8 @@ import basicSsl from '@vitejs/plugin-basic-ssl';
 import solidPlugin from 'vite-plugin-solid';
 import UnoCSS from 'unocss/vite';
 import unoPreset from '@unocss/preset-mini'
+import presetTypography from '@unocss/preset-typography'
+
 import transformerDirectives from '@unocss/transformer-directives';
 
 export default defineConfig({
@@ -18,7 +20,7 @@ export default defineConfig({
     basicSsl(),
     UnoCSS({
       mode: 'shadow-dom',
-      presets: [unoPreset()],
+      presets: [unoPreset(), presetTypography()],
       transformers: [transformerDirectives()],
       rules: [],
     }),
