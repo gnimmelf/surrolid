@@ -9,7 +9,7 @@ export const Field: Component<{ children: JSX.Element; errors?: string[] }> = (
       <Show when={props.errors}>
         <div class="error">
           <sl-icon class="icon" attr:name="exclamation-circle" />
-          <span>{props.errors?.join('.')}</span>
+          <span>{props.errors?.join('. ')}</span>
         </div>
       </Show>
     </div>

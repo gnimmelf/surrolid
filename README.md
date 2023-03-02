@@ -2,6 +2,7 @@
 
 ## High pri
 
+- [] Check / sanitize db io for XSS injecton
 - [] Suspense spinner when fetching
 - [] Form submit: Buttons under form, use type="submit"
 - [] Check session timeout
