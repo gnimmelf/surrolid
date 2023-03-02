@@ -1,10 +1,4 @@
-import {
-  Component,
-  createEffect,
-  createSignal,
-  Show,
-  Suspense,
-} from 'solid-js';
+import { Component, createEffect, createSignal, Show } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library';
@@ -66,50 +60,48 @@ const App: Component<{
       <style data-name="unocss">@unocss-placeholder</style>
       <style data-name="custom">{customStyles}</style>
       <div>
-        <Suspense fallback={<Loading />}>
-          <TopBar title={props.title} />
-          <Show when={!state.authenticated}>
-            <Login title="Login" />
-          </Show>
-          <Show when={state.authenticated}>
-            <sl-tab-group
-              on:sl-tab-show={({ detail }: any) => {
-                localStorage.activePanel = detail.name;
-              }}
-              ref={(el: HTMLElement) => setSlTabGroupEl(el)}
-            >
-              <sl-tab slot="nav" attr:panel="profile">
-                <sl-icon attr:name="person" />
-                {t('Profile')}
-              </sl-tab>
-              <sl-tab slot="nav" attr:panel="account">
-                <sl-icon attr:name="person-lock" />
-                {t('Account')}
-              </sl-tab>
-              <sl-tab slot="nav" attr:panel="subscription">
-                <sl-icon attr:name="journal" />
-                {t('Subscription')}
-              </sl-tab>
-              <sl-tab slot="nav" attr:panel="contact">
-                <sl-icon attr:name="person-hearts" />
-                {t('Contact')}
-              </sl-tab>
+        <TopBar title={props.title} />
+        <Show when={!state.authenticated}>
+          <Login title="Login" />
+        </Show>
+        <Show when={state.authenticated}>
+          <sl-tab-group
+            on:sl-tab-show={({ detail }: any) => {
+              localStorage.activePanel = detail.name;
+            }}
+            ref={(el: HTMLElement) => setSlTabGroupEl(el)}
+          >
+            <sl-tab slot="nav" attr:panel="profile">
+              <sl-icon attr:name="person" />
+              {t('Profile')}
+            </sl-tab>
+            <sl-tab slot="nav" attr:panel="account">
+              <sl-icon attr:name="person-lock" />
+              {t('Account')}
+            </sl-tab>
+            <sl-tab slot="nav" attr:panel="subscription">
+              <sl-icon attr:name="journal" />
+              {t('Subscription')}
+            </sl-tab>
+            <sl-tab slot="nav" attr:panel="contact">
+              <sl-icon attr:name="person-hearts" />
+              {t('Contact')}
+            </sl-tab>
 
-              <sl-tab-panel attr:name="profile">
-                <Profile />
-              </sl-tab-panel>
-              <sl-tab-panel attr:name="account">
-                <Account />
-              </sl-tab-panel>
-              <sl-tab-panel attr:name="subscription">
-                <TBD title={t('Subscription')} />
-              </sl-tab-panel>
-              <sl-tab-panel attr:name="contact">
-                <TBD title={t('Contact')} />
-              </sl-tab-panel>
-            </sl-tab-group>
-          </Show>
-        </Suspense>
+            <sl-tab-panel attr:name="profile">
+              <Profile />
+            </sl-tab-panel>
+            <sl-tab-panel attr:name="account">
+              <Account />
+            </sl-tab-panel>
+            <sl-tab-panel attr:name="subscription">
+              <TBD title={t('Subscription')} />
+            </sl-tab-panel>
+            <sl-tab-panel attr:name="contact">
+              <TBD title={t('Contact')} />
+            </sl-tab-panel>
+          </sl-tab-group>
+        </Show>
       </div>
       <Show when={localStorage.debug}>
         <hr />

@@ -16,11 +16,11 @@ import '@shoelace-style/shoelace/dist/components/input/input';
 import { useService } from '../lib/service';
 
 import { Field, Form } from '../components/Field';
-import { firstName, lastName, address, phone } from '../schema/fields';
+import { name, address, phone, validateValues } from '../schema/fields';
 
 const Schema = z.object({
-  firstName,
-  lastName,
+  firstName: name,
+  lastName: name,
   address,
   phone,
 });
@@ -58,21 +58,11 @@ export const Profile: Component = () => {
       setValues(key, evt.target.value);
     };
 
-  const validateValues = () => {
-    const res = Schema.safeParse(values);
-    if (res.success) {
-      return res.data;
-    } else {
-      // Remember to flatten!
-      setErrors(res.error.flatten());
-    }
-  };
-
   return (
     <section>
       <h2>{t('Profile')}</h2>
 
-      <Form onSubmit={() => setSave(validateValues())}>
+      <Form onSubmit={() => setSave(validateValues(Schema, values, setErrors))}>
         <Field errors={errors().fieldErrors?.firstName}>
           <sl-input
             attr:label={t('First name')}
@@ -84,7 +74,7 @@ export const Profile: Component = () => {
             attr:value={values.firstName}
             on:sl-change={updateValues('firstName')}
             attr:data-invalid={!!errors().fieldErrors?.firstName}
-          />
+          ></sl-input>
         </Field>
         <Field errors={errors().fieldErrors?.lastName}>
           <sl-input
@@ -97,7 +87,7 @@ export const Profile: Component = () => {
             attr:value={values.lastName}
             on:sl-change={updateValues('lastName')}
             attr:data-invalid={!!errors().fieldErrors?.lastName}
-          />
+          ></sl-input>
         </Field>
         <Field errors={errors().fieldErrors?.address}>
           <sl-input
@@ -109,17 +99,18 @@ export const Profile: Component = () => {
             attr:value={values.address}
             on:sl-change={updateValues('address')}
             attr:data-invalid={!!errors().fieldErrors?.address}
-          />
+          ></sl-input>
         </Field>
         <Field errors={errors().fieldErrors?.phone}>
           <sl-input
             attr:label={t('Phone')}
             attr:inputmode="numeric"
+            attr:spellcheck={false}
             attr:clearable={true}
             attr:value={values.phone}
             on:sl-change={updateValues('phone')}
             attr:data-invalid={!!errors().fieldErrors?.phone}
-          />
+          ></sl-input>
         </Field>
 
         <Show when={errors().formErrors?.length}>

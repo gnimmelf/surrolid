@@ -12,7 +12,7 @@ import '@shoelace-style/shoelace/dist/components/input/input';
 
 import { useService } from '../lib/service';
 import { Field, Form } from '../components/Field';
-import { email, pass } from '../schema/fields';
+import { email, pass, validateValues } from '../schema/fields';
 
 const Schema = z.object({
   email,
@@ -56,21 +56,11 @@ export const Account: Component = () => {
       setValues(key, evt.target.value);
     };
 
-  const validateValues = () => {
-    const res = Schema.safeParse(values);
-    if (res.success) {
-      return res.data;
-    } else {
-      // Remember to flatten!
-      setErrors(res.error.flatten());
-    }
-  };
-
   return (
     <section>
       <h2>{t('Account')}</h2>
 
-      <Form onSubmit={() => setSave(validateValues())}>
+      <Form onSubmit={() => setSave(validateValues(Schema, values, setErrors))}>
         <Field errors={errors().fieldErrors?.email}>
           <sl-input
             attr:label={t('Email')}
