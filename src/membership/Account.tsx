@@ -7,11 +7,9 @@ import {
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
-import '@shoelace-style/shoelace/dist/components/button/button';
-import '@shoelace-style/shoelace/dist/components/input/input';
 
 import { useService } from '../lib/service';
-import { Field, Form } from '../components/Field';
+import { Input, Form, FetchButton } from '../components/FormControls';
 import { email, pass, validateValues } from '../schema/fields';
 
 const Schema = z.object({
@@ -61,33 +59,37 @@ export const Account: Component = () => {
       <h2>{t('Account')}</h2>
 
       <Form onSubmit={() => setSave(validateValues(Schema, values, setErrors))}>
-        <Field errors={errors().fieldErrors?.email}>
-          <sl-input
-            attr:label={t('Email')}
-            attr:inputmode="text"
-            attr:autocapitalize="words"
-            attr:spellcheck={false}
-            attr:clearable={true}
-            attr:required={true}
-            attr:value={values.email}
-            on:sl-change={updateValues('email')}
-          />
-        </Field>
-        <Field errors={errors().fieldErrors?.pass}>
-          <sl-input
-            attr:label={t('Password')}
-            attr:inputmode="text"
-            attr:clearable={true}
-            attr:type="password"
-            attr:password-toggle={true}
-            attr:value={values.pass}
-            on:sl-change={updateValues('pass')}
-          />
-        </Field>
+        <Input
+          label={t('Email')}
+          inputmode="text"
+          autocapitalize="words"
+          spellcheck={false}
+          clearable={true}
+          required={true}
+          value={values.email}
+          on:sl-change={updateValues('email')}
+          isLoading={saveAccount.loading}
+          errors={errors().fieldErrors?.email}
+        />
+        <Input
+          label={t('Password')}
+          inputmode="text"
+          clearable={true}
+          type="password"
+          password-toggle={true}
+          value={values.pass}
+          on:sl-change={updateValues('pass')}
+          isLoading={saveAccount.loading}
+          errors={errors().fieldErrors?.pass}
+        />
 
-        <sl-button attr:type="submit" attr:variant="primary">
+        <FetchButton
+          type="submit"
+          variant="primary"
+          isLoading={saveAccount.loading}
+        >
           {t('Save')}
-        </sl-button>
+        </FetchButton>
       </Form>
     </section>
   );

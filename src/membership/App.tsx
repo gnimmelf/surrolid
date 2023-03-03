@@ -1,4 +1,10 @@
-import { Component, createEffect, createSignal, Show } from 'solid-js';
+import {
+  Component,
+  createEffect,
+  createSignal,
+  Show,
+  Suspense,
+} from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library';
@@ -61,6 +67,7 @@ const App: Component<{
       <style data-name="custom">{customStyles}</style>
       <div>
         <TopBar title={props.title} />
+
         <Show when={!state.authenticated}>
           <Login title="Login" />
         </Show>

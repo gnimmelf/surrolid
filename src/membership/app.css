@@ -26,6 +26,19 @@ main.app {
   text-align: center;
 }
 
+sl-icon.rotate {
+  animation: turn 1s infinite linear;
+}
+
+@keyframes turn {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
 sl-button {
   margin-right: 1rem;
 }

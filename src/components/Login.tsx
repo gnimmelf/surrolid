@@ -4,18 +4,15 @@ import {
   createSignal,
   createResource,
   Show,
-  Suspense,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
-import '@shoelace-style/shoelace/dist/components/button/button';
 
 import { useService } from '../lib/service';
 
-import { Field, Form } from './Field';
-import { email, pass } from '../schema/fields';
-import { Loading } from './Loading';
+import { Form, Input, FetchButton } from './FormControls';
+import { email, pass, validateValues } from '../schema/fields';
 
 const Schema = z.object({
   email,
@@ -46,19 +43,19 @@ export const Login: Component<{ title: string }> = (props) => {
 
   const [signinData] = createResource(signin, actions.signin);
   const [signupData] = createResource(signup, actions.signup);
-
   const [userData] = createResource(
     // (Auto-)login on change to token
     () => state.conn.token,
     async (token) => {
       if (token) {
-        await new Promise((r) => setTimeout(() => r(actions.loadUser()), 1000));
+        await new Promise((r) => setTimeout(() => r(actions.loadUser()), 3000));
       }
     }
   );
 
   createEffect(async () => {
     if (signinData.error) {
+      console.log({ signinData });
       setErrors({
         formErrors: [
           t('Failed signing in'),
@@ -76,83 +73,65 @@ export const Login: Component<{ title: string }> = (props) => {
     }
   });
 
-  const validateValues = () => {
-    const res = Schema.safeParse(values);
-    if (res.success) {
-      return res.data;
-    } else {
-      // Remember to flatten!
-      setErrors(res.error.flatten());
-    }
-  };
-
-  const suspenseTrigger = () => {
-    signupData();
-    signinData();
-    userData();
-    return '';
-  };
-
   const updateValues =
     (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
       setValues(key, evt.target.value);
     };
 
+  const isLoading = () =>
+    signinData.loading || signupData.loading || userData.loading;
+
   return (
-    <div>
-      <Suspense fallback={<Loading />}>
-        <h2>{t('Sign in')}</h2>
-        <Form onSubmit={() => setSignin(validateValues())}>
-          <Field errors={errors().fieldErrors?.email}>
-            <sl-input
-              attr:label={t('Email')}
-              attr:type="text"
-              attr:inputmode="email"
-              attr:clearable={true}
-              attr:required={true}
-              attr:value={values.email}
-              on:sl-change={updateValues('email')}
-              attr:data-invalid={
-                !!errors().fieldErrors?.email || errors().formErrors
-              }
-            />
-          </Field>
+    <section>
+      <h2>{t('Sign in')}</h2>
+      <Form
+        onSubmit={() => setSignin(validateValues(Schema, values, setErrors))}
+      >
+        <Input
+          label={t('Email')}
+          type="text"
+          inputmode="email"
+          clearable={true}
+          required={true}
+          value={values.email}
+          errors={errors().fieldErrors?.email}
+          data-invalid={!!errors().fieldErrors?.email || errors().formErrors}
+          on:sl-change={updateValues('email')}
+          isLoading={isLoading()}
+        />
 
-          <Field errors={errors().fieldErrors?.pass}>
-            <sl-input
-              attr:label={t('Password')}
-              attr:type="password"
-              attr:inputmode="text"
-              attr:password-toggle={true}
-              attr:clearable={true}
-              attr:required={true}
-              attr:value={values.pass}
-              on:sl-change={updateValues('pass')}
-              attr:data-invalid={
-                !!errors().fieldErrors?.pass || errors().formErrors
-              }
-            />
-          </Field>
+        <Input
+          label={t('Password')}
+          type="password"
+          inputmode="text"
+          password-toggle={true}
+          clearable={true}
+          required={true}
+          value={values.pass}
+          errors={errors().fieldErrors?.pass}
+          on:sl-change={updateValues('pass')}
+          data-invalid={!!errors().fieldErrors?.pass || errors().formErrors}
+          isLoading={isLoading()}
+        />
 
-          <Show when={errors().formErrors?.length}>
-            <div class="form-error">{errors().formErrors?.join('. ')}</div>
-          </Show>
+        <Show when={errors().formErrors?.length}>
+          <div class="form-error">{errors().formErrors?.join('. ')}</div>
+        </Show>
 
-          <div>
-            <sl-button
-              onClick={() => setSignup(validateValues())}
-              attr:variant="neutral"
-            >
-              {t('Sign up')}
-            </sl-button>
+        <div>
+          <FetchButton
+            onClick={() => setSignup(validateValues(Schema, values, setErrors))}
+            isLoading={isLoading()}
+            variant="neutral"
+          >
+            {t('Sign up')}
+          </FetchButton>
 
-            <sl-button attr:type="submit" attr:variant="primary">
-              {t('Sign in')}
-            </sl-button>
-          </div>
-          {suspenseTrigger()}
-        </Form>
-      </Suspense>
-    </div>
+          <FetchButton type="submit" variant="primary" isLoading={isLoading()}>
+            {t('Sign in')}
+          </FetchButton>
+        </div>
+      </Form>
+    </section>
   );
 };

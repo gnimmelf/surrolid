@@ -9,13 +9,9 @@ import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
-import '@shoelace-style/shoelace/dist/components/button/button';
-import '@shoelace-style/shoelace/dist/components/avatar/avatar';
-import '@shoelace-style/shoelace/dist/components/input/input';
-
 import { useService } from '../lib/service';
 
-import { Field, Form } from '../components/Field';
+import { Input, Form, FetchButton } from '../components/FormControls';
 import { name, address, phone, validateValues } from '../schema/fields';
 
 const Schema = z.object({
@@ -63,63 +59,70 @@ export const Profile: Component = () => {
       <h2>{t('Profile')}</h2>
 
       <Form onSubmit={() => setSave(validateValues(Schema, values, setErrors))}>
-        <Field errors={errors().fieldErrors?.firstName}>
-          <sl-input
-            attr:label={t('First name')}
-            attr:inputmode="text"
-            attr:autocapitalize="words"
-            attr:spellcheck={false}
-            attr:clearable={true}
-            attr:required={true}
-            attr:value={values.firstName}
-            on:sl-change={updateValues('firstName')}
-            attr:data-invalid={!!errors().fieldErrors?.firstName}
-          ></sl-input>
-        </Field>
-        <Field errors={errors().fieldErrors?.lastName}>
-          <sl-input
-            attr:label={t('Last name')}
-            attr:inputmode="text"
-            attr:autocapitalize="words"
-            attr:spellcheck={false}
-            attr:clearable={true}
-            attr:required={true}
-            attr:value={values.lastName}
-            on:sl-change={updateValues('lastName')}
-            attr:data-invalid={!!errors().fieldErrors?.lastName}
-          ></sl-input>
-        </Field>
-        <Field errors={errors().fieldErrors?.address}>
-          <sl-input
-            attr:label={t('Address')}
-            attr:inputmode="text"
-            attr:autocapitalize="words"
-            attr:spellcheck={false}
-            attr:clearable={true}
-            attr:value={values.address}
-            on:sl-change={updateValues('address')}
-            attr:data-invalid={!!errors().fieldErrors?.address}
-          ></sl-input>
-        </Field>
-        <Field errors={errors().fieldErrors?.phone}>
-          <sl-input
-            attr:label={t('Phone')}
-            attr:inputmode="numeric"
-            attr:spellcheck={false}
-            attr:clearable={true}
-            attr:value={values.phone}
-            on:sl-change={updateValues('phone')}
-            attr:data-invalid={!!errors().fieldErrors?.phone}
-          ></sl-input>
-        </Field>
+        <Input
+          label={t('First name')}
+          inputmode="text"
+          autocapitalize="words"
+          spellcheck={false}
+          clearable={true}
+          required={true}
+          value={values.firstName}
+          on:sl-change={updateValues('firstName')}
+          data-invalid={!!errors().fieldErrors?.firstName}
+          isLoading={saveProfile.loading}
+          errors={errors().fieldErrors?.firstName}
+        />
+
+        <Input
+          label={t('Last name')}
+          inputmode="text"
+          autocapitalize="words"
+          spellcheck={false}
+          clearable={true}
+          required={true}
+          value={values.lastName}
+          on:sl-change={updateValues('lastName')}
+          data-invalid={!!errors().fieldErrors?.lastName}
+          isLoading={saveProfile.loading}
+          errors={errors().fieldErrors?.lastName}
+        />
+        <Input
+          label={t('Address')}
+          inputmode="text"
+          autocapitalize="words"
+          spellcheck={false}
+          clearable={true}
+          required={false}
+          value={values.address}
+          on:sl-change={updateValues('address')}
+          data-invalid={!!errors().fieldErrors?.address}
+          isLoading={saveProfile.loading}
+          errors={errors().fieldErrors?.address}
+        />
+
+        <Input
+          label={t('Phone')}
+          inputmode="numeric"
+          spellcheck={false}
+          clearable={true}
+          value={values.phone}
+          on:sl-change={updateValues('phone')}
+          data-invalid={!!errors().fieldErrors?.phone}
+          isLoading={saveProfile.loading}
+          errors={errors().fieldErrors?.phone}
+        />
 
         <Show when={errors().formErrors?.length}>
           <div class="form-error">{errors().formErrors?.join('. ')}</div>
         </Show>
 
-        <sl-button attr:type="submit" attr:variant="primary">
+        <FetchButton
+          type="submit"
+          variant="primary"
+          isLoading={saveProfile.loading}
+        >
           {t('Save')}
-        </sl-button>
+        </FetchButton>
       </Form>
     </section>
   );

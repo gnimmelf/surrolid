@@ -1,12 +1,14 @@
 import { Component, Show, createMemo } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
+import '@shoelace-style/shoelace/dist/components/avatar/avatar';
+
 import { useService } from '../lib/service';
 
 import { Logout } from './Logout';
 import { Locale } from '../components/Locale';
 
-const parseInitials = ({ firstName, lastName }) =>
+const parseInitials = ({ firstName, lastName }: any) =>
   [firstName, lastName].reduce((acc, name) => {
     acc = acc + (name.length ? name[0] : '');
     return acc;
