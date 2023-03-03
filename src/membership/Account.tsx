@@ -41,7 +41,7 @@ export const Account: Component = () => {
   createEffect(async () => {
     if (saveAccount.error) {
       setErrors({
-        formErrors: ['Error saving profile'],
+        formErrors: [t('Error saving')],
       });
     }
     if (saveAccount.state === 'ready') {

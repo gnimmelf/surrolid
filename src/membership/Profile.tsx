@@ -44,7 +44,7 @@ export const Profile: Component = () => {
   createEffect(async () => {
     if (saveProfile.error) {
       setErrors({
-        formErrors: ['Error saving profile'],
+        formErrors: ['Error saving'],
       });
     }
   });

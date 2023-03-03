@@ -22,7 +22,6 @@ import { I18nProvider } from '../locale/I18nProvider';
 import { ServiceProvider, useService } from '../lib/service';
 
 import { Login } from '../components/Login';
-import { Loading } from '../components/Loading';
 import { TopBar } from './TopBar';
 import { Profile } from './Profile';
 import { Account } from './Account';
