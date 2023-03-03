@@ -2,22 +2,31 @@ import { Setter } from 'solid-js';
 import { z, ZodSchema } from 'zod';
 
 const reName = new RegExp(/^[\p{L}'][ \p{L}'-]*[\p{L}]$/u);
+const rePhone = new RegExp(/^([\+][1-9]{2})?[ ]?([0-9 ]{8})$/);
+const reStreet = new RegExp(/[ \p{L}\p{N}.,-]{3,60}/);
 
-export const email = z.string().email('Must be a valid email address');
-export const name = z
+export const email = z.string().trim().email('Must be a valid email address');
+export const name = z.string().trim().regex(reName, 'Must be a valid name');
+
+export const pass = z
   .string()
   .trim()
-  .min(2, 'Minimum 2 charcters')
-  .regex(reName, 'Must be a vaild name');
-
-export const pass = z.string().trim().min(3, 'Minimum 3 charcters');
-
-export const address = z.string().trim().min(3).or(z.literal(''));
-export const phone = z
-  .string()
-  .trim()
-  .min(8, 'Minimum 8 charcters')
+  .min(3, 'Minimum 3 charcters')
   .or(z.literal(''));
+
+export const address = z
+  .string()
+  .trim()
+  .regex(reStreet, 'Must be a valid street address')
+  .or(z.literal(''));
+export const phone = z.preprocess(
+  (val: any) => val.split(' ').join(''),
+  z
+    .string()
+    .trim()
+    .regex(rePhone, 'Must be a valid phone number')
+    .or(z.literal(''))
+);
 
 export const validateValues = (
   Schema: ZodSchema,

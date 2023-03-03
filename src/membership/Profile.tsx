@@ -44,7 +44,7 @@ export const Profile: Component = () => {
   createEffect(async () => {
     if (saveProfile.error) {
       setErrors({
-        formErrors: ['Error saving'],
+        formErrors: [t('Error saving')],
       });
     }
   });
@@ -113,7 +113,7 @@ export const Profile: Component = () => {
         />
 
         <Show when={errors().formErrors?.length}>
-          <div class="form-error">{errors().formErrors?.join('. ')}</div>
+          <div class="form-error">{errors().formErrors?.join('. ')}.</div>
         </Show>
 
         <FetchButton

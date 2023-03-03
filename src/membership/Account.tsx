@@ -3,6 +3,7 @@ import {
   createEffect,
   createResource,
   createSignal,
+  Show,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
@@ -82,6 +83,10 @@ export const Account: Component = () => {
           isLoading={saveAccount.loading}
           errors={errors().fieldErrors?.pass}
         />
+
+        <Show when={errors().formErrors?.length}>
+          <div class="form-error">{errors().formErrors?.join('. ')}.</div>
+        </Show>
 
         <FetchButton
           type="submit"

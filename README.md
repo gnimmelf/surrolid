@@ -2,11 +2,12 @@
 
 ## High pri
 
-- [] Check / sanitize db io for XSS injecton
-- [] Suspense spinner when fetching
-- [] Form submit: Buttons under form, use type="submit"
+- [x] Check / sanitize db io for XSS injecton
+- [x] isLoading feedback
+- [x] Form submit: Buttons under form, use type="submit"
+- [] Form: slot for buttons, include `errors.formErros` in Form component
 - [] Check session timeout
-- [] Account
+- [] Account page
 
   - [x] Password-change
 
@@ -14,13 +15,16 @@
 
   - [] Transactional emails
 
+    - [] Reset password email w/ magic link
+    - [] Signup email
+
 ## Other
 
 - [x] A field-component that shows errors (src/components/Field.tsx) and has a slot / accepts children for form elements
 - [] Contact
 - [] Subcription
-- [] Zod => TS, defer types from Zod schemas
-- [] Zod: Extract and import schema-types used more than once, eg `email` and `pass`
+- [x] Zod => TS, defer types from Zod schemas
+- [x] Zod: Extract and import schema-types used more than once, eg `email` and `pass`
 
 ## Try
 
@@ -35,13 +39,13 @@ https://gist.github.com/koakh/fbbc37cde630bedcf57acfd4d6a6956b
 ## Server
 
 ```
-surreal start -u admin -p gnimmelf --log=full file://surrealData.db --bind 0.0.0.0:8055
+surreal start -u admin -p gnimmelf --log=full file://database --bind 0.0.0.0:8055
 ```
 
 ## Sql
 
 ```
-surreal sql --conn http://localhost:8055 -u admin -p gnimmelf --ns intergate  --db test --pretty
+surreal sql --conn http://localhost:8000 -u admin -p gnimmelf --ns intergate  --db test --pretty
 ```
 
 ## Setup

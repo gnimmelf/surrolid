@@ -48,7 +48,7 @@ export const Login: Component<{ title: string }> = (props) => {
     () => state.conn.token,
     async (token) => {
       if (token) {
-        await new Promise((r) => setTimeout(() => r(actions.loadUser()), 3000));
+        await new Promise((r) => setTimeout(() => r(actions.loadUser()), 0));
       }
     }
   );

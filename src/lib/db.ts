@@ -90,9 +90,13 @@ export const fetchQuery = async (conn: Connection, query: string) => {
     throw new RecordError(payload.details);
   }
 
-  const data = payload.map((dataSet: { result: unknown }) => dataSet.result);
-
-  console.log({ payload, data });
+  const data = payload.map((dataSet: { result: unknown }) => {
+    console.log({ dataSet });
+    if (dataSet.status === 'ERR') {
+      throw new RecordError(dataSet.detail);
+    }
+    return dataSet.result;
+  });
 
   return {
     ...parseMeta(response),

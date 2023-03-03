@@ -107,7 +107,7 @@ export const ServiceProvider: Component<{
     async saveProfile(profile: TProfile) {
       const query = `UPDATE ${state.account.id} MERGE ${JSON.stringify(
         profile
-      )}`;
+      )} RETURN NONE`;
       await fetchQuery(state.conn, query);
     },
     async saveAccount(credentials: TCredentials) {

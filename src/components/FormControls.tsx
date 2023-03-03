@@ -15,7 +15,7 @@ export const Input: Component<{
       <Show when={local.errors}>
         <div class="error">
           <sl-icon class="icon" attr:name="exclamation-circle" />
-          <span>{local.errors?.join('. ')}</span>
+          <span>{local.errors?.join('. ')}.</span>
         </div>
       </Show>
     </div>
