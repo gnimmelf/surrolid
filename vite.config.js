@@ -5,6 +5,7 @@ import solidPlugin from 'vite-plugin-solid';
 import UnoCSS from 'unocss/vite';
 import unoPreset from '@unocss/preset-mini'
 import presetTypography from '@unocss/preset-typography'
+import devtools from 'solid-devtools/vite'
 
 import transformerDirectives from '@unocss/transformer-directives';
 
@@ -16,6 +17,7 @@ export default defineConfig({
     port: 8080,
   },
   plugins: [
+    devtools({ locator: true }),
     solidPlugin(),
     basicSsl(),
     UnoCSS({

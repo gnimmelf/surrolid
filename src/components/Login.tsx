@@ -55,7 +55,6 @@ export const Login: Component<{ title: string }> = (props) => {
 
   createEffect(async () => {
     if (signinData.error) {
-      console.log({ signinData });
       setErrors({
         formErrors: [
           t('Failed signing in'),

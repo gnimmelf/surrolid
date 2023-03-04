@@ -5,6 +5,7 @@ export type Connection = {
   database: string;
   scope: string;
   token: string;
+  apibaseurl: string;
 };
 
 export type Auth = {
@@ -35,8 +36,15 @@ const parseMeta = (
   };
 };
 
-const doFetch = async (urlPath: string, { headers = {}, body = {} } = {}) => {
-  const response = await fetch(`https://data.intergate.io/${urlPath}`, {
+const doFetch = async (
+  apibaseurl: string,
+  urlPath: string,
+  { headers = {}, body = {} } = {}
+) => {
+  const url = new URL(`${apibaseurl}/${urlPath}`);
+  url.pathname = url.pathname.replace('//', '/');
+  console.log(url);
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       ...headers,
@@ -54,7 +62,7 @@ const doFetch = async (urlPath: string, { headers = {}, body = {} } = {}) => {
 };
 
 export const fetchToken = async (auth: Auth) => {
-  const response: Response = await doFetch(auth.method, {
+  const response: Response = await doFetch(auth.apibaseurl, auth.method, {
     body: {
       email: auth.email,
       pass: auth.pass,
@@ -74,7 +82,7 @@ export const fetchToken = async (auth: Auth) => {
 };
 
 export const fetchQuery = async (conn: Connection, query: string) => {
-  const response = await doFetch('sql', {
+  const response = await doFetch(conn.apibaseurl, 'sql', {
     headers: {
       NS: conn.namespace,
       DB: conn.database,

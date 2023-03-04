@@ -118,19 +118,21 @@ const App: Component<{
 };
 
 const AppWrapper: Component<{
+  apibaseurl: string;
   title: string;
   namespace: string;
   database: string;
   scope: string;
 }> = (props) => {
   // onError((error) => console.warn(`onError: ${error}`));
-
+  console.log(props);
   return (
     <I18nProvider>
       <ServiceProvider
         namespace={props.namespace}
         database={props.database}
         scope={props.scope}
+        apibaseurl={props.apibaseurl}
       >
         <App title={props.title} />
       </ServiceProvider>

@@ -30,6 +30,7 @@ export const ServiceProvider: Component<{
   namespace: string;
   database: string;
   scope: string;
+  apibaseurl: string;
   children: JSXElement;
 }> = (props) => {
   const [state, setState] = createStore({
@@ -39,6 +40,7 @@ export const ServiceProvider: Component<{
       namespace: props.namespace,
       database: props.database,
       scope: props.scope,
+      apibaseurl: props.apibaseurl,
     },
     profile: { ...initialState.profile },
     account: { ...initialState.account },

@@ -2,10 +2,19 @@
 
 ## High pri
 
+- [] lib/db.ts: Check usage of arguments to surql statements instead of concatenating string-snippets
+
+  - [] Split table user into account + profile
+  - [] ServiceProvider: Plit service into account ("auth") + profile + etc
+
 - [x] Check / sanitize db io for XSS injecton
 - [x] isLoading feedback
 - [x] Form submit: Buttons under form, use type="submit"
 - [] Form: slot for buttons, include `errors.formErros` in Form component
+- [] Form: Success feedback, eg. last updated / saved
+
+  - [] Maybe a db event table => Account history
+
 - [] Check session timeout
 - [] Account page
 
@@ -13,13 +22,14 @@
 
     - [] Require old pass to change pass
 
-  - [] Transactional emails
+- [] Transactional emails
 
-    - [] Reset password email w/ magic link
-    - [] Signup email
+  - [] Reset password email w/ magic link
+  - [] Signup email
 
 ## Other
 
+- [] Payment integrations (stripe/klarna/vipps)
 - [x] A field-component that shows errors (src/components/Field.tsx) and has a slot / accepts children for form elements
 - [] Contact
 - [] Subcription
@@ -45,7 +55,7 @@ surreal start -u admin -p gnimmelf --log=full file://database --bind 0.0.0.0:805
 ## Sql
 
 ```
-surreal sql --conn http://localhost:8000 -u admin -p gnimmelf --ns intergate  --db test --pretty
+surreal sql --conn http://localhost:8055 -u admin -p gnimmelf --ns intergate  --db test --pretty
 ```
 
 ## Setup

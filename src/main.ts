@@ -20,6 +20,7 @@ declare module 'solid-js' {
 customElement(
   'membership-widget',
   {
+    apibaseurl: 'https://localhost:8055/',
     title: 'Membership portal',
     namespace: 'test',
     database: 'test',
