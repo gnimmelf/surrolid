@@ -4,8 +4,12 @@
 
 - [] lib/db.ts: Check usage of arguments to surql statements instead of concatenating string-snippets
 
-  - [] Split table user into account + profile
-  - [] ServiceProvider: Plit service into account ("auth") + profile + etc
+- [] Split table user into account + profile
+
+- [] ServiceProvider
+
+  - [x] Split service into account ("auth") + profile + etc
+  - [] Split Provider store into stores per service; merge in provider
 
 - [x] Check / sanitize db io for XSS injecton
 - [x] isLoading feedback

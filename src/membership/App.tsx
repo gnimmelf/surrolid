@@ -19,7 +19,7 @@ import themeStyles from '@shoelace-style/shoelace/dist/themes/light.css?inline';
 import customStyles from './app.css?inline';
 
 import { I18nProvider } from '../locale/I18nProvider';
-import { ServiceProvider, useService } from '../lib/service';
+import { ServiceProvider, useService } from '../services/ServiceProvider';
 
 import { Login } from '../components/Login';
 import { TopBar } from './TopBar';
@@ -52,7 +52,6 @@ const App: Component<{
     const el: any = slTabGroupEl();
     if (activePanel && el) {
       el.updateComplete.then(() => {
-        console.log(el, el.panels.length);
         el.show(activePanel);
       });
     }
@@ -125,7 +124,7 @@ const AppWrapper: Component<{
   scope: string;
 }> = (props) => {
   // onError((error) => console.warn(`onError: ${error}`));
-  console.log(props);
+  console.log('App', props);
   return (
     <I18nProvider>
       <ServiceProvider

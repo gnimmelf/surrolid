@@ -1,6 +1,6 @@
 import { AuthenticationError, RecordError, ServiceError } from './errors';
 
-export type Connection = {
+export type TConnection = {
   namespace: string;
   database: string;
   scope: string;
@@ -8,11 +8,11 @@ export type Connection = {
   apibaseurl: string;
 };
 
-export type Auth = {
+export type TAuth = {
   method: string;
   email: string;
   pass: string;
-} & Connection;
+};
 
 const parseMeta = (
   response: Response
@@ -43,7 +43,6 @@ const doFetch = async (
 ) => {
   const url = new URL(`${apibaseurl}/${urlPath}`);
   url.pathname = url.pathname.replace('//', '/');
-  console.log(url);
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -61,14 +60,14 @@ const doFetch = async (
   return response;
 };
 
-export const fetchToken = async (auth: Auth) => {
-  const response: Response = await doFetch(auth.apibaseurl, auth.method, {
+export const fetchToken = async (conn: TConnection, auth: TAuth) => {
+  const response: Response = await doFetch(conn.apibaseurl, auth.method, {
     body: {
       email: auth.email,
       pass: auth.pass,
-      ns: auth.namespace,
-      db: auth.database,
-      sc: auth.scope,
+      ns: conn.namespace,
+      db: conn.database,
+      sc: conn.scope,
     },
   });
   const payload = await response.json();
@@ -81,12 +80,13 @@ export const fetchToken = async (auth: Auth) => {
   };
 };
 
-export const fetchQuery = async (conn: Connection, query: string) => {
+export const fetchQuery = async (token, conn: TConnection, query: string) => {
+  console.log('fetchQuery', { token, conn, query });
   const response = await doFetch(conn.apibaseurl, 'sql', {
     headers: {
       NS: conn.namespace,
       DB: conn.database,
-      Authorization: `Bearer ${conn.token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: query,
   });
@@ -99,7 +99,6 @@ export const fetchQuery = async (conn: Connection, query: string) => {
   }
 
   const data = payload.map((dataSet: { result: unknown }) => {
-    console.log({ dataSet });
     if (dataSet.status === 'ERR') {
       throw new RecordError(dataSet.detail);
     }

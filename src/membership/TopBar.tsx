@@ -3,7 +3,7 @@ import { useI18n } from '@solid-primitives/i18n';
 
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
 
-import { useService } from '../lib/service';
+import { useService } from '../services/ServiceProvider';
 
 import { Logout } from './Logout';
 import { Locale } from '../components/Locale';

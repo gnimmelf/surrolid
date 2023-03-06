@@ -9,7 +9,7 @@ import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
-import { useService } from '../lib/service';
+import { useService } from '../services/ServiceProvider';
 
 import { Form, Input, FetchButton } from './FormControls';
 import { email, pass, validateValues } from '../schema/fields';
@@ -28,7 +28,7 @@ const defaultCredentials = {
 
 export const Login: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
-  const { actions, state } = useService();
+  const { auth, account, state } = useService();
 
   const [values, setValues] = createStore<TSchema>(defaultCredentials);
   const [signup, setSignup] = createSignal();
@@ -41,14 +41,14 @@ export const Login: Component<{ title: string }> = (props) => {
     };
   }>({});
 
-  const [signinData] = createResource(signin, actions.signin);
-  const [signupData] = createResource(signup, actions.signup);
+  const [signinData] = createResource(signin, auth.signin);
+  const [signupData] = createResource(signup, auth.signup);
   const [userData] = createResource(
     // (Auto-)login on change to token
-    () => state.conn.token,
+    () => state.token,
     async (token) => {
       if (token) {
-        await new Promise((r) => setTimeout(() => r(actions.loadUser()), 0));
+        await new Promise((r) => setTimeout(() => r(account.load()), 0));
       }
     }
   );

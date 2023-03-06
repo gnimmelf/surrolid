@@ -9,14 +9,3 @@ export type TProfile = {
   phone: string;
   address?: string;
 };
-
-export type TService = {
-  actions: Record<string, Function>;
-  resourceCreators: Record<string, Function>;
-  state: {
-    langs: Array<{ code: string; name: string }>;
-    authenticated: boolean;
-    profile: TProfile;
-    account: TCredentials;
-  };
-};

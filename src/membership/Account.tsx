@@ -9,7 +9,7 @@ import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
-import { useService } from '../lib/service';
+import { useService } from '../services/ServiceProvider';
 import { Input, Form, FetchButton } from '../components/FormControls';
 import { email, pass, validateValues } from '../schema/fields';
 
@@ -22,7 +22,7 @@ type TSchema = z.infer<typeof Schema>;
 
 export const Account: Component = () => {
   const [t] = useI18n();
-  const { state, actions } = useService();
+  const { state, account } = useService();
 
   const [values, setValues] = createStore({
     email: state.account.email,
@@ -37,7 +37,7 @@ export const Account: Component = () => {
     };
   }>({});
 
-  const [saveAccount] = createResource(save, actions.saveAccount);
+  const [saveAccount] = createResource(save, account.saveAccount);
 
   createEffect(async () => {
     if (saveAccount.error) {
