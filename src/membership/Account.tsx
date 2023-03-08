@@ -9,7 +9,7 @@ import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
-import { useService } from '../services/ServiceProvider';
+import { TService, useService } from '../services/ServiceProvider';
 import { Input, Form, FetchButton } from '../components/FormControls';
 import { email, pass, validateValues } from '../schema/fields';
 
@@ -22,12 +22,9 @@ type TSchema = z.infer<typeof Schema>;
 
 export const Account: Component = () => {
   const [t] = useI18n();
-  const { state, account } = useService();
+  const { account } = useService() as TService;
 
-  const [values, setValues] = createStore({
-    email: state.account.email,
-    pass: '',
-  });
+  const [values, setValues] = createStore(account.state);
   const [save, setSave] = createSignal();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
@@ -37,15 +34,15 @@ export const Account: Component = () => {
     };
   }>({});
 
-  const [saveAccount] = createResource(save, account.saveAccount);
+  const [updateAccount] = createResource(save, account.updateDetails);
 
   createEffect(async () => {
-    if (saveAccount.error) {
+    if (updateAccount.error) {
       setErrors({
         formErrors: [t('Error saving')],
       });
     }
-    if (saveAccount.state === 'ready') {
+    if (updateAccount.state === 'ready') {
       setValues('pass', '');
     }
   });
@@ -69,7 +66,7 @@ export const Account: Component = () => {
           required={true}
           value={values.email}
           on:sl-change={updateValues('email')}
-          isLoading={saveAccount.loading}
+          isLoading={updateAccount.loading}
           errors={errors().fieldErrors?.email}
         />
         <Input
@@ -80,7 +77,7 @@ export const Account: Component = () => {
           password-toggle={true}
           value={values.pass}
           on:sl-change={updateValues('pass')}
-          isLoading={saveAccount.loading}
+          isLoading={updateAccount.loading}
           errors={errors().fieldErrors?.pass}
         />
 
@@ -91,7 +88,7 @@ export const Account: Component = () => {
         <FetchButton
           type="submit"
           variant="primary"
-          isLoading={saveAccount.loading}
+          isLoading={updateAccount.loading}
         >
           {t('Save')}
         </FetchButton>

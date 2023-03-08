@@ -1,39 +1,75 @@
-import { batch } from 'solid-js';
+import { batch, createEffect, onMount } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
 import { TCredentials } from '../schema/typings';
 
-const authService = ({ agent, store }: any) => {
-  const { setState, initialState } = store;
+import { fetchToken, fetchQuery } from '../lib/db';
 
-  const storeToken = ({ token }: any) => {
+const initialState = () => ({
+  token: '',
+  userId: '',
+});
+
+const authService = ({ conn }: any) => {
+  const [state, setState] = createStore(initialState());
+
+  const storeToken = ({ token }: { token: string }) => {
     setState('token', token);
+    console.log('Writing token to localStorage:', token);
     localStorage.accessToken = token;
   };
 
+  onMount(() => {
+    const token = localStorage.accessToken;
+    if (token) {
+      console.log('Reading token from localStorage:', token);
+      setState('token', token);
+    }
+  });
+
+  const authenticate = async () => {
+    const { data } = await fetchQuery(
+      conn,
+      'SELECT id FROM user;',
+      state.token
+    );
+    setState('userId', data.id);
+  };
+
+  const authenticated = () => {
+    return !!state.userId;
+  };
+
+  createEffect(() => {
+    if (state.token) {
+      authenticate();
+    }
+  });
+
   return {
+    state,
+    authenticated,
     async signup(credentials: TCredentials) {
-      const result = await agent.fetchToken({
+      const { data } = await fetchToken(conn, {
         ...credentials,
         method: 'signup',
       });
-      storeToken(result);
+      storeToken(data);
     },
     async signin(credentials: TCredentials) {
-      const result = await agent.fetchToken({
+      const { data } = await fetchToken(conn, {
         ...credentials,
         method: 'signin',
       });
-      storeToken(result);
+      storeToken(data);
     },
     async signout() {
       delete localStorage.accessToken;
       delete localStorage.activePanel;
-      batch(() => {
-        setState('authenticated', false);
-        setState('token', '');
-        setState('profile', { ...initialState.profile });
-        setState('account', { ...initialState.account });
-      });
+      setState(initialState());
+    },
+    query: (query: string) => {
+      return fetchQuery(conn, query, state.token);
     },
   };
 };

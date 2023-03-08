@@ -1,56 +1,29 @@
-import { batch } from 'solid-js';
+import { createEffect } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
-import { TCredentials, TProfile } from '../schema/typings';
+import { TProfile } from '../schema/typings';
+import { TService } from './ServiceProvider';
 
-const accountService = ({ agent, store }: any) => {
-  const { state, setState } = store;
+const initialState = () => ({
+  email: '',
+});
+
+const accountService = ({ auth }: TService) => {
+  const [state, setState] = createStore(initialState());
+
   return {
-    async load() {
-      const result = await agent.fetchQuery(
-        [
-          'SELECT id, email FROM user',
-          'SELECT firstName, lastName, address, phone FROM user',
-        ].join(';')
-      );
-
-      const account = Object.entries(result.data[0][0]).reduce(
-        (acc, [k, v]) => ({ ...acc, [k]: v === null ? '' : v }),
-        {}
-      );
-      const profile = Object.entries(result.data[1][0]).reduce(
-        (acc, [k, v]) => ({ ...acc, [k]: v === null ? '' : v }),
-        {}
-      );
-
-      batch(() => {
-        setState('account', account);
-        setState('profile', profile);
-        setState('authenticated', true);
-      });
+    state,
+    async resetState() {
+      setState(initialState());
     },
-    async saveProfile(profile: TProfile) {
-      const query = `UPDATE ${state.account.id} MERGE ${JSON.stringify(
-        profile
-      )} RETURN NONE`;
-      await agent.fetchQuery(query);
+    async loadDetails() {
+      const { data } = await auth.query('SELECT email FROM user;');
+      setState('email', data.email);
     },
-    async saveAccount(credentials: TCredentials) {
-      const { pass, email } = credentials;
-      const queryStart = `UPDATE ${state.account.id} SET`;
-      let queryParts = [];
-
-      if (email !== state.account.email) {
-        queryParts.push(`email = '${email}'`);
-      }
-
-      if (pass) {
-        queryParts.push(`pass = crypto::argon2::generate('${pass}')`);
-      }
-
-      if (queryParts.length) {
-        const query = `${queryStart} ${queryParts.join(', ')} RETURN NONE`;
-        await agent.fetchQuery(query);
-      }
+    async updateDetails(data: TProfile) {
+      await auth.query(
+        `UPDATE ${auth.state.userId} MERGE ${JSON.stringify(data)} RETURN NONE`
+      );
     },
   };
 };

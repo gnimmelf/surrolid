@@ -10,7 +10,7 @@ const Logout: Component = () => {
   const { auth } = useService();
 
   const [signout, setSignout] = createSignal();
-  const [signoutData] = createResource(signout, () => auth.signout());
+  const [signoutData] = createResource(signout, auth.signout);
 
   return (
     <FetchButton

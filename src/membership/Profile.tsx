@@ -9,7 +9,7 @@ import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
-import { useService } from '../services/ServiceProvider';
+import { TService, useService } from '../services/ServiceProvider';
 
 import { Input, Form, FetchButton } from '../components/FormControls';
 import { name, address, phone, validateValues } from '../schema/fields';
@@ -25,9 +25,9 @@ type TSchema = z.infer<typeof Schema>;
 
 export const Profile: Component = () => {
   const [t] = useI18n();
-  const { state, account } = useService();
+  const { profile } = useService() as TService;
 
-  const [values, setValues] = createStore(state.profile);
+  const [values, setValues] = createStore(profile.state);
   const [save, setSave] = createSignal();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
@@ -39,10 +39,10 @@ export const Profile: Component = () => {
     };
   }>({});
 
-  const [saveProfile] = createResource(save, account.saveProfile);
+  const [updateProfile] = createResource(save, profile.updateDetails);
 
   createEffect(async () => {
-    if (saveProfile.error) {
+    if (updateProfile.error) {
       setErrors({
         formErrors: [t('Error saving')],
       });
@@ -69,7 +69,7 @@ export const Profile: Component = () => {
           value={values.firstName}
           on:sl-change={updateValues('firstName')}
           data-invalid={!!errors().fieldErrors?.firstName}
-          isLoading={saveProfile.loading}
+          isLoading={updateProfile.loading}
           errors={errors().fieldErrors?.firstName}
         />
 
@@ -83,7 +83,7 @@ export const Profile: Component = () => {
           value={values.lastName}
           on:sl-change={updateValues('lastName')}
           data-invalid={!!errors().fieldErrors?.lastName}
-          isLoading={saveProfile.loading}
+          isLoading={updateProfile.loading}
           errors={errors().fieldErrors?.lastName}
         />
         <Input
@@ -96,7 +96,7 @@ export const Profile: Component = () => {
           value={values.address}
           on:sl-change={updateValues('address')}
           data-invalid={!!errors().fieldErrors?.address}
-          isLoading={saveProfile.loading}
+          isLoading={updateProfile.loading}
           errors={errors().fieldErrors?.address}
         />
 
@@ -108,7 +108,7 @@ export const Profile: Component = () => {
           value={values.phone}
           on:sl-change={updateValues('phone')}
           data-invalid={!!errors().fieldErrors?.phone}
-          isLoading={saveProfile.loading}
+          isLoading={updateProfile.loading}
           errors={errors().fieldErrors?.phone}
         />
 
@@ -119,7 +119,7 @@ export const Profile: Component = () => {
         <FetchButton
           type="submit"
           variant="primary"
-          isLoading={saveProfile.loading}
+          isLoading={updateProfile.loading}
         >
           {t('Save')}
         </FetchButton>

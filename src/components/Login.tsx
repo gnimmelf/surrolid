@@ -28,7 +28,7 @@ const defaultCredentials = {
 
 export const Login: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
-  const { auth, account, state } = useService();
+  const { auth } = useService();
 
   const [values, setValues] = createStore<TSchema>(defaultCredentials);
   const [signup, setSignup] = createSignal();
@@ -43,15 +43,6 @@ export const Login: Component<{ title: string }> = (props) => {
 
   const [signinData] = createResource(signin, auth.signin);
   const [signupData] = createResource(signup, auth.signup);
-  const [userData] = createResource(
-    // (Auto-)login on change to token
-    () => state.token,
-    async (token) => {
-      if (token) {
-        await new Promise((r) => setTimeout(() => r(account.load()), 0));
-      }
-    }
-  );
 
   createEffect(async () => {
     if (signinData.error) {
@@ -62,9 +53,7 @@ export const Login: Component<{ title: string }> = (props) => {
         ],
       });
     }
-  });
 
-  createEffect(async () => {
     if (signupData.error) {
       setErrors({
         formErrors: [t('Failed signing up'), t('Did you already sign up?')],
@@ -77,8 +66,7 @@ export const Login: Component<{ title: string }> = (props) => {
       setValues(key, evt.target.value);
     };
 
-  const isLoading = () =>
-    signinData.loading || signupData.loading || userData.loading;
+  const isLoading = () => signinData.loading || signupData.loading;
 
   return (
     <section>

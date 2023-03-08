@@ -1,3 +1,4 @@
+import { unWrapQueryData } from '../lib/utils';
 import { AuthenticationError, RecordError, ServiceError } from './errors';
 
 export type TConnection = {
@@ -14,25 +15,22 @@ export type TAuth = {
   pass: string;
 };
 
-const parseMeta = (
-  response: Response
-): {
-  meta: Pick<
-    Response,
-    'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'
-  >;
-} => {
+type TMeta = Pick<
+  Response,
+  'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'
+>;
+
+const parseMeta = (response: Response, extra?: Record<string, any>): TMeta => {
   const { headers, ok, redirected, status, statusText, type, url } = response;
   return {
-    meta: {
-      headers,
-      ok,
-      redirected,
-      status,
-      statusText,
-      type,
-      url,
-    },
+    headers,
+    ok,
+    redirected,
+    status,
+    statusText,
+    type,
+    url,
+    ...extra,
   };
 };
 
@@ -75,13 +73,16 @@ export const fetchToken = async (conn: TConnection, auth: TAuth) => {
     throw new AuthenticationError(payload.details);
   }
   return {
-    ...parseMeta(response),
-    ...payload,
+    meta: parseMeta(response),
+    data: payload,
   };
 };
 
-export const fetchQuery = async (token, conn: TConnection, query: string) => {
-  console.log('fetchQuery', { token, conn, query });
+export const fetchQuery = async (
+  conn: TConnection,
+  query: string,
+  token?: string
+) => {
   const response = await doFetch(conn.apibaseurl, 'sql', {
     headers: {
       NS: conn.namespace,
@@ -106,7 +107,7 @@ export const fetchQuery = async (token, conn: TConnection, query: string) => {
   });
 
   return {
-    ...parseMeta(response),
-    data: data.length === 1 ? data[0] : data,
+    meta: parseMeta(response, { query }),
+    data: unWrapQueryData(data),
   };
 };

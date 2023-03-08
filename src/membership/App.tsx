@@ -2,6 +2,7 @@ import {
   Component,
   createEffect,
   createSignal,
+  onError,
   Show,
   Suspense,
 } from 'solid-js';
@@ -19,7 +20,11 @@ import themeStyles from '@shoelace-style/shoelace/dist/themes/light.css?inline';
 import customStyles from './app.css?inline';
 
 import { I18nProvider } from '../locale/I18nProvider';
-import { ServiceProvider, useService } from '../services/ServiceProvider';
+import {
+  ServiceProvider,
+  TService,
+  useService,
+} from '../services/ServiceProvider';
 
 import { Login } from '../components/Login';
 import { TopBar } from './TopBar';
@@ -44,7 +49,7 @@ const App: Component<{
   title: string;
 }> = (props) => {
   const [t] = useI18n();
-  const { state } = useService();
+  const { auth, account, profile } = useService() as TService;
   const [slTabGroupEl, setSlTabGroupEl] = createSignal<HTMLElement>();
 
   createEffect(() => {
@@ -57,6 +62,14 @@ const App: Component<{
     }
   });
 
+  createEffect(() =>
+    console.log('New state:', {
+      auth: auth.state,
+      account: account.state,
+      profile: profile.state,
+    })
+  );
+
   return (
     <main class="app">
       <style data-name="reset">{resetStyles}</style>
@@ -66,20 +79,16 @@ const App: Component<{
       <div>
         <TopBar title={props.title} />
 
-        <Show when={!state.authenticated}>
+        <Show when={!auth.authenticated()}>
           <Login title="Login" />
         </Show>
-        <Show when={state.authenticated}>
+        <Show when={auth.authenticated()}>
           <sl-tab-group
             on:sl-tab-show={({ detail }: any) => {
               localStorage.activePanel = detail.name;
             }}
             ref={(el: HTMLElement) => setSlTabGroupEl(el)}
           >
-            <sl-tab slot="nav" attr:panel="profile">
-              <sl-icon attr:name="person" />
-              {t('Profile')}
-            </sl-tab>
             <sl-tab slot="nav" attr:panel="account">
               <sl-icon attr:name="person-lock" />
               {t('Account')}
@@ -93,11 +102,9 @@ const App: Component<{
               {t('Contact')}
             </sl-tab>
 
-            <sl-tab-panel attr:name="profile">
-              <Profile />
-            </sl-tab-panel>
             <sl-tab-panel attr:name="account">
               <Account />
+              <Profile />
             </sl-tab-panel>
             <sl-tab-panel attr:name="subscription">
               <TBD title={t('Subscription')} />
@@ -108,10 +115,6 @@ const App: Component<{
           </sl-tab-group>
         </Show>
       </div>
-      <Show when={localStorage.debug}>
-        <hr />
-        <pre>{JSON.stringify(state, null, 2)}</pre>
-      </Show>
     </main>
   );
 };
@@ -123,8 +126,10 @@ const AppWrapper: Component<{
   database: string;
   scope: string;
 }> = (props) => {
-  // onError((error) => console.warn(`onError: ${error}`));
   console.log('App', props);
+
+  // onError((error) => console.error(`onError: ${error}`));
+
   return (
     <I18nProvider>
       <ServiceProvider

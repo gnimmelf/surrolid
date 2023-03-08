@@ -1,31 +1,22 @@
 import {
   Component,
   createContext,
+  createEffect,
   JSXElement,
   useContext,
-  batch,
-  onMount,
 } from 'solid-js';
-import { createStore } from 'solid-js/store';
 
-import agentService from '../services/agent';
-import authService from '../services/auth';
+import authService from './auth';
 import accountService from './account';
+import profileService from './profile';
 
-const initialState = {
-  profile: {
-    firstName: '',
-    lastName: '',
-    address: '',
-    phone: '',
-  },
-  account: {
-    id: '',
-    email: '',
-  },
+export type TService = {
+  auth: typeof authService;
+  account: typeof accountService;
+  profile: typeof profileService;
 };
 
-const ServiceContext = createContext();
+const ServiceContext = createContext<TService>();
 
 export const ServiceProvider: Component<{
   namespace: string;
@@ -34,21 +25,7 @@ export const ServiceProvider: Component<{
   apibaseurl: string;
   children: JSXElement;
 }> = (props) => {
-  const [state, setState] = createStore({
-    authenticated: false,
-    token: '',
-    profile: { ...initialState.profile },
-    account: { ...initialState.account },
-  });
-
-  const store = {
-    state,
-    setState,
-    initialState,
-  };
-
-  const agent = agentService({
-    store,
+  const auth = authService({
     conn: {
       namespace: props.namespace,
       database: props.database,
@@ -56,19 +33,20 @@ export const ServiceProvider: Component<{
       apibaseurl: props.apibaseurl,
     },
   });
+  const account = accountService({ auth });
+  const profile = profileService({ auth });
 
-  const auth = authService({ agent, store });
-  const account = accountService({ agent, store });
+  const service = { auth, account, profile };
 
-  onMount(() => {
-    const token = localStorage.accessToken;
-    if (token) {
-      console.log('Setting token from localStorage:', token);
-      setState('token', token);
+  createEffect(() => {
+    if (!auth.authenticated()) {
+      account.resetState();
+      profile.resetState();
+    } else {
+      account.loadDetails();
+      profile.loadDetails();
     }
   });
-
-  const service = { state, auth, account };
 
   return (
     <ServiceContext.Provider value={service}>

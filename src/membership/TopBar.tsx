@@ -1,4 +1,4 @@
-import { Component, Show, createMemo } from 'solid-js';
+import { Component, Show, createMemo, createEffect } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
 import '@shoelace-style/shoelace/dist/components/avatar/avatar';
@@ -16,18 +16,18 @@ const parseInitials = ({ firstName, lastName }: any) =>
 
 export const TopBar: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
-  const { state } = useService();
+  const { profile, auth } = useService();
 
-  const initials = createMemo(() => parseInitials(state.profile));
+  const initials = createMemo(() => parseInitials(profile.state));
 
   return (
     <div class="top-bar">
       <menu>
-        <Show when={state.authenticated}>
+        <Show when={auth.authenticated()}>
           <sl-avatar attr:initials={initials()} />
         </Show>
         <Locale />
-        <Show when={state.authenticated}>
+        <Show when={auth.authenticated()}>
           <Logout />
         </Show>
       </menu>
