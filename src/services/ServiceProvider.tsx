@@ -42,9 +42,6 @@ export const ServiceProvider: Component<{
     if (!auth.authenticated()) {
       account.resetState();
       profile.resetState();
-    } else {
-      account.loadDetails();
-      profile.loadDetails();
     }
   });
 

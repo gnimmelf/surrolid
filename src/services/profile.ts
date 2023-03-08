@@ -24,12 +24,11 @@ const profileService = ({ auth }: TService) => {
       );
       setState(data);
     },
-    async updateDetails(profile: TProfile) {
+    async updateDetails(data: TProfile) {
       await auth.query(
-        `UPDATE ${auth.state.userId} MERGE ${JSON.stringify(
-          profile
-        )} RETURN NONE`
+        `UPDATE ${auth.state.userId} MERGE ${JSON.stringify(data)} RETURN NONE`
       );
+      setState(data);
     },
   };
 };

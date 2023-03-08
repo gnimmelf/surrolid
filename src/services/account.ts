@@ -24,6 +24,7 @@ const accountService = ({ auth }: TService) => {
       await auth.query(
         `UPDATE ${auth.state.userId} MERGE ${JSON.stringify(data)} RETURN NONE`
       );
+      setState(data);
     },
   };
 };

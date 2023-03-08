@@ -106,8 +106,14 @@ export const fetchQuery = async (
     return dataSet.result;
   });
 
-  return {
-    meta: parseMeta(response, { query }),
-    data: unWrapQueryData(data),
-  };
+  console.log('Awaiting', query);
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      console.log('Resovled', query);
+      resolve({
+        meta: parseMeta(response, { query }),
+        data: unWrapQueryData(data),
+      });
+    }, 2000)
+  );
 };

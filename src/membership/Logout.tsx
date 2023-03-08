@@ -14,7 +14,7 @@ const Logout: Component = () => {
 
   return (
     <FetchButton
-      isLoading={signoutData.loading}
+      isSubmiting={signoutData.loading}
       onClick={() => setSignout(true)}
       variant="primary"
     >

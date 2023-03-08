@@ -30,6 +30,7 @@ import { Login } from '../components/Login';
 import { TopBar } from './TopBar';
 import { Profile } from './Profile';
 import { Account } from './Account';
+import { Loading } from '../components/Loading';
 
 registerIconLibrary('default', {
   resolver: (name) =>
@@ -49,7 +50,7 @@ const App: Component<{
   title: string;
 }> = (props) => {
   const [t] = useI18n();
-  const { auth, account, profile } = useService() as TService;
+  const { auth } = useService() as TService;
   const [slTabGroupEl, setSlTabGroupEl] = createSignal<HTMLElement>();
 
   createEffect(() => {
@@ -61,14 +62,6 @@ const App: Component<{
       });
     }
   });
-
-  createEffect(() =>
-    console.log('New state:', {
-      auth: auth.state,
-      account: account.state,
-      profile: profile.state,
-    })
-  );
 
   return (
     <main class="app">
@@ -126,9 +119,7 @@ const AppWrapper: Component<{
   database: string;
   scope: string;
 }> = (props) => {
-  console.log('App', props);
-
-  // onError((error) => console.error(`onError: ${error}`));
+  onError((error) => console.error(`onError: ${error}`));
 
   return (
     <I18nProvider>

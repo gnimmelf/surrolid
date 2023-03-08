@@ -5,13 +5,13 @@ import '@shoelace-style/shoelace/dist/components/input/input';
 
 export const Input: Component<{
   errors?: string[];
-  isLoading: boolean;
+  isSubmiting: boolean;
   [x: string]: unknown;
 }> = (props) => {
-  const [local, rest] = splitProps(props, ['isLoading', 'errors']);
+  const [local, rest] = splitProps(props, ['isSubmiting', 'errors']);
   return (
     <div class="field">
-      <sl-input {...rest} disabled={local.isLoading}></sl-input>
+      <sl-input {...rest} disabled={local.isSubmiting}></sl-input>
       <Show when={local.errors}>
         <div class="error">
           <sl-icon class="icon" attr:name="exclamation-circle" />
@@ -33,14 +33,14 @@ export const Form: Component<{ children: JSX.Element; onSubmit: Function }> = (
 };
 
 export const FetchButton: Component<{
-  isLoading: boolean;
+  isSubmiting: boolean;
   children: JSX.Element;
   [x: string]: unknown;
 }> = (props) => {
-  const [local, rest] = splitProps(props, ['isLoading', 'children']);
+  const [local, rest] = splitProps(props, ['isSubmiting', 'children']);
   return (
-    <sl-button {...rest} disabled={local.isLoading}>
-      <Show when={local.isLoading}>
+    <sl-button {...rest} disabled={local.isSubmiting}>
+      <Show when={local.isSubmiting}>
         <sl-icon class="rotate" slot="suffix" name="arrow-repeat"></sl-icon>
       </Show>
       {local.children}
