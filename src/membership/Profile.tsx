@@ -42,21 +42,21 @@ export const Profile: Component = () => {
     };
   }>({});
 
-  const [loader] = createResource(auth.authenticated(), async () => {
+  const [loadDetails] = createResource(auth.authenticated(), async () => {
     await profile.loadDetails();
     setValues(profile.state);
   });
-  const [updater] = createResource(onSave, profile.updateDetails);
+  const [updateDetails] = createResource(onSave, profile.updateDetails);
 
   createEffect(async () => {
-    if (updater.error) {
+    if (updateDetails.error) {
       setErrors({
         formErrors: [t('Error saving')],
       });
     }
   });
 
-  const updateValues =
+  const updateValue =
     (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
       setValues(key, evt.target.value);
     };
@@ -65,7 +65,7 @@ export const Profile: Component = () => {
     <section>
       <h2>{t('Profile')}</h2>
       <Suspense fallback={<Loading />}>
-        {noop(loader())}
+        {noop(loadDetails())}
         <Form
           onSubmit={() => doSave(validateValues(Schema, values, setErrors))}
         >
@@ -77,9 +77,9 @@ export const Profile: Component = () => {
             clearable={true}
             required={true}
             value={values.firstName}
-            on:sl-change={updateValues('firstName')}
+            on:sl-change={updateValue('firstName')}
             data-invalid={!!errors().fieldErrors?.firstName}
-            isSubmiting={updater.loading}
+            isSubmiting={updateDetails.loading}
             errors={errors().fieldErrors?.firstName}
           />
 
@@ -91,9 +91,9 @@ export const Profile: Component = () => {
             clearable={true}
             required={true}
             value={values.lastName}
-            on:sl-change={updateValues('lastName')}
+            on:sl-change={updateValue('lastName')}
             data-invalid={!!errors().fieldErrors?.lastName}
-            isSubmiting={updater.loading}
+            isSubmiting={updateDetails.loading}
             errors={errors().fieldErrors?.lastName}
           />
           <Input
@@ -104,9 +104,9 @@ export const Profile: Component = () => {
             clearable={true}
             required={false}
             value={values.address}
-            on:sl-change={updateValues('address')}
+            on:sl-change={updateValue('address')}
             data-invalid={!!errors().fieldErrors?.address}
-            isSubmiting={updater.loading}
+            isSubmiting={updateDetails.loading}
             errors={errors().fieldErrors?.address}
           />
 
@@ -116,9 +116,9 @@ export const Profile: Component = () => {
             spellcheck={false}
             clearable={true}
             value={values.phone}
-            on:sl-change={updateValues('phone')}
+            on:sl-change={updateValue('phone')}
             data-invalid={!!errors().fieldErrors?.phone}
-            isSubmiting={updater.loading}
+            isSubmiting={updateDetails.loading}
             errors={errors().fieldErrors?.phone}
           />
 
@@ -129,7 +129,7 @@ export const Profile: Component = () => {
           <FetchButton
             type="submit"
             variant="primary"
-            isSubmiting={updater.loading}
+            isSubmiting={updateDetails.loading}
           >
             {t('Save')}
           </FetchButton>

@@ -40,24 +40,24 @@ export const Account: Component = () => {
     };
   }>({});
 
-  const [loader] = createResource(auth.authenticated(), async () => {
+  const [loadDetails] = createResource(auth.authenticated(), async () => {
     await account.loadDetails();
     setValues(account.state);
   });
-  const [updater] = createResource(onSave, account.updateDetails);
+  const [updateDetails] = createResource(onSave, account.updateDetails);
 
   createEffect(async () => {
-    if (updater.error) {
+    if (updateDetails.error) {
       setErrors({
         formErrors: [t('Error saving')],
       });
     }
-    if (updater.state === 'ready') {
+    if (updateDetails.state === 'ready') {
       setValues('pass', '');
     }
   });
 
-  const updateValues =
+  const updateValue =
     (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
       setValues(key, evt.target.value);
     };
@@ -66,7 +66,7 @@ export const Account: Component = () => {
     <section>
       <h2>{t('Account')}</h2>
       <Suspense fallback={<Loading />}>
-        {noop(loader())}
+        {noop(loadDetails())}
         <Form
           onSubmit={() => doSave(validateValues(Schema, values, setErrors))}
         >
@@ -78,8 +78,8 @@ export const Account: Component = () => {
             clearable={true}
             required={true}
             value={values.email}
-            on:sl-change={updateValues('email')}
-            isSubmiting={updater.loading}
+            on:sl-change={updateValue('email')}
+            isSubmiting={updateDetails.loading}
             errors={errors().fieldErrors?.email}
           />
           <Input
@@ -89,8 +89,8 @@ export const Account: Component = () => {
             type="password"
             password-toggle={true}
             value={values.pass}
-            on:sl-change={updateValues('pass')}
-            isSubmiting={updater.loading}
+            on:sl-change={updateValue('pass')}
+            isSubmiting={updateDetails.loading}
             errors={errors().fieldErrors?.pass}
           />
 
@@ -101,7 +101,7 @@ export const Account: Component = () => {
           <FetchButton
             type="submit"
             variant="primary"
-            isSubmiting={updater.loading}
+            isSubmiting={updateDetails.loading}
           >
             {t('Save')}
           </FetchButton>

@@ -44,12 +44,15 @@ export const Login: Component<{ title: string }> = (props) => {
     };
   }>({});
 
-  const [signinData] = createResource(onSignin, auth.signin);
-  const [signupData] = createResource(onSignup, auth.signup);
-  const [loader] = createResource(() => !!auth.state.token, auth.loadDetails);
+  const [signin] = createResource(onSignin, auth.signin);
+  const [signup] = createResource(onSignup, auth.signup);
+  const [loadDetails] = createResource(
+    () => !!auth.state.token,
+    auth.loadDetails
+  );
 
   createEffect(async () => {
-    if (signinData.error) {
+    if (signin.error) {
       setErrors({
         formErrors: [
           t('Failed signing in'),
@@ -58,25 +61,25 @@ export const Login: Component<{ title: string }> = (props) => {
       });
     }
 
-    if (signupData.error) {
+    if (signup.error) {
       setErrors({
         formErrors: [t('Failed signing up'), t('Did you already sign up?')],
       });
     }
   });
 
-  const updateValues =
+  const updateValue =
     (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
       setValues(key, evt.target.value);
     };
 
-  const isSubmiting = () => signinData.loading || signupData.loading;
+  const isSubmiting = () => signin.loading || signup.loading;
 
   return (
     <section>
       <h2>{t('Sign in')}</h2>
       <Suspense fallback={<Loading />}>
-        {noop(loader())}
+        {noop(loadDetails())}
         <Form
           onSubmit={() => doSignin(validateValues(Schema, values, setErrors))}
         >
@@ -89,7 +92,7 @@ export const Login: Component<{ title: string }> = (props) => {
             value={values.email}
             errors={errors().fieldErrors?.email}
             data-invalid={!!errors().fieldErrors?.email || errors().formErrors}
-            on:sl-change={updateValues('email')}
+            on:sl-change={updateValue('email')}
             isSubmiting={isSubmiting()}
           />
 
@@ -102,7 +105,7 @@ export const Login: Component<{ title: string }> = (props) => {
             required={true}
             value={values.pass}
             errors={errors().fieldErrors?.pass}
-            on:sl-change={updateValues('pass')}
+            on:sl-change={updateValue('pass')}
             data-invalid={!!errors().fieldErrors?.pass || errors().formErrors}
             isSubmiting={isSubmiting()}
           />
