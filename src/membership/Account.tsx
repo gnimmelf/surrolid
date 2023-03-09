@@ -28,7 +28,10 @@ export const Account: Component = () => {
   const { auth, account } = useService();
 
   const [onSave, doSave] = createSignal<TSchema>();
-  const [values, setValues] = createStore(account.state);
+  const [values, setValues] = createStore<TSchema>({
+    email: account.state.email,
+    pass: '',
+  });
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -37,7 +40,10 @@ export const Account: Component = () => {
     };
   }>({});
 
-  const [loader] = createResource(auth.authenticated(), account.loadDetails);
+  const [loader] = createResource(auth.authenticated(), async () => {
+    await account.loadDetails();
+    setValues(account.state);
+  });
   const [updater] = createResource(onSave, account.updateDetails);
 
   createEffect(async () => {

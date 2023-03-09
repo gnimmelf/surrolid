@@ -31,7 +31,7 @@ export const Profile: Component = () => {
   const { auth, profile } = useService();
 
   const [onSave, doSave] = createSignal<TSchema>();
-  const [values, setValues] = createStore(profile.state);
+  const [values, setValues] = createStore({ ...profile.state });
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -42,7 +42,10 @@ export const Profile: Component = () => {
     };
   }>({});
 
-  const [loader] = createResource(auth.authenticated(), profile.loadDetails);
+  const [loader] = createResource(auth.authenticated(), async () => {
+    await profile.loadDetails();
+    setValues(profile.state);
+  });
   const [updater] = createResource(onSave, profile.updateDetails);
 
   createEffect(async () => {
