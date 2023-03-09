@@ -1,7 +1,13 @@
 import { createStore } from 'solid-js/store';
 
-import { TProfile } from '../schema/typings';
 import { TService } from './ServiceProvider';
+
+export type TProfile = {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  address?: string;
+};
 
 const initialState = () => ({
   firstName: '',
@@ -19,9 +25,9 @@ const profileService = ({ auth }: TService) => {
       setState(initialState());
     },
     async loadDetails() {
-      const { data } = await auth.query(
+      const { data } = (await auth.query(
         'SELECT firstName, lastName, address, phone FROM user;'
-      );
+      )) as any;
       setState(data);
     },
     async updateDetails(data: TProfile) {

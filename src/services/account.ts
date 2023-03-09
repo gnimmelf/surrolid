@@ -1,7 +1,6 @@
-import { createEffect } from 'solid-js';
 import { createStore } from 'solid-js/store';
+import { TCredentials } from './auth';
 
-import { TProfile } from '../schema/typings';
 import { TService } from './ServiceProvider';
 
 const initialState = () => ({
@@ -17,10 +16,10 @@ const accountService = ({ auth }: TService) => {
       setState(initialState());
     },
     async loadDetails() {
-      const { data } = await auth.query('SELECT email FROM user;');
+      const { data } = (await auth.query('SELECT email FROM user;')) as any;
       setState('email', data.email);
     },
-    async updateDetails(data: TProfile) {
+    async updateDetails(data: TCredentials) {
       await auth.query(
         `UPDATE ${auth.state.userId} MERGE ${JSON.stringify(data)} RETURN NONE`
       );

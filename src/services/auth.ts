@@ -1,16 +1,19 @@
-import { batch, createEffect, createRenderEffect, onMount } from 'solid-js';
+import { onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
-import { TCredentials } from '../schema/typings';
+import { fetchToken, fetchQuery, TConnection } from '../lib/db';
 
-import { fetchToken, fetchQuery } from '../lib/db';
+export type TCredentials = {
+  email: string;
+  pass: string;
+};
 
 const initialState = () => ({
   token: '',
   userId: '',
 });
 
-const authService = ({ conn }: any) => {
+const authService = ({ conn }: { conn: TConnection }) => {
   const [state, setState] = createStore(initialState());
 
   const setToken = ({ token }: { token: string }) => {
@@ -49,11 +52,11 @@ const authService = ({ conn }: any) => {
       setToken(data);
     },
     async loadDetails() {
-      const { data } = await fetchQuery(
+      const { data } = (await fetchQuery(
         conn,
         'SELECT id FROM user;',
         state.token
-      );
+      )) as any;
       setState('userId', data.id);
     },
     async signout() {

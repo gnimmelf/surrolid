@@ -10,7 +10,7 @@ import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
-import { TService, useService } from '../services/ServiceProvider';
+import { useService } from '../services/ServiceProvider';
 import { Input, Form, FetchButton } from '../components/FormControls';
 import { email, pass, validateValues } from '../schema/fields';
 import { Loading } from '../components/Loading';
@@ -25,10 +25,10 @@ type TSchema = z.infer<typeof Schema>;
 
 export const Account: Component = () => {
   const [t] = useI18n();
-  const { auth, account } = useService() as TService;
+  const { auth, account } = useService();
 
+  const [onSave, doSave] = createSignal<TSchema>();
   const [values, setValues] = createStore(account.state);
-  const [save, setSave] = createSignal();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -38,7 +38,7 @@ export const Account: Component = () => {
   }>({});
 
   const [loader] = createResource(auth.authenticated(), account.loadDetails);
-  const [updater] = createResource(save, account.updateDetails);
+  const [updater] = createResource(onSave, account.updateDetails);
 
   createEffect(async () => {
     if (updater.error) {
@@ -62,7 +62,7 @@ export const Account: Component = () => {
       <Suspense fallback={<Loading />}>
         {noop(loader())}
         <Form
-          onSubmit={() => setSave(validateValues(Schema, values, setErrors))}
+          onSubmit={() => doSave(validateValues(Schema, values, setErrors))}
         >
           <Input
             label={t('Email')}

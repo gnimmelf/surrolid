@@ -34,8 +34,8 @@ export const Login: Component<{ title: string }> = (props) => {
   const { auth } = useService();
 
   const [values, setValues] = createStore<TSchema>(defaultCredentials);
-  const [signup, setSignup] = createSignal();
-  const [signin, setSignin] = createSignal();
+  const [onSignup, doSignup] = createSignal<TSchema>();
+  const [onSignin, doSignin] = createSignal<TSchema>();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -44,8 +44,8 @@ export const Login: Component<{ title: string }> = (props) => {
     };
   }>({});
 
-  const [signinData] = createResource(signin, auth.signin);
-  const [signupData] = createResource(signup, auth.signup);
+  const [signinData] = createResource(onSignin, auth.signin);
+  const [signupData] = createResource(onSignup, auth.signup);
   const [loader] = createResource(() => !!auth.state.token, auth.loadDetails);
 
   createEffect(async () => {
@@ -78,7 +78,7 @@ export const Login: Component<{ title: string }> = (props) => {
       <Suspense fallback={<Loading />}>
         {noop(loader())}
         <Form
-          onSubmit={() => setSignin(validateValues(Schema, values, setErrors))}
+          onSubmit={() => doSignin(validateValues(Schema, values, setErrors))}
         >
           <Input
             label={t('Email')}
@@ -114,7 +114,7 @@ export const Login: Component<{ title: string }> = (props) => {
           <div>
             <FetchButton
               onClick={() =>
-                setSignup(validateValues(Schema, values, setErrors))
+                doSignup(validateValues(Schema, values, setErrors))
               }
               isSubmiting={isSubmiting()}
               variant="neutral"

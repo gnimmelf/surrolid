@@ -11,9 +11,9 @@ import accountService from './account';
 import profileService from './profile';
 
 export type TService = {
-  auth: typeof authService;
-  account: typeof accountService;
-  profile: typeof profileService;
+  auth: ReturnType<typeof authService>;
+  account: ReturnType<typeof accountService>;
+  profile: ReturnType<typeof profileService>;
 };
 
 const ServiceContext = createContext<TService>();
@@ -33,8 +33,8 @@ export const ServiceProvider: Component<{
       apibaseurl: props.apibaseurl,
     },
   });
-  const account = accountService({ auth });
-  const profile = profileService({ auth });
+  const account = accountService({ auth } as TService);
+  const profile = profileService({ auth } as TService);
 
   const service = { auth, account, profile };
 
@@ -53,5 +53,5 @@ export const ServiceProvider: Component<{
 };
 
 export const useService = () => {
-  return useContext(ServiceContext);
+  return useContext(ServiceContext) as TService;
 };

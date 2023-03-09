@@ -9,13 +9,13 @@ const Logout: Component = () => {
   const [t] = useI18n();
   const { auth } = useService();
 
-  const [signout, setSignout] = createSignal();
-  const [signoutData] = createResource(signout, auth.signout);
+  const [onSignout, doSignout] = createSignal();
+  const [signoutData] = createResource(onSignout, () => auth.signout());
 
   return (
     <FetchButton
       isSubmiting={signoutData.loading}
-      onClick={() => setSignout(true)}
+      onClick={() => doSignout(true)}
       variant="primary"
     >
       {t('Sign out')}

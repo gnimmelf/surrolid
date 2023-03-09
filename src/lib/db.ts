@@ -5,7 +5,7 @@ export type TConnection = {
   namespace: string;
   database: string;
   scope: string;
-  token: string;
+  // token: string;
   apibaseurl: string;
 };
 
@@ -15,10 +15,17 @@ export type TAuth = {
   pass: string;
 };
 
+type TSurrealResponse = { status: string; detail: string; result: any };
+
 type TMeta = Pick<
   Response,
   'headers' | 'ok' | 'redirected' | 'status' | 'statusText' | 'type' | 'url'
 >;
+
+type TResult = {
+  meta: TMeta;
+  data: Record<string, unknown> | Record<string, unknown>[];
+};
 
 const parseMeta = (response: Response, extra?: Record<string, any>): TMeta => {
   const { headers, ok, redirected, status, statusText, type, url } = response;
@@ -82,7 +89,7 @@ export const fetchQuery = async (
   conn: TConnection,
   query: string,
   token?: string
-) => {
+): Promise<TResult> => {
   const response = await doFetch(conn.apibaseurl, 'sql', {
     headers: {
       NS: conn.namespace,
@@ -99,7 +106,7 @@ export const fetchQuery = async (
     throw new RecordError(payload.details);
   }
 
-  const data = payload.map((dataSet: { result: unknown }) => {
+  const data = payload.map((dataSet: TSurrealResponse) => {
     if (dataSet.status === 'ERR') {
       throw new RecordError(dataSet.detail);
     }
@@ -114,6 +121,6 @@ export const fetchQuery = async (
         meta: parseMeta(response, { query }),
         data: unWrapQueryData(data),
       });
-    }, 2000)
+    }, 500)
   );
 };
