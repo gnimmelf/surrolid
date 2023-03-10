@@ -2,11 +2,11 @@
 
 # High pri
 
-- [] lib/db.ts: Check usage of arguments to surql statements instead of concatenating string-snippets
-- [] lib/db.ts: Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
+- [] Use arguments to surql statements instead of concatenating string-snippets
+- [] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
 
 - [] Form: slot (renderprop) for buttons, include `errors.formErros` in Form component
-- [] Form: Success feedback, eg. last updated / saved
+- [] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity)
 
 ### Db
 
