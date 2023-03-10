@@ -8,5 +8,8 @@ DEFINE SCOPE account
 		address: "",
 		phone: ""
 	})
-	SIGNIN ( SELECT * FROM user WHERE email = $email AND crypto::argon2::compare(pass, $pass) )
+
+	SIGNIN (
+		SELECT * FROM user WHERE email = $email AND crypto::argon2::compare(pass, $pass)
+	)
 ;

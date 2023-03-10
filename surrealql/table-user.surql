@@ -2,6 +2,7 @@ DEFINE TABLE user SCHEMAFULL
   PERMISSIONS
     FOR select, update WHERE id = $auth.id,
     FOR create, delete NONE;
+
 DEFINE FIELD email ON user TYPE string ASSERT is::email($value);
 DEFINE FIELD pass ON user TYPE string ASSERT $value = /.*{4,80}/;
 DEFINE FIELD firstName ON user TYPE string ASSERT $value == "" OR $value = /[ \p{L}'-]{3,40}/;

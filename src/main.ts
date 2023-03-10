@@ -20,7 +20,8 @@ declare module 'solid-js' {
 customElement(
   'membership-widget',
   {
-    apibaseurl: 'https://localhost:8055/',
+    apibaseurl: 'http://localhost:8055/',
+    // apibaseurl="https://data.intergate.io/"
     title: 'Membership portal',
     namespace: 'test',
     database: 'test',
