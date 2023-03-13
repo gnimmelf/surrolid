@@ -11,7 +11,8 @@ DEFINE FIELD email ON account TYPE string ASSERT is::email($value);
 DEFINE FIELD pass ON account TYPE string
     PERMISSIONS
         FOR select, create NONE
-        FOR update, delete WHERE $scope = 'account' && id = $auth.id;
+        FOR update, delete WHERE $scope = 'account' && id = $auth.id
+    VALUE crypto::argon2::generate($after);;
 
 DEFINE INDEX idx_account ON account COLUMNS email UNIQUE;
 
@@ -40,7 +41,7 @@ DEFINE SCOPE account
 
 DEFINE TABLE profile SCHEMAFULL
     PERMISSIONS
-        FOR select WHERE id = $auth.id,
+        FOR select WHERE owner = $auth.id,
         FOR update WHERE $scope = 'account' && owner = $auth.id
         FOR create, delete NONE;
 

@@ -1,7 +1,7 @@
-import { children, Component, JSXElement } from 'solid-js';
+import { Component, JSXElement } from 'solid-js';
 import { I18nContext, createI18nContext } from '@solid-primitives/i18n';
 
-import noTexts from './no-nb.json';
+import noTexts from '../locale/no-nb.json';
 
 const LOCALES = [
   {

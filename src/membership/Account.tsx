@@ -12,7 +12,7 @@ import { z } from 'zod';
 
 import { useService } from '../services/ServiceProvider';
 import { Input, Form, FetchButton } from '../components/FormControls';
-import { email, pass, validateValues } from '../schema/fields';
+import { email, pass, validateValues } from '../lib/fields';
 import { Loading } from '../components/Loading';
 import { noop } from '../lib/utils';
 

@@ -19,7 +19,7 @@ import themeStyles from '@shoelace-style/shoelace/dist/themes/light.css?inline';
 
 import customStyles from './app.css?inline';
 
-import { I18nProvider } from '../locale/I18nProvider';
+import { I18nProvider } from '../components/I18nProvider';
 import {
   ServiceProvider,
   TService,

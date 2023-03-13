@@ -1,4 +1,5 @@
 import { Component, JSX, Show, splitProps } from 'solid-js';
+import { useI18n } from '@solid-primitives/i18n';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/input/input';
@@ -8,6 +9,7 @@ export const Input: Component<{
   isSubmiting: boolean;
   [x: string]: unknown;
 }> = (props) => {
+  const [t] = useI18n();
   const [local, rest] = splitProps(props, ['isSubmiting', 'errors']);
   return (
     <div class="field">
@@ -15,7 +17,7 @@ export const Input: Component<{
       <Show when={local.errors}>
         <div class="error">
           <sl-icon class="icon" attr:name="exclamation-circle" />
-          <span>{local.errors?.join('. ')}.</span>
+          <span>{local.errors?.map((str) => t(str)).join('. ')}.</span>
         </div>
       </Show>
     </div>
