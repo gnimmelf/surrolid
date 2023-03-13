@@ -16,7 +16,7 @@ const accountService = ({ auth }: TService) => {
       setState(initialState());
     },
     async loadDetails() {
-      const { data } = (await auth.query('SELECT email FROM user;')) as any;
+      const { data } = (await auth.query('SELECT email FROM account;')) as any;
       setState('email', data.email);
     },
     async updateDetails(data: TCredentials) {

@@ -34,10 +34,17 @@
 - [] [Material components](https://suid.io/getting-started/installation)
 - [] [Particles](https://github.com/matteobruni/tsparticles/tree/main/components/solid)
 
-# SurrealDB
+# Notes
 
-Sombody else's notes:
-https://gist.github.com/koakh/fbbc37cde630bedcf57acfd4d6a6956b
+- Zod / TS
+
+  - https://scastiel.dev/zod-typescript
+
+- SurrealDB:
+
+  - https://github.com/kearfy/demo-nextjs-surrealdb/blob/main/tables/post.surql
+  - https://github.com/theopensource-company/kards-social
+  - https://gist.github.com/koakh/fbbc37cde630bedcf57acfd4d6a6956b
 
 ## Server
 

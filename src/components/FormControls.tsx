@@ -22,16 +22,6 @@ export const Input: Component<{
   );
 };
 
-export const Form: Component<{ children: JSX.Element; onSubmit: Function }> = (
-  props
-) => {
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    props.onSubmit();
-  };
-  return <form onSubmit={handleSubmit}>{props.children}</form>;
-};
-
 export const FetchButton: Component<{
   isSubmiting: boolean;
   children: JSX.Element;
@@ -46,4 +36,14 @@ export const FetchButton: Component<{
       {local.children}
     </sl-button>
   );
+};
+
+export const Form: Component<{ children: JSX.Element; onSubmit: Function }> = (
+  props
+) => {
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    props.onSubmit();
+  };
+  return <form onSubmit={handleSubmit}>{props.children}</form>;
 };

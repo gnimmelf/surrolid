@@ -54,7 +54,7 @@ const authService = ({ conn }: { conn: TConnection }) => {
     async loadDetails() {
       const { data } = (await fetchQuery(
         conn,
-        'SELECT id FROM user;',
+        'SELECT id FROM account;',
         state.token
       )) as any;
       setState('userId', data.id);

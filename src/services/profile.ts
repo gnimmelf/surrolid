@@ -26,13 +26,13 @@ const profileService = ({ auth }: TService) => {
     },
     async loadDetails() {
       const { data } = (await auth.query(
-        'SELECT firstName, lastName, address, phone FROM user;'
+        'SELECT owner, firstName, lastName, address, phone FROM profile;'
       )) as any;
       setState(data);
     },
     async updateDetails(data: TProfile) {
       await auth.query(
-        `UPDATE ${auth.state.userId} MERGE ${JSON.stringify(data)} RETURN NONE`
+        `UPDATE profile MERGE ${JSON.stringify(data)} RETURN NONE`
       );
       setState(data);
     },
