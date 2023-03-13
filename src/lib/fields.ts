@@ -3,7 +3,7 @@ import { z, ZodSchema } from 'zod';
 
 const reName = new RegExp(/^[\p{L}'][ \p{L}'-]*[\p{L}]$/u);
 const rePhone = new RegExp(/^([\+][1-9]{2})?[ ]?([0-9 ]{8})$/);
-const reStreet = new RegExp(/^[\p{L}'][ \p{L}\p{N}'-,]{8}$/u);
+const reStreet = new RegExp(/^[\p{L}'][ \p{L}\p{N}'-,]{8,}$/u);
 
 export const email = z.string().trim().email('Must be a valid email address');
 export const name = z.string().trim().regex(reName, 'Must be a valid name');
