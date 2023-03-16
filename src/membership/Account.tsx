@@ -48,6 +48,7 @@ export const Account: Component = () => {
 
   createEffect(async () => {
     if (updateDetails.error) {
+      console.log(updateDetails.error);
       setErrors({
         formErrors: [t('Error saving')],
       });

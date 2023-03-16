@@ -3,6 +3,8 @@ import { customElement } from 'solid-element';
 
 import Membership from './membership/App';
 
+import { TBD } from './components/TBD';
+
 declare module 'solid-js' {
   namespace JSX {
     type ElementProps<T> = {
@@ -21,7 +23,6 @@ customElement(
   'membership-widget',
   {
     apibaseurl: 'http://localhost:8055/',
-    // apibaseurl="https://data.intergate.io/"
     title: 'Membership portal',
     namespace: 'test',
     database: 'test',
@@ -29,3 +30,5 @@ customElement(
   },
   Membership
 );
+
+customElement('admin-widget', { title: 'Admin widget' }, TBD);

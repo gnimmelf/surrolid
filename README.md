@@ -7,10 +7,11 @@
 
 - [] Form: slot (renderprop) for buttons, include `errors.formErros` in Form component
 - [] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity)
+- [] Form: Feedback translation
 
 ### Db
 
-- [] Split table user into account + profile
+- [x] Split table user into account + profile
 - [] Maybe a db event table => Account history
 - [] Require old pass to change pass
 

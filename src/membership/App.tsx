@@ -1,11 +1,4 @@
-import {
-  Component,
-  createEffect,
-  createSignal,
-  onError,
-  Show,
-  Suspense,
-} from 'solid-js';
+import { Component, createEffect, createSignal, onError, Show } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
 import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library';
@@ -27,24 +20,17 @@ import {
 } from '../services/ServiceProvider';
 
 import { Login } from '../components/Login';
-import { TopBar } from './TopBar';
+import { TopBar } from '../components/TopBar';
+import { TBD } from '../components/TBD';
+
 import { Profile } from './Profile';
 import { Account } from './Account';
-import { Loading } from '../components/Loading';
+import { AuthenticationError } from '../lib/errors';
 
 registerIconLibrary('default', {
   resolver: (name) =>
     `https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/icons/${name}.svg`,
 });
-
-const TBD = (props: { title: string }) => {
-  return (
-    <section>
-      <h2>{props.title}</h2>
-      <p>Not implemented!</p>
-    </section>
-  );
-};
 
 const App: Component<{
   title: string;
@@ -60,6 +46,15 @@ const App: Component<{
       el.updateComplete.then(() => {
         el.show(activePanel);
       });
+    }
+  });
+
+  onError((error) => {
+    if (error instanceof AuthenticationError) {
+      console.warn('Session expired, signing out');
+      auth.signout();
+    } else {
+      throw error;
     }
   });
 
@@ -119,7 +114,7 @@ const AppWrapper: Component<{
   database: string;
   scope: string;
 }> = (props) => {
-  onError((error) => console.error(`onError: ${error}`));
+  onError((error) => console.error(`App::onError: ${error}`));
 
   return (
     <I18nProvider>
