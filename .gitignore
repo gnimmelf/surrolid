@@ -12,7 +12,6 @@ database/*
 history.txt
 
 node_modules
-dist
 dist-ssr
 *.local
 
