@@ -1,5 +1,5 @@
-
 # ACCOUNT
+
 REMOVE TABLE account;
 
 DEFINE TABLE account SCHEMAFULL
@@ -43,6 +43,7 @@ DEFINE SCOPE account
   SIGNIN ( SELECT * FROM account WHERE email = $email AND crypto::argon2::compare(pass, $pass)	);
 
 # PROFILE
+
 REMOVE TABLE profile;
 
 DEFINE TABLE profile SCHEMAFULL
@@ -60,6 +61,7 @@ DEFINE FIELD address ON profile TYPE string;
 DEFINE FIELD phone ON profile TYPE string ;
 
 # ENVIRONMENT
+
 REMOVE TABLE envirnment;
 
 DEFINE TABLE environment SCHEMAFULL PERMISSIONS
@@ -84,9 +86,8 @@ IF not(environment:siteName.id) THEN
   CREATE environment:siteName SET value = "My Test Site", public = true;
 END;
 
-
-
 # MAILQUEUE
+
 REMOVE TABLE mailqueue;
 
 DEFINE TABLE mailqueue SCHEMAFULL PERMISSIONS
@@ -97,6 +98,8 @@ DEFINE FIELD email ON TABLE mailqueue TYPE string;
 DEFINE FIELD templateKey ON TABLE mailqueue TYPE string;
 DEFINE FIELD status ON TABLE mailqueue TYPE string;
 DEFINE FIELD statusMessage ON TABLE mailqueue TYPE string;
+
+## SENDMAIL
 
 DEFINE EVENT sendmail ON TABLE mailqueue WHEN ($event = "CREATE") THEN {
   LET $clientId = SELECT value FROM environment:clientId;
