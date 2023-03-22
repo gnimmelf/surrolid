@@ -38,9 +38,6 @@ export const validateValues = (
   }>
 ) => {
   const res = Schema.safeParse(values);
-
-  console.log(res);
-
   if (res.success) {
     setErrors({});
     return res.data;

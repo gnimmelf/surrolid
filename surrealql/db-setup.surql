@@ -68,17 +68,23 @@ DEFINE TABLE environment SCHEMAFULL PERMISSIONS
 DEFINE FIELD value ON TABLE environment TYPE string ASSERT $value != NONE;
 DEFINE FIELD public ON TABLE environment TYPE bool ASSERT $value != NONE;
 
-IF not(environment:mailchannelsSecret.id) THEN
+IF not(environment:clientId.id) THEN
   CREATE environment:clientId SET value = "test", public = false;
 END;
 
-IF not(environment:mailchannelsSecret.id) THEN
-  CREATE environment:mailchannelsSecret SET value = "o%vFzf5s$SKuhv", public = false;
+IF not(environment:sendmailSecret.id) THEN
+  CREATE environment:sendmailSecret SET value = "o%vFzf5s$SKuhv", public = false;
 END;
 
-IF not(environment:mailchannelsEndpoint.id) THEN
-  CREATE environment:mailchannelsEndpoint SET value = "https://data.intergate.io/mailchannels", public = false;
+IF not(environment:sendmailEndpoint.id) THEN
+  CREATE environment:sendmailEndpoint SET value = "https://data.intergate.io/mailchannels", public = false;
 END;
+
+IF not(environment:siteName.id) THEN
+  CREATE environment:siteName SET value = "My Test Site", public = true;
+END;
+
+
 
 # MAILQUEUE
 REMOVE TABLE mailqueue;
@@ -89,19 +95,33 @@ DEFINE TABLE mailqueue SCHEMAFULL PERMISSIONS
 DEFINE FIELD owner ON TABLE mailqueue TYPE string;
 DEFINE FIELD email ON TABLE mailqueue TYPE string;
 DEFINE FIELD templateKey ON TABLE mailqueue TYPE string;
-DEFINE FIELD status ON TABLE mailqueue;
+DEFINE FIELD status ON TABLE mailqueue TYPE string;
+DEFINE FIELD statusMessage ON TABLE mailqueue TYPE string;
 
 DEFINE EVENT sendmail ON TABLE mailqueue WHEN ($event = "CREATE") THEN {
   LET $clientId = SELECT value FROM environment:clientId;
-  LET $secret = SELECT value FROM environment:mailchannelsSecret;
-  LET $endPoint = SELECT value FROM environment:mailchannelsEndpoint;
+  LET $secret = SELECT value FROM environment:sendmailSecret;
+  LET $endPoint = SELECT value FROM environment:sendmailEndpoint;
+  LET $siteName = SELECT * FROM environment:siteName;
+
   LET $status = SELECT * FROM http::post($endPoint.value, {
+    debug: false,
     dryRun: false,
     appId: 'membership',
     clientId: $clientId.value,
     secret: $secret.value,
     to: { email: $after.email },
     templateKey: "welcome",
+    extraArgs: {
+      siteName: $siteName.value
+    }
   });
-  UPDATE mailqueue SET status = $status[0].statusText WHERE owner = $after.owner;
+  UPDATE mailqueue SET
+    status = $status[0].statusText,
+    statusMessage = function($status) {
+      const [ response ] = arguments[0];
+      console.log('sendmail response:', response);
+      return response.data;
+    }
+  WHERE owner = $after.owner;
 }
