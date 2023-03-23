@@ -1,35 +1,42 @@
+# Solid JS Web-components using surrealDB
+
 # TODO
 
-# High pri
+# Fixes
 
 - [] I18n (@solid-primitives/i18n) - Return key if no translation found!
 
   - Check alternative https://github.com/the-cookbook/solid-intl
 
-- [] Use arguments to surql statements instead of concatenating string-snippets
 - [] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
 
 - [] Form: slot (renderprop) for buttons, include `errors.formErros` in Form component
-- [] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity)
+- [] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity?)
 - [] Form: Feedback translation
 
-### Db
+## Db
 
 - [x] Split table user into account + profile
 - [] Maybe a db event table => Account history
-- [] Require old pass to change pass
 
 - [] Make a ping call once db-connection is set up
 
-  - [] Check session timeout
+  - [] Check session timeout. - How?
+
+## Security
+
+- [] transactional email w/ magic link
+
+  -[] Reset password
+  -[] Change e-mail
+
+- [] Use arguments to surql statements instead of concatenating string-snippets
+
+  - Is this really moot, because the sql enpoint is always open...?
 
 ## Other
 
-- [] Transactional emails
-
-  - [] Reset password email w/ magic link
-  - [] Signup email
-
+- [] Solid POD for account info?
 - [] Payment integrations (stripe/klarna/vipps)
 - [] Contact
 - [] Subcription
