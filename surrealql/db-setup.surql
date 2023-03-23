@@ -21,7 +21,7 @@ DEFINE SCOPE account
   SIGNUP {
     LET $account = CREATE account CONTENT {
       email: $email,
-      pass: crypto::argon2::generate($pass)
+      pass: $pass
     };
     IF ($account.id) THEN {
       CREATE profile CONTENT {

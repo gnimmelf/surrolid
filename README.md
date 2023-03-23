@@ -2,6 +2,10 @@
 
 # High pri
 
+- [] I18n (@solid-primitives/i18n) - Return key if no translation found!
+
+  - Check alternative https://github.com/the-cookbook/solid-intl
+
 - [] Use arguments to surql statements instead of concatenating string-snippets
 - [] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
 
@@ -47,13 +51,15 @@
   - https://github.com/theopensource-company/kards-social
   - https://gist.github.com/koakh/fbbc37cde630bedcf57acfd4d6a6956b
 
+# Localhost
+
 ## Server
 
 ```
 surreal start -u admin -p gnimmelf --log=full file://database --bind 0.0.0.0:8055
 ```
 
-## Sql
+## Client
 
 ```
 surreal sql --conn http://localhost:8055 -u admin -p gnimmelf --ns intergate  --db test --pretty

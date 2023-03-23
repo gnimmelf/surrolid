@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "scp dist/* gnimmelf@94.130.111.150:/opt/cdn/"
   },
   "devDependencies": {
     "@unocss/preset-mini": "^0.48.5",
