@@ -6,7 +6,7 @@ export type TConnection = {
   database: string;
   scope: string;
   // token: string;
-  apibaseurl: string;
+  datapoint: string;
 };
 
 export type TAuth = {
@@ -42,11 +42,11 @@ const parseMeta = (response: Response, extra?: Record<string, any>): TMeta => {
 };
 
 const doFetch = async (
-  apibaseurl: string,
+  datapoint: string,
   urlPath: string,
   { headers = {}, body = {} } = {}
 ) => {
-  const url = new URL(`${apibaseurl}/${urlPath}`);
+  const url = new URL(`${datapoint}/${urlPath}`);
   url.pathname = url.pathname.replace('//', '/');
   const response = await fetch(url, {
     method: 'POST',
@@ -66,7 +66,7 @@ const doFetch = async (
 };
 
 export const fetchToken = async (conn: TConnection, auth: TAuth) => {
-  const response: Response = await doFetch(conn.apibaseurl, auth.method, {
+  const response: Response = await doFetch(conn.datapoint, auth.method, {
     body: {
       email: auth.email,
       pass: auth.pass,
@@ -90,7 +90,7 @@ export const fetchQuery = async (
   query: string,
   token?: string
 ): Promise<TResult> => {
-  const response = await doFetch(conn.apibaseurl, 'sql', {
+  const response = await doFetch(conn.datapoint, 'sql', {
     headers: {
       NS: conn.namespace,
       DB: conn.database,

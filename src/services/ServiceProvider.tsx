@@ -22,7 +22,7 @@ export const ServiceProvider: Component<{
   namespace: string;
   database: string;
   scope: string;
-  apibaseurl: string;
+  datapoint: string;
   children: JSXElement;
 }> = (props) => {
   const auth = authService({
@@ -30,7 +30,7 @@ export const ServiceProvider: Component<{
       namespace: props.namespace,
       database: props.database,
       scope: props.scope,
-      apibaseurl: props.apibaseurl,
+      datapoint: props.datapoint,
     },
   });
   const account = accountService({ auth } as TService);

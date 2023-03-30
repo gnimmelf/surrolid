@@ -1,15 +1,7 @@
 import { Component, createEffect, createSignal, onError, Show } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
-import { registerIconLibrary } from '@shoelace-style/shoelace/dist/utilities/icon-library';
-import '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
-import '@shoelace-style/shoelace/dist/components/tab/tab';
-import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
-import '@shoelace-style/shoelace/dist/components/icon/icon';
-
 import resetStyles from '@unocss/reset/normalize.css?inline';
-import themeStyles from '@shoelace-style/shoelace/dist/themes/light.css?inline';
-
 import customStyles from './app.css?inline';
 
 import { I18nProvider } from '../components/I18nProvider';
@@ -26,11 +18,6 @@ import { TBD } from '../components/TBD';
 import { Profile } from './Profile';
 import { Account } from './Account';
 import { AuthenticationError } from '../lib/errors';
-
-registerIconLibrary('default', {
-  resolver: (name) =>
-    `https://cdn.jsdelivr.net/npm/bootstrap-icons@latest/icons/${name}.svg`,
-});
 
 const App: Component<{
   title: string;
@@ -61,7 +48,6 @@ const App: Component<{
   return (
     <main class="app">
       <style data-name="reset">{resetStyles}</style>
-      <style data-name="theme">{themeStyles}</style>
       <style data-name="unocss">@unocss-placeholder</style>
       <style data-name="custom">{customStyles}</style>
       <div>
@@ -108,7 +94,7 @@ const App: Component<{
 };
 
 const AppWrapper: Component<{
-  apibaseurl: string;
+  datapoint: string;
   title: string;
   namespace: string;
   database: string;
@@ -122,7 +108,7 @@ const AppWrapper: Component<{
         namespace={props.namespace}
         database={props.database}
         scope={props.scope}
-        apibaseurl={props.apibaseurl}
+        datapoint={props.datapoint}
       >
         <App title={props.title} />
       </ServiceProvider>

@@ -5,15 +5,24 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Surrolid Widgets</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/themes/light.css"
+    />
   </head>
   <body>
     <membership-widget
+      datapoint="https://data.intergate.io"
       title="My membership"
       namespace="intergate"
       database="test"
       scope="account"
     ></membership-widget>
 
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/shoelace.js"
+    ></script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

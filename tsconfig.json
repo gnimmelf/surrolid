@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "typeRoots": ["src/schema"],
     "strict": true,
     "target": "ESNext",
     "module": "ESNext",

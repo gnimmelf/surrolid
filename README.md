@@ -1,8 +1,44 @@
 # Solid JS Web-components using surrealDB
 
-# TODO
+## Usage
 
-# Fixes
+1. Include files
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/themes/light.css"
+/>
+<script
+  type="module"
+  src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/shoelace.js"
+></script>
+<script type="module" src="https://intergate.io/cdn/social-widgets.js"></script>
+```
+
+2. Set css vars
+
+```html
+<style>
+  :root {
+    --bg-color: #173544;
+  }
+  body {
+    background: var(--bg-color);
+  }
+</style>
+```
+
+3. Use custom- / web-component
+
+```html
+<instagram-basic
+  title="Instagram basic"
+  datapoint="https://instagram-basic.intergate.workers.dev/ainalauritsen"
+></instagram-basic>
+```
+
+# Roadmap
 
 - [] I18n (@solid-primitives/i18n) - Return key if no translation found!
 
@@ -14,16 +50,12 @@
 - [] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity?)
 - [] Form: Feedback translation
 
-## Db
-
 - [x] Split table user into account + profile
 - [] Maybe a db event table => Account history
 
 - [] Make a ping call once db-connection is set up
 
   - [] Check session timeout. - How?
-
-## Security
 
 - [] transactional email w/ magic link
 
@@ -44,7 +76,6 @@
 ## Try
 
 - [] [Material components](https://suid.io/getting-started/installation)
-- [] [Particles](https://github.com/matteobruni/tsparticles/tree/main/components/solid)
 
 # Notes
 

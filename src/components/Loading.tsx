@@ -1,7 +1,5 @@
 import { Component, JSXElement } from 'solid-js';
 
-import '@shoelace-style/shoelace/dist/components/spinner/spinner';
-
 export const Loading: Component<{
   children?: JSXElement;
 }> = (props) => (

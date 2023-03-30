@@ -1,9 +1,6 @@
 import { Component, JSX, Show, splitProps } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
-import '@shoelace-style/shoelace/dist/components/button/button';
-import '@shoelace-style/shoelace/dist/components/input/input';
-
 export const Input: Component<{
   errors?: string[];
   isSubmiting: boolean;

@@ -1,8 +1,6 @@
 import { Component, Show, createMemo, createEffect } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
-import '@shoelace-style/shoelace/dist/components/avatar/avatar';
-
 import { useService } from '../services/ServiceProvider';
 
 import { Logout } from './Logout';

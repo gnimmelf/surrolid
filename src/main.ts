@@ -1,9 +1,7 @@
 /* @refresh reload */
 import { customElement } from 'solid-element';
-
+import '@shoelace-style/shoelace/dist/shoelace';
 import Membership from './membership/App';
-
-import { TBD } from './components/TBD';
 
 declare module 'solid-js' {
   namespace JSX {
@@ -22,7 +20,7 @@ declare module 'solid-js' {
 customElement(
   'membership-widget',
   {
-    apibaseurl: 'http://localhost:8055/',
+    datapoint: 'http://localhost:8055/',
     title: 'Membership portal',
     namespace: 'test',
     database: 'test',
@@ -30,5 +28,3 @@ customElement(
   },
   Membership
 );
-
-customElement('admin-widget', { title: 'Admin widget' }, TBD);
