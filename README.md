@@ -21,10 +21,8 @@
 ```html
 <style>
   :root {
-    --bg-color: #173544;
-  }
-  body {
-    background: var(--bg-color);
+    --bg-color: var(--sl-color-teal-100: );
+    --border-color: var(--sl-color-teal-900: );
   }
 </style>
 ```
@@ -32,13 +30,18 @@
 3. Use custom- / web-component
 
 ```html
-<instagram-basic
-  title="Instagram basic"
-  datapoint="https://instagram-basic.intergate.workers.dev/ainalauritsen"
-></instagram-basic>
+<membership-widget
+  datapoint="https://data.intergate.io/"
+  title="My membership"
+  namespace="intergate"
+  database="test"
+  scope="account"
+></membership-widget>
 ```
 
 # Roadmap
+
+- [] expose hard-coded css colors as css vars
 
 - [] I18n (@solid-primitives/i18n) - Return key if no translation found!
 

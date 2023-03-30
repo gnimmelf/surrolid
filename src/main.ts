@@ -1,6 +1,5 @@
 /* @refresh reload */
 import { customElement } from 'solid-element';
-import '@shoelace-style/shoelace/dist/shoelace';
 import Membership from './membership/App';
 
 declare module 'solid-js' {
