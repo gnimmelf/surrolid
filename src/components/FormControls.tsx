@@ -13,7 +13,7 @@ export const Input: Component<{
       <sl-input {...rest} disabled={local.isSubmiting}></sl-input>
       <Show when={local.errors}>
         <div class="error">
-          <sl-icon class="icon" attr:name="exclamation-circle" />
+          <sl-icon class="icon" name="exclamation-circle" />
           <span>{local.errors?.map((str) => t(str)).join('. ')}.</span>
         </div>
       </Show>
@@ -40,7 +40,7 @@ export const FetchButton: Component<{
 export const Form: Component<{ children: JSX.Element; onSubmit: Function }> = (
   props
 ) => {
-  const handleSubmit = (evt) => {
+  const handleSubmit = (evt: Event) => {
     evt.preventDefault();
     props.onSubmit();
   };
