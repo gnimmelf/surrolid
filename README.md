@@ -21,8 +21,10 @@
 ```html
 <style>
   :root {
-    --bg-color: var(--sl-color-teal-100: );
-    --border-color: var(--sl-color-teal-900: );
+    --bg-color: var(--sl-color-emerald-950);
+    --fg-color: var(--sl-color-emerald-100);
+    --accent-color: var(--sl-color-emerald-400);
+    --border-color: var(--sl-color-emerald-100);
   }
 </style>
 ```

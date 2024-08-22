@@ -2,8 +2,9 @@
 }
 
 main.app {
-  background-color: var(--sl-color-primary-50);
-  border-color: var(--sl-color-primary-200);
+  color: var(--fg-color);
+  background-color: var(--bg-color);
+  border-color: var(--border-color);
   border-radius: 8px;
   border-style: solid;
   border-width: 2px;
@@ -41,6 +42,27 @@ sl-icon.rotate {
 
 sl-button {
   margin-right: 1rem;
+}
+
+sl-avatar {
+  --sl-color-neutral-0: var(--bg-color);
+  --sl-color-neutral-400: var(--fg-color)
+}
+
+sl-button::part(base) {
+  color: var(--fg-color);
+  background: var(--bg-color);
+  border: solid 1px var(--border-color);
+}
+
+sl-tab-group::part(base) {
+  color: var(--fg-color);
+  --track-color: var(--border-color);
+  --indicator-color: var(--accent-color);
+}
+
+sl-tab::part(base) {
+  color: var(--fg-color);
 }
 
 sl-tab > sl-icon {
