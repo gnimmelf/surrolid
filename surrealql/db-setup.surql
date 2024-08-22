@@ -7,14 +7,23 @@ DEFINE TABLE account SCHEMAFULL
     FOR select, update WHERE id = $auth.id,
     FOR create, delete NONE;
 
-DEFINE FIELD email ON account TYPE string ASSERT is::email($value);
-DEFINE FIELD pass ON account TYPE string
+DEFINE FIELD email
+    ON account
+    TYPE string
+    ASSERT string::is::email($value);
+
+DEFINE FIELD pass
+    ON account
+    TYPE string
     PERMISSIONS
         FOR select, create NONE
-        FOR update, delete WHERE $scope = 'account' && id = $auth.id
+        FOR update, delete
+            WHERE $scope = 'account' && id = $auth.id
     VALUE crypto::argon2::generate($after);;
 
-DEFINE INDEX idx_account ON account COLUMNS email UNIQUE;
+DEFINE INDEX idx_account
+    ON account
+    COLUMNS email UNIQUE;
 
 DEFINE SCOPE account
   SESSION 24h
@@ -48,17 +57,36 @@ REMOVE TABLE profile;
 
 DEFINE TABLE profile SCHEMAFULL
     PERMISSIONS
-        FOR select WHERE owner = $auth.id,
-        FOR update WHERE $scope = 'account' && owner = $auth.id
+        FOR select
+            WHERE owner = $auth.id,
+        FOR update
+            WHERE $scope = 'account' && owner = $auth.id
         FOR create, delete NONE;
 
-DEFINE FIELD owner ON TABLE profile TYPE string
-  PERMISSIONS
-    FOR update NONE;
-DEFINE FIELD firstName ON profile TYPE string;
-DEFINE FIELD lastName ON profile TYPE string;
-DEFINE FIELD address ON profile TYPE string;
-DEFINE FIELD phone ON profile TYPE string ;
+DEFINE FIELD owner
+    ON TABLE profile TYPE string
+    PERMISSIONS
+        FOR update NONE;
+
+DEFINE FIELD firstName
+    ON profile
+    TYPE string;
+
+DEFINE FIELD lastName
+    ON profile
+    TYPE string;
+
+DEFINE FIELD address
+    ON profile
+    TYPE string;
+
+DEFINE FIELD phone
+    ON profile
+    TYPE string ;
+
+
+###
+# EXPERIMENTAL BELOW!!
 
 # ENVIRONMENT
 
