@@ -62,7 +62,7 @@ DEFINE FIELD phone ON profile TYPE string ;
 
 # ENVIRONMENT
 
-REMOVE TABLE envirnment;
+REMOVE TABLE environment;
 
 DEFINE TABLE environment SCHEMAFULL PERMISSIONS
   FOR select,update, create, delete NONE;
