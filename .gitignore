@@ -13,6 +13,8 @@ history.txt
 
 node_modules
 dist-ssr
+dist
+__snippets
 *.local
 
 # Editor directories and files
