@@ -8,30 +8,21 @@ import {
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
-import { z } from 'zod';
 
-import { useService } from '../services/ServiceProvider';
-
+import { useService } from '../components/ServiceProvider';
 import { Input, Form, FetchButton } from '../components/FormControls';
-import { name, address, phone, validateValues } from '../lib/fields';
-import { Loading } from '../components/Loading';
+import { ProfileSchema, TProfile } from '../services/ProfileService';
+import { validateValues } from '../lib/fields';
 import { noop } from '../lib/utils';
-
-const Schema = z.object({
-  firstName: name,
-  lastName: name,
-  address,
-  phone,
-});
-
-type TSchema = z.infer<typeof Schema>;
+import { Loading } from '../components/Loading';
 
 export const Profile: Component = () => {
   const [t] = useI18n();
   const { auth, profile } = useService();
 
-  const [onSave, doSave] = createSignal<TSchema>();
-  const [values, setValues] = createStore({ ...profile.state });
+  const [onSave, doSave] = createSignal<TProfile>();
+  const [store, setStore] = createStore(profile.initialState);
+
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -42,14 +33,17 @@ export const Profile: Component = () => {
     };
   }>({});
 
-  const [loadDetails] = createResource(auth.authenticated(), async () => {
-    await profile.loadDetails();
-    setValues(profile.state);
-  });
-  const [updateDetails] = createResource(onSave, profile.updateDetails);
+  const [loadData] = createResource(
+    () => auth.isAuthenticated,
+    async () => {
+      await profile.loadData()
+      setStore(profile.state);
+    }
+  );
+  const [saveData] = createResource(onSave, profile.saveData);
 
   createEffect(async () => {
-    if (updateDetails.error) {
+    if (saveData.error) {
       setErrors({
         formErrors: [t('Error saving')],
       });
@@ -57,17 +51,17 @@ export const Profile: Component = () => {
   });
 
   const updateValue =
-    (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
-      setValues(key, evt.target.value);
+    (key: keyof TProfile) => (evt: DOMEvent<HTMLInputElement>) => {
+      setStore(key, evt.target.value);
     };
 
   return (
     <section>
       <h2>{t('Profile')}</h2>
       <Suspense fallback={<Loading />}>
-        {noop(loadDetails())}
+        {noop(loadData())}
         <Form
-          onSubmit={() => doSave(validateValues(Schema, values, setErrors))}
+          onSubmit={() => doSave(validateValues(ProfileSchema, store, setErrors))}
         >
           <Input
             label={t('First name')}
@@ -76,10 +70,10 @@ export const Profile: Component = () => {
             spellcheck={false}
             clearable={true}
             required={true}
-            value={values.firstName}
+            value={store.firstName}
             on:sl-change={updateValue('firstName')}
             data-invalid={!!errors().fieldErrors?.firstName}
-            isSubmiting={updateDetails.loading}
+            isSubmiting={saveData.loading}
             errors={errors().fieldErrors?.firstName}
           />
 
@@ -90,10 +84,10 @@ export const Profile: Component = () => {
             spellcheck={false}
             clearable={true}
             required={true}
-            value={values.lastName}
+            value={store.lastName}
             on:sl-change={updateValue('lastName')}
             data-invalid={!!errors().fieldErrors?.lastName}
-            isSubmiting={updateDetails.loading}
+            isSubmiting={saveData.loading}
             errors={errors().fieldErrors?.lastName}
           />
           <Input
@@ -103,10 +97,10 @@ export const Profile: Component = () => {
             spellcheck={false}
             clearable={true}
             required={false}
-            value={values.address}
+            value={store.address}
             on:sl-change={updateValue('address')}
             data-invalid={!!errors().fieldErrors?.address}
-            isSubmiting={updateDetails.loading}
+            isSubmiting={saveData.loading}
             errors={errors().fieldErrors?.address}
           />
 
@@ -115,10 +109,10 @@ export const Profile: Component = () => {
             inputmode="numeric"
             spellcheck={false}
             clearable={true}
-            value={values.phone}
+            value={store.phone}
             on:sl-change={updateValue('phone')}
             data-invalid={!!errors().fieldErrors?.phone}
-            isSubmiting={updateDetails.loading}
+            isSubmiting={saveData.loading}
             errors={errors().fieldErrors?.phone}
           />
 
@@ -129,7 +123,7 @@ export const Profile: Component = () => {
           <FetchButton
             type="submit"
             variant="primary"
-            isSubmiting={updateDetails.loading}
+            isSubmiting={saveData.loading}
           >
             {t('Save')}
           </FetchButton>

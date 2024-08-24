@@ -10,7 +10,7 @@ import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
-import { useService } from '../services/ServiceProvider';
+import { useService } from './ServiceProvider';
 
 import { Form, Input, FetchButton } from './FormControls';
 import { email, pass, validateValues } from '../lib/fields';
@@ -31,9 +31,9 @@ const defaultCredentials = {
 
 export const Login: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
-  const { auth } = useService();
+  const { auth, account, profile } = useService();
 
-  const [values, setValues] = createStore<TSchema>(defaultCredentials);
+  const [store, setStore] = createStore<TSchema>(defaultCredentials);
   const [onSignup, doSignup] = createSignal<TSchema>();
   const [onSignin, doSignin] = createSignal<TSchema>();
   const [errors, setErrors] = createSignal<{
@@ -46,9 +46,12 @@ export const Login: Component<{ title: string }> = (props) => {
 
   const [signin] = createResource(onSignin, auth.signin);
   const [signup] = createResource(onSignup, auth.signup);
-  const [loadDetails] = createResource(
-    () => !!auth.state.token,
-    auth.loadDetails
+  const [loadData] = createResource(
+    () => auth.isAuthenticated,
+    () => {
+      account.loadData
+      profile.loadData
+    }
   );
 
   createEffect(async () => {
@@ -70,7 +73,7 @@ export const Login: Component<{ title: string }> = (props) => {
 
   const updateValue =
     (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
-      setValues(key, evt.target.value);
+      setStore(key, evt.target.value);
     };
 
   const isSubmiting = () => signin.loading || signup.loading;
@@ -79,9 +82,9 @@ export const Login: Component<{ title: string }> = (props) => {
     <section>
       <h2>{t('Sign in')}</h2>
       <Suspense fallback={<Loading />}>
-        {noop(loadDetails())}
+        {noop(loadData())}
         <Form
-          onSubmit={() => doSignin(validateValues(Schema, values, setErrors))}
+          onSubmit={() => doSignin(validateValues(Schema, store, setErrors))}
         >
           <Input
             label={t('Email')}
@@ -89,7 +92,7 @@ export const Login: Component<{ title: string }> = (props) => {
             inputmode="email"
             clearable={true}
             required={true}
-            value={values.email}
+            value={store.email}
             errors={errors().fieldErrors?.email}
             data-invalid={!!errors().fieldErrors?.email || errors().formErrors}
             on:sl-change={updateValue('email')}
@@ -103,7 +106,7 @@ export const Login: Component<{ title: string }> = (props) => {
             password-toggle={true}
             clearable={true}
             required={true}
-            value={values.pass}
+            value={store.pass}
             errors={errors().fieldErrors?.pass}
             on:sl-change={updateValue('pass')}
             data-invalid={!!errors().fieldErrors?.pass || errors().formErrors}
@@ -117,7 +120,7 @@ export const Login: Component<{ title: string }> = (props) => {
           <div>
             <FetchButton
               onClick={() =>
-                doSignup(validateValues(Schema, values, setErrors))
+                doSignup(validateValues(Schema, store, setErrors))
               }
               isSubmiting={isSubmiting()}
               variant="neutral"

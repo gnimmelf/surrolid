@@ -1,7 +1,7 @@
 import { Component, createResource, createSignal } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
-import { useService } from '../services/ServiceProvider';
+import { useService } from './ServiceProvider';
 
 import { FetchButton } from '../components/FormControls';
 

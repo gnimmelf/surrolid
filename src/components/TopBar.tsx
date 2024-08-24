@@ -1,7 +1,7 @@
 import { Component, Show, createMemo, createEffect } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
-import { useService } from '../services/ServiceProvider';
+import { useService } from './ServiceProvider';
 
 import { Logout } from './Logout';
 import { Locale } from '../components/Locale';
@@ -21,11 +21,11 @@ export const TopBar: Component<{ title: string }> = (props) => {
   return (
     <div class="top-bar">
       <menu>
-        <Show when={auth.authenticated()}>
+        <Show when={auth.isAuthenticated}>
           <sl-avatar attr:initials={initials()} />
         </Show>
         <Locale />
-        <Show when={auth.authenticated()}>
+        <Show when={auth.isAuthenticated}>
           <Logout />
         </Show>
       </menu>

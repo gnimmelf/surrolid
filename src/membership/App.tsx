@@ -7,9 +7,8 @@ import customStyles from './app.css?inline';
 import { I18nProvider } from '../components/I18nProvider';
 import {
   ServiceProvider,
-  TService,
   useService,
-} from '../services/ServiceProvider';
+} from '../components/ServiceProvider';
 
 import { Login } from '../components/Login';
 import { TopBar } from '../components/TopBar';
@@ -23,7 +22,7 @@ const App: Component<{
   title: string;
 }> = (props) => {
   const [t] = useI18n();
-  const { auth } = useService() as TService;
+  const { auth } = useService();
   const [slTabGroupEl, setSlTabGroupEl] = createSignal<HTMLElement>();
 
   createEffect(() => {
@@ -53,10 +52,10 @@ const App: Component<{
       <div>
         <TopBar title={props.title} />
 
-        <Show when={!auth.authenticated()}>
+        <Show when={!auth.isAuthenticated}>
           <Login title="Login" />
         </Show>
-        <Show when={auth.authenticated()}>
+        <Show when={auth.isAuthenticated}>
           <sl-tab-group
             on:sl-tab-show={({ detail }: any) => {
               localStorage.activePanel = detail.name;
@@ -93,7 +92,7 @@ const App: Component<{
   );
 };
 
-const AppWrapper: Component<{
+const AppProvider: Component<{
   datapoint: string;
   title: string;
   namespace: string;
@@ -116,4 +115,4 @@ const AppWrapper: Component<{
   );
 };
 
-export default AppWrapper;
+export default AppProvider;

@@ -43,19 +43,39 @@
 
 # Roadmap
 
-- [] expose hard-coded css colors as css vars
+## Libs
+
+- [] Use Javascript sdk from Surreal.
+
+  - [] Works clientside?
+
+- [] Replace Vite with Bun.
+
+- [] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
 
 - [] I18n (@solid-primitives/i18n) - Return key if no translation found!
 
   - Check alternative https://github.com/the-cookbook/solid-intl
 
-- [] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
+
+## Styling
+
+- [] Get rid of Unocss. Overkill for this scope.
+
+  - [] Try [Material components](https://suid.io/getting-started/installation) ?
+
+- [] expose hard-coded css colors as css vars
+
+## Forms
 
 - [] Form: slot (renderprop) for buttons, include `errors.formErros` in Form component
 - [] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity?)
 - [] Form: Feedback translation
 
+## Surreal
+
 - [x] Split table user into account + profile
+
 - [] Maybe a db event table => Account history
 
 - [] Make a ping call once db-connection is set up
@@ -77,10 +97,6 @@
 - [] Payment integrations (stripe/klarna/vipps)
 - [] Contact
 - [] Subcription
-
-## Try
-
-- [] [Material components](https://suid.io/getting-started/installation)
 
 # Notes
 

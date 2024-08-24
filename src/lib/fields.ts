@@ -33,8 +33,8 @@ export const validateValues = (
   Schema: ZodSchema,
   values: z.infer<typeof Schema>,
   setErrors: Setter<{
-    formErrors: string[];
-    fieldErrors: { [x: string]: string[] };
+    formErrors?: string[];
+    fieldErrors?: { [x: string]: string[] };
   }>
 ) => {
   const res = Schema.safeParse(values);

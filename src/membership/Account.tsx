@@ -8,30 +8,22 @@ import {
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { useI18n } from '@solid-primitives/i18n';
-import { z } from 'zod';
 
-import { useService } from '../services/ServiceProvider';
+import { useService } from '../components/ServiceProvider';
 import { Input, Form, FetchButton } from '../components/FormControls';
-import { email, pass, validateValues } from '../lib/fields';
+import { AccountSchema, TAccount } from '../services/AccountService';
+import { validateValues } from '../lib/fields';
 import { Loading } from '../components/Loading';
 import { noop } from '../lib/utils';
 
-const Schema = z.object({
-  email,
-  pass,
-});
-
-type TSchema = z.infer<typeof Schema>;
 
 export const Account: Component = () => {
   const [t] = useI18n();
   const { auth, account } = useService();
 
-  const [onSave, doSave] = createSignal<TSchema>();
-  const [values, setValues] = createStore<TSchema>({
-    email: account.state.email,
-    pass: '',
-  });
+  const [onSave, doSave] = createSignal<TAccount>();
+  const [store, setStore] = createStore<TAccount>(account.initialState);
+
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -40,36 +32,39 @@ export const Account: Component = () => {
     };
   }>({});
 
-  const [loadDetails] = createResource(auth.authenticated(), async () => {
-    await account.loadDetails();
-    setValues(account.state);
-  });
-  const [updateDetails] = createResource(onSave, account.updateDetails);
+  const [loadData] = createResource(
+    () => auth.isAuthenticated,
+    async () => {
+      await account.loadData()
+      setStore(account.state);
+    }
+  );
+  const [saveData] = createResource(onSave, account.saveData);
 
   createEffect(async () => {
-    if (updateDetails.error) {
-      console.log(updateDetails.error);
+    if (saveData.error) {
+      console.log(saveData.error);
       setErrors({
         formErrors: [t('Error saving')],
       });
     }
-    if (updateDetails.state === 'ready') {
-      setValues('pass', '');
+    if (saveData.state === 'ready') {
+      setStore('pass', '');
     }
   });
 
   const updateValue =
-    (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
-      setValues(key, evt.target.value);
+    (key: keyof TAccount) => (evt: DOMEvent<HTMLInputElement>) => {
+      setStore(key, evt.target.value);
     };
 
   return (
     <section>
       <h2>{t('Account')}</h2>
       <Suspense fallback={<Loading />}>
-        {noop(loadDetails())}
+        {noop(loadData())}
         <Form
-          onSubmit={() => doSave(validateValues(Schema, values, setErrors))}
+          onSubmit={() => doSave(validateValues(AccountSchema, store, setErrors))}
         >
           <Input
             label={t('Email')}
@@ -78,9 +73,9 @@ export const Account: Component = () => {
             spellcheck={false}
             clearable={true}
             required={true}
-            value={values.email}
+            value={store.email}
             on:sl-change={updateValue('email')}
-            isSubmiting={updateDetails.loading}
+            isSubmiting={saveData.loading}
             errors={errors().fieldErrors?.email}
           />
           <Input
@@ -89,9 +84,9 @@ export const Account: Component = () => {
             clearable={true}
             type="password"
             password-toggle={true}
-            value={values.pass}
+            value={store.pass}
             on:sl-change={updateValue('pass')}
-            isSubmiting={updateDetails.loading}
+            isSubmiting={saveData.loading}
             errors={errors().fieldErrors?.pass}
           />
 
@@ -102,7 +97,7 @@ export const Account: Component = () => {
           <FetchButton
             type="submit"
             variant="primary"
-            isSubmiting={updateDetails.loading}
+            isSubmiting={saveData.loading}
           >
             {t('Save')}
           </FetchButton>
