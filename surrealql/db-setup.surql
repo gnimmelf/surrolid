@@ -2,7 +2,7 @@
 
 REMOVE TABLE account;
 
-DEFINE TABLE account SCHEMAFULL
+LET $account = DEFINE TABLE account SCHEMAFULL
   PERMISSIONS
     FOR select, update WHERE id = $auth.id,
     FOR create, delete NONE;
@@ -16,8 +16,8 @@ DEFINE FIELD pass
     ON account
     TYPE string
     PERMISSIONS
-        FOR select, create NONE
-        FOR update, delete
+        FOR select, create, delete NONE
+        FOR update
             WHERE $scope = 'account' && id = $auth.id
     VALUE crypto::argon2::generate($after);;
 
@@ -28,10 +28,10 @@ DEFINE INDEX idx_account
 DEFINE SCOPE account
   SESSION 24h
   SIGNUP {
-    LET $account = CREATE account CONTENT {
+    LET $account = array::first(CREATE account CONTENT {
       email: $email,
       pass: $pass
-    };
+    });
     IF ($account.id) THEN {
       CREATE profile CONTENT {
         owner: $account.id,
@@ -39,11 +39,6 @@ DEFINE SCOPE account
         lastName: "",
         address: "",
         phone: ""
-      };
-      CREATE mailqueue CONTENT {
-        owner: $account.id,
-        email: $account.email,
-        templateKey: "welcome"
       };
     } END;
 
@@ -64,7 +59,8 @@ DEFINE TABLE profile SCHEMAFULL
         FOR create, delete NONE;
 
 DEFINE FIELD owner
-    ON TABLE profile TYPE string
+    ON TABLE profile
+    TYPE record(account)
     PERMISSIONS
         FOR update NONE;
 
