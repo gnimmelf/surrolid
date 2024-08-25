@@ -76,6 +76,7 @@ form [data-invalid]::part(base) {
 form .form-error {
   padding: 1rem;
   margin-bottom: 1rem;
+  color: black;
   background-color: var(--sl-color-orange-50);
   border-color: var(--sl-color-orange-200);
   border-radius: 10px;

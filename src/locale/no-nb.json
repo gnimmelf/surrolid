@@ -21,5 +21,6 @@
   "Error saving": "Kunne ikke lagre",
   "Must be a valid email address": "Ugyldig adresse",
   "Must be a valid name": "Ugyldig navn",
-  "Must be a valid street address": "Ugyldig adresse"
+  "Must be a valid street address": "Ugyldig adresse",
+  "Must be 3-16 charcters and contain one digit and a special char": "Må være 3-16 tegn langt og inneha ett tall og et tegn"
 }

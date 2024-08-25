@@ -1,4 +1,4 @@
-import { Component, JSX, Show, splitProps } from 'solid-js';
+import { Component, createEffect, JSX, Show, splitProps } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
 export const Input: Component<{
@@ -8,13 +8,14 @@ export const Input: Component<{
 }> = (props) => {
   const [t] = useI18n();
   const [local, rest] = splitProps(props, ['isSubmiting', 'errors']);
+
   return (
     <div class="field">
       <sl-input {...rest} disabled={local.isSubmiting}></sl-input>
       <Show when={local.errors}>
         <div class="error">
           <sl-icon class="icon" name="exclamation-circle" />
-          <span>{local.errors?.map((str) => t(str)).join('. ')}.</span>
+          <span>{local.errors?.map((str) => t(str) || str).join('. ')}.</span>
         </div>
       </Show>
     </div>

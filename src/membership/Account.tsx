@@ -1,8 +1,11 @@
 import {
+  Accessor,
   Component,
   createEffect,
+  createRenderEffect,
   createResource,
   createSignal,
+  from,
   Show,
   Suspense,
 } from 'solid-js';
@@ -32,14 +35,19 @@ export const Account: Component = () => {
     };
   }>({});
 
+  const accountState: Accessor<{ email: string }  | undefined> = from(account)
+  createRenderEffect(() => {
+    const state = accountState() as TAccount
+    if (state) {
+      setStore(state)
+    }
+  })
+
   const [loadData] = createResource(
     () => auth.isAuthenticated,
-    async () => {
-      await account.loadData()
-      setStore(account.state);
-    }
+    () => account.loadData()
   );
-  const [saveData] = createResource(onSave, account.saveData);
+  const [saveData] = createResource(onSave, (data: TAccount) => account.saveData(data));
 
   createEffect(async () => {
     if (saveData.error) {
@@ -75,6 +83,7 @@ export const Account: Component = () => {
             required={true}
             value={store.email}
             on:sl-change={updateValue('email')}
+            data-invalid={!!errors().fieldErrors?.email}
             isSubmiting={saveData.loading}
             errors={errors().fieldErrors?.email}
           />
@@ -86,6 +95,7 @@ export const Account: Component = () => {
             password-toggle={true}
             value={store.pass}
             on:sl-change={updateValue('pass')}
+            data-invalid={!!errors().fieldErrors?.pass}
             isSubmiting={saveData.loading}
             errors={errors().fieldErrors?.pass}
           />

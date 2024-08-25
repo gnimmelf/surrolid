@@ -1,80 +1,89 @@
-import { createStore, Store } from "solid-js/store";
-import Surreal from "surrealdb.js"
+import Surreal from "surrealdb"
+import { Observable, unpackResult } from "../lib/utils";
 
-class DbService {
-    #db: Surreal;
-    #url: URL
-    #isConnected: boolean = false
+class DbService extends Observable {
+  #db: Surreal;
+  #url: string
+  #namespace: string
+  #database: string
+  #isConnected: boolean = false
 
-    constructor(datapoint: string) {
-        this.#db = new Surreal()
-        this.#url = new URL(`${datapoint}/rpc`)
-        this.#isConnected = false
+  constructor(datapoint: string, namespace: string, database: string) {
+    super();
+    this.#db = new Surreal()
+    this.#url = new URL(`${datapoint}/rpc`).toString()
+    this.#namespace = namespace
+    this.#database = database
+    this.#isConnected = false
+  }
+
+  async connect(): Promise<DbService> {
+    try {
+      await this.#db.connect(this.#url, {
+        namespace: this.#namespace,
+        database: this.#database,
+      });
+    } catch (error) {
+      console.error(error)
+      throw error;
     }
+    this.#isConnected = true
+    console.info(`DbService connected: ${this.#url} => ${this.#namespace}:${this.#database}`)
+    return this
+  }
 
-    async connect(): Promise<void> {
-        try {
-            await this.#db.connect(this.#url.toString());
-        } catch (err) {
-            throw err;
-        }
-        this.#isConnected = true
+  disconnect(): void {
+    if (this.#db) {
+      this.#db.close();
     }
+    this.#isConnected = false
+  }
 
-    disconnect(): void {
-        if (this.#db) {
-            this.#db.close();
-        }
-        this.#isConnected = false
-    }
 
-    getDb(): Surreal {
-        return this.#db
-    }
 
-    isConnected(): boolean {
-        return this.#isConnected
-    }
+  getDb(): Surreal {
+    return this.#db
+  }
 
-    async getProfileDetails() {
-        try {
-            const result = await this.#db.query('SELECT firstName, lastName, address, phone FROM profile;')
-            // TODO! Unpack result
-            return result
-        } catch (err) {
-            throw err;
-        }
-    }
+  get isConnected(): boolean {
+    return this.#isConnected
+  }
 
-    async setProfileDetails(details) {
-        try {
-            const result = await this.#db.query('UPDATE firstName, lastName, address, phone FROM profile;', details)
-            // TODO! Unpack result
-            return result
-        } catch (err) {
-            throw err;
-        }
+  async getProfileDetails() {
+    try {
+      const result = await this.#db.query('SELECT firstName, lastName, address, phone FROM profile;')
+      return unpackResult(result)
+    } catch (error) {
+      throw error;
     }
+  }
 
-    async getAccountDetails() {
-        try {
-            const result = await this.#db.query('SELECT firstName, lastName, address, phone FROM profile;')
-            // TODO! Unpack result
-            return result
-        } catch (err) {
-            throw err;
-        }
+  async setProfileDetails(details: any) {
+    try {
+      await this.#db.merge('profile', details)
+    } catch (err) {
+      throw err;
     }
+  }
 
-    async setAccountDetails(details) {
-        try {
-            const result = await this.#db.query('UPDATE firstName, lastName, address, phone FROM profile;', details)
-            // TODO! Unpack result
-            return result
-        } catch (err) {
-            throw err;
-        }
+  async getAccountDetails() {
+    try {
+      const result = await this.#db.query('SELECT email FROM account;')
+      return unpackResult(result)
+    } catch (err) {
+      throw err;
     }
+  }
+
+  async setAccountDetails<T>(details: T) {
+    try {
+      const result = await this.#db.query('UPDATE firstName, lastName, address, phone FROM profile;', details)
+      // TODO! Unpack result
+      return result
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 export default DbService

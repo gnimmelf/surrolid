@@ -19,7 +19,7 @@ DEFINE FIELD pass
         FOR select, create, delete NONE
         FOR update
             WHERE $scope = 'account' && id = $auth.id
-    VALUE crypto::argon2::generate($after);;
+    VALUE crypto::argon2::generate($after);
 
 DEFINE INDEX idx_account
     ON account

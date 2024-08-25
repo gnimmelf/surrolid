@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
-import { email, pass, validateValues } from '../lib/fields';
+import { email, pass } from '../lib/fields';
 import DbService from './DbService';
+import { Observable } from '../lib/utils';
 
 export const AccountSchema = z.object({
   email,
@@ -15,11 +16,12 @@ const initialState = (): TAccount => ({
   pass: ''
 });
 
-class AccountService {
+class AccountService extends Observable {
   #dbService: DbService
   #state = initialState()
 
   constructor(dbService: DbService) {
+    super();
     this.#dbService = dbService
   }
 
@@ -32,12 +34,13 @@ class AccountService {
   }
 
   async loadData(): Promise<void> {
-    const details = this.#dbService.getAccountDetails()
+    const details = await this.#dbService.getAccountDetails()
     this.#state = details as unknown as TAccount
+    this.next(this.state)
   }
 
   async saveData(details: TAccount): Promise<void> {
-    const db = this.#dbService.setAccountDetails(details)
+    const db = await this.#dbService.setAccountDetails(details)
   }
 }
 

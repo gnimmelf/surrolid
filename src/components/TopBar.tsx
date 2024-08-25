@@ -1,4 +1,4 @@
-import { Component, Show, createMemo, createEffect } from 'solid-js';
+import { Component, Show, createMemo, createEffect, from, Accessor } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
 import { useService } from './ServiceProvider';
@@ -16,16 +16,19 @@ export const TopBar: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
   const { profile, auth } = useService();
 
+  const authState: Accessor<{ isAuthenticated: boolean } | undefined> = from(auth)
+  const isAuthenticated = () => authState()?.isAuthenticated
+
   const initials = createMemo(() => parseInitials(profile.state));
 
   return (
     <div class="top-bar">
       <menu>
-        <Show when={auth.isAuthenticated}>
+        <Show when={isAuthenticated()}>
           <sl-avatar attr:initials={initials()} />
         </Show>
         <Locale />
-        <Show when={auth.isAuthenticated}>
+        <Show when={(isAuthenticated())}>
           <Logout />
         </Show>
       </menu>

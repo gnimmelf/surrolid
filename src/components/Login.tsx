@@ -31,7 +31,7 @@ const defaultCredentials = {
 
 export const Login: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
-  const { auth, account, profile } = useService();
+  const { auth } = useService();
 
   const [store, setStore] = createStore<TSchema>(defaultCredentials);
   const [onSignup, doSignup] = createSignal<TSchema>();
@@ -44,18 +44,12 @@ export const Login: Component<{ title: string }> = (props) => {
     };
   }>({});
 
-  const [signin] = createResource(onSignin, auth.signin);
-  const [signup] = createResource(onSignup, auth.signup);
-  const [loadData] = createResource(
-    () => auth.isAuthenticated,
-    () => {
-      account.loadData
-      profile.loadData
-    }
-  );
+  const [signin] = createResource(onSignin, (credentials) => auth.signin(credentials));
+  const [signup] = createResource(onSignup, (credentials) => auth.signup(credentials));
 
   createEffect(async () => {
     if (signin.error) {
+      console.error(signin.error)
       setErrors({
         formErrors: [
           t('Failed signing in'),
@@ -65,6 +59,7 @@ export const Login: Component<{ title: string }> = (props) => {
     }
 
     if (signup.error) {
+      console.error(signup.error)
       setErrors({
         formErrors: [t('Failed signing up'), t('Did you already sign up?')],
       });
@@ -82,7 +77,6 @@ export const Login: Component<{ title: string }> = (props) => {
     <section>
       <h2>{t('Sign in')}</h2>
       <Suspense fallback={<Loading />}>
-        {noop(loadData())}
         <Form
           onSubmit={() => doSignin(validateValues(Schema, store, setErrors))}
         >

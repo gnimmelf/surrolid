@@ -1,8 +1,11 @@
 import {
+  Accessor,
   Component,
   createEffect,
+  createRenderEffect,
   createResource,
   createSignal,
+  from,
   Show,
   Suspense,
 } from 'solid-js';
@@ -33,14 +36,22 @@ export const Profile: Component = () => {
     };
   }>({});
 
+  const profileState: Accessor<TProfile  | undefined> = from(profile)
+  createRenderEffect(() => {
+    const state = profileState() as TProfile
+    if (state) {
+      setStore(state)
+    }
+  })
+
   const [loadData] = createResource(
     () => auth.isAuthenticated,
-    async () => {
-      await profile.loadData()
-      setStore(profile.state);
-    }
+    () => profile.loadData()
   );
-  const [saveData] = createResource(onSave, profile.saveData);
+  const [saveData] = createResource(onSave, (data: TProfile) => {
+    console.log({ data })
+    profile.saveData(data)
+});
 
   createEffect(async () => {
     if (saveData.error) {

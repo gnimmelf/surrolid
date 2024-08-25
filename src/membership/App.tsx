@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal, onError, Show } from 'solid-js';
+import { Accessor, Component, createEffect, createRenderEffect, createSignal, from, onError, Show } from 'solid-js';
 import { useI18n } from '@solid-primitives/i18n';
 
 import resetStyles from '@unocss/reset/normalize.css?inline';
@@ -24,6 +24,9 @@ const App: Component<{
   const [t] = useI18n();
   const { auth } = useService();
   const [slTabGroupEl, setSlTabGroupEl] = createSignal<HTMLElement>();
+
+  const authState: Accessor<{ isAuthenticated: boolean } | undefined> = from(auth)
+  const isAuthenticated = () => authState()?.isAuthenticated
 
   createEffect(() => {
     const { activePanel } = localStorage;
@@ -52,10 +55,10 @@ const App: Component<{
       <div>
         <TopBar title={props.title} />
 
-        <Show when={!auth.isAuthenticated}>
+        <Show when={!isAuthenticated()}>
           <Login title="Login" />
         </Show>
-        <Show when={auth.isAuthenticated}>
+        <Show when={isAuthenticated()}>
           <sl-tab-group
             on:sl-tab-show={({ detail }: any) => {
               localStorage.activePanel = detail.name;

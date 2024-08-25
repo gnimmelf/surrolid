@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import { name, address, phone, validateValues } from '../lib/fields';
 import DbService from './DbService';
+import { Observable } from '../lib/utils';
 
 export const ProfileSchema = z.object({
   firstName: name,
@@ -19,11 +20,12 @@ const initialState = (): TProfile => ({
   phone: '',
 });
 
-class ProfileService {
+class ProfileService extends Observable{
   #dbService: DbService
   #state = initialState()
 
   constructor(dbService: DbService) {
+    super();
     this.#dbService = dbService
   }
 
@@ -36,12 +38,13 @@ class ProfileService {
   }
 
   async loadData(): Promise<void> {
-    const details = this.#dbService.getProfileDetails()
+    const details = await  this.#dbService.getProfileDetails()
     this.#state = details as unknown as TProfile
+    this.next(this.state)
   }
 
   async saveData(details: TProfile): Promise<void> {
-    const db = this.#dbService.setProfileDetails(details)
+    const db = await this.#dbService.setProfileDetails(details)
   }
 }
 

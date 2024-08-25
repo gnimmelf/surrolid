@@ -16,6 +16,14 @@ export default defineConfig({
   preview: {
     port: 8080,
   },
+  build: {
+    target: 'esnext', // you can also use 'es2020' here
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: 'esnext', // you can also use 'es2020' here
+    },
+  },
   plugins: [
     devtools({ locator: true }),
     solidPlugin(),
