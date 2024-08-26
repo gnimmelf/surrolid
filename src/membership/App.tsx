@@ -43,9 +43,6 @@ const App: Component<{
       console.warn('Session expired, signing out');
       auth.signout();
     } else {
-      if (error.message) {
-        console.log(error.name, error.message)
-      }
       throw error;
     }
   });

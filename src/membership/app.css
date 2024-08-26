@@ -2,9 +2,9 @@
 }
 
 main.app {
-  color: var(--fg-color);
+  /* color: var(--fg-color);
   background-color: var(--bg-color);
-  border-color: var(--border-color);
+  border-color: var(--border-color); */
   border-radius: 8px;
   border-style: solid;
   border-width: 2px;
@@ -44,7 +44,7 @@ sl-button {
   margin-right: 1rem;
 }
 
-sl-avatar {
+/* sl-avatar {
   --sl-color-neutral-0: var(--bg-color);
   --sl-color-neutral-400: var(--fg-color)
 }
@@ -63,7 +63,7 @@ sl-tab-group::part(base) {
 
 sl-tab::part(base) {
   color: var(--fg-color);
-}
+} */
 
 sl-tab > sl-icon {
   margin-right: 0.5rem;

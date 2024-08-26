@@ -43,15 +43,21 @@
 
 # Roadmap
 
+## Fixes
+
+- [] Make auto-login (`authenticate` with `localStorage.accessToken`) suspend before first render of login-form
+
 ## Libs
 
-- [] Use Javascript sdk from Surreal.
+- [x] Use Javascript sdk from Surreal.
 
-  - [] Works clientside?
+  - [x] Works clientside?
 
-- [] Replace Vite with Bun.
+- [] Replace Vite with Bun?
 
-- [] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
+  - Wait for better SolidJs support in bun: https://bun.sh/guides/ecosystem/solidstart
+
+- [x] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
 
 - [] I18n (@solid-primitives/i18n) - Return key if no translation found!
 
@@ -64,12 +70,18 @@
 
   - [] Try [Material components](https://suid.io/getting-started/installation) ?
 
-- [] expose hard-coded css colors as css vars
+- [] Remove halfbacked custom-styling rules
+
+  - [] Use dark theme by default
+
+  - [] Create proper shoelace theme
 
 ## Forms
 
 - [] Form: slot (renderprop) for buttons, include `errors.formErros` in Form component
+
 - [] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity?)
+
 - [] Form: Feedback translation
 
 ## Surreal
@@ -121,7 +133,7 @@ surreal start -u admin -p gnimmelf --log=full file://database --bind 0.0.0.0:805
 ## Client
 
 ```
-surreal sql --conn http://localhost:8055 -u admin -p gnimmelf --ns intergate  --db test --pretty
+surreal sql --conn wss://localhost:8055 -u admin -p gnimmelf --ns intergate  --db test --pretty
 ```
 
 ## Setup
@@ -136,10 +148,4 @@ See `/surrealql/scope-*`
 
 ## Testing
 
-```
-curl --request POST \
-  --url http://localhost:8000/signin \
-  --header 'content-type: application/json' \
-  --header 'user-agent: vscode-restclient' \
-  --data '{"ns": "intergate","db": "test","sc": "account","email": "flemming@intergate.io","pass": "flemming"}'
-```
+Lacking, as allways on learning-projects like this...

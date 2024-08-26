@@ -49,7 +49,6 @@ export const Profile: Component = () => {
     () => profile.loadData()
   );
   const [saveData] = createResource(onSave, (data: TProfile) => {
-    console.log({ data })
     profile.saveData(data)
 });
 
