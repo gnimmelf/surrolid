@@ -24,7 +24,7 @@ export const Profile: Component = () => {
   const { auth, profile } = useService();
 
   const [onSave, doSave] = createSignal<TProfile>();
-  const [store, setStore] = createStore(profile.state);
+  const [store, setStore] = createStore(profile.state as TProfile);
 
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
@@ -36,9 +36,10 @@ export const Profile: Component = () => {
     };
   }>({});
 
+  // Subscribe to service-updates
   const profileState: Accessor<TProfile  | undefined> = from(profile)
   createRenderEffect(() => {
-    const state = profileState() as TProfile
+    const state = profileState()
     if (state) {
       setStore(state)
     }

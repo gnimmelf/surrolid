@@ -25,7 +25,7 @@ export const Account: Component = () => {
   const { auth, account } = useService();
 
   const [onSave, doSave] = createSignal<TAccount>();
-  const [store, setStore] = createStore<TAccount>(account.state);
+  const [store, setStore] = createStore(account.state as TAccount);
 
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
@@ -35,9 +35,10 @@ export const Account: Component = () => {
     };
   }>({});
 
-  const accountState: Accessor<{ email: string }  | undefined> = from(account)
+  // Subscribe to service-updates
+  const accountState: Accessor<Omit<TAccount, "pass">  | undefined> = from(account)
   createRenderEffect(() => {
-    const state = accountState() as TAccount
+    const state = accountState()
     if (state) {
       setStore(state)
     }

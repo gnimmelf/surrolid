@@ -4,8 +4,9 @@ import {
   JSXElement,
   Suspense,
   useContext,
-  createResource
+  createResource,
 } from 'solid-js';
+import { createStore } from "solid-js/store"
 
 import DbService from '../services/DbService';
 import AuthService from '../services/AuthService';

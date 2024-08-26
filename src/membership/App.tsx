@@ -25,6 +25,7 @@ const App: Component<{
   const { auth } = useService();
   const [slTabGroupEl, setSlTabGroupEl] = createSignal<HTMLElement>();
 
+  // Subscribe to service-updates
   const authState: Accessor<{ isAuthenticated: boolean } | undefined> = from(auth)
   const isAuthenticated = () => authState()?.isAuthenticated
 

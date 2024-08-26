@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { name, address, phone, checkLoadedData } from '../lib/fields';
 import DbService from './DbService';
-import { Observable } from '../lib/utils';
+import { Observable } from '../lib/Observable';
 
 export const ProfileSchema = z.object({
   firstName: name,
@@ -11,7 +11,7 @@ export const ProfileSchema = z.object({
   phone,
 });
 
-const DataSchema = ProfileSchema
+const LoadSchema = ProfileSchema
 
 export type TProfile = z.infer<typeof ProfileSchema>;
 
@@ -24,28 +24,21 @@ const initialState = (): TProfile => ({
 
 class ProfileService extends Observable{
   #dbService: DbService
-  #state = initialState()
 
   constructor(dbService: DbService) {
-    super();
+    super(initialState());
     this.#dbService = dbService
-  }
-
-  get state() {
-    return structuredClone(this.#state)
   }
 
   async loadData(): Promise<void> {
     const details = await  this.#dbService.getProfileDetails()
-    checkLoadedData(DataSchema, details)
-    this.#state = details as unknown as TProfile
-    this.next(this.state)
+    checkLoadedData(LoadSchema, details)
+    this.setState(details)
   }
 
   async saveData(details: TProfile): Promise<void> {
     await this.#dbService.setProfileDetails(details)
-    this.#state = details as unknown as TProfile
-    this.next(this.state)
+    this.setState(details)
   }
 }
 

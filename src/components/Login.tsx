@@ -29,7 +29,7 @@ const defaultCredentials = {
   pass: 'flemming8',
 };
 
-export const Login: Component<{ title: string }> = (props) => {
+export const Login: Component<{ title: string }> = () => {
   const [t] = useI18n();
   const { auth } = useService();
 
@@ -43,7 +43,6 @@ export const Login: Component<{ title: string }> = (props) => {
       pass?: string[];
     };
   }>({});
-
 
   const [authenticate] = createResource(() => true, async () => await auth.authenticate())
   const [signin] = createResource(onSignin, (credentials) => auth.signin(credentials));

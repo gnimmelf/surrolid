@@ -1,11 +1,6 @@
-import { Observable } from '../lib/utils';
+import { boolean, z } from 'zod';
+import { Observable } from '../lib/Observable';
 import DbService from './DbService';
-
-
-export type TCredentials = {
-  email: string;
-  pass: string;
-};
 
 type TAuthParams = {
   namespace: string
@@ -13,13 +8,28 @@ type TAuthParams = {
   scope: string
 }
 
+export type TCredentials = {
+  email: string;
+  pass: string;
+};
+
+export const AuthSchema = z.object({
+  isAuthenticated: z.boolean(),
+});
+
+export type TAuth = z.infer<typeof AuthSchema>;
+
+const initialState = () => ({
+  isAuthenticated: false
+})
+
 class AuthService extends Observable {
   #dbService: DbService
   #authParams: TAuthParams
   #accessToken: string
 
   constructor(dbService: DbService, authParams: TAuthParams) {
-    super();
+    super(initialState());
     this.#dbService = dbService
     this.#authParams = authParams
     this.#accessToken = ''
@@ -40,7 +50,7 @@ class AuthService extends Observable {
         console.error(error)
         return this.signout();
       }
-      this.next({
+      this.setState({
         isAuthenticated: this.isAuthenticated
       })
     }
@@ -60,7 +70,7 @@ class AuthService extends Observable {
       throw err;
     }
     this.#storeAccessToken()
-    this.next({
+    this.setState({
       isAuthenticated: this.isAuthenticated
     })
   }
@@ -79,7 +89,7 @@ class AuthService extends Observable {
       throw err;
     }
     this.#storeAccessToken()
-    this.next({
+    this.setState({
       isAuthenticated: this.isAuthenticated
     })
   }
@@ -89,7 +99,7 @@ class AuthService extends Observable {
     this.#storeAccessToken()
     const db = await this.#dbService.getDb()
     await db.invalidate()
-    this.next({
+    this.setState({
       isAuthenticated: this.isAuthenticated
     })
   }

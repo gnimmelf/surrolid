@@ -5,6 +5,8 @@ import { useService } from './ServiceProvider';
 
 import { Logout } from './Logout';
 import { Locale } from '../components/Locale';
+import { TAuth } from '../services/AuthService';
+import { TProfile } from '../services/ProfileService';
 
 const parseInitials = ({ firstName, lastName }: any) =>
   [firstName, lastName].reduce((acc, name) => {
@@ -16,8 +18,9 @@ export const TopBar: Component<{ title: string }> = (props) => {
   const [t] = useI18n();
   const { profile, auth } = useService();
 
-  const authState: Accessor<{ isAuthenticated: boolean } | undefined> = from(auth)
-  const profileState: Accessor<{ isAuthenticated: boolean } | undefined> = from(profile)
+  // Subscribe to service-updates
+  const authState: Accessor<TAuth | undefined> = from(auth)
+  const profileState: Accessor<TProfile | undefined> = from(profile)
 
   const isAuthenticated = () => authState()?.isAuthenticated
   const initials = createMemo(() => profileState() && parseInitials(profileState()));

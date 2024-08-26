@@ -1,4 +1,4 @@
-import { Accessor, createSignal, from } from 'solid-js';
+import { createSignal } from 'solid-js';
 
 export const unWrapQueryData: any = (data: object[][]) => {
   let tmp: any = data;
@@ -26,30 +26,5 @@ export const unpackResult = <T>(result: T[]): T => {
 export const awaitCondition = async (conditionCheck: Function, ms = 10) => {
   while (!conditionCheck()) {
     await new Promise((resolve) => setTimeout(resolve, ms));
-  }
-}
-
-/**
- * Class extension to make instances observable
- */
-export class Observable {
-  #subscribers: Function[];
-
-  constructor() {
-    this.#subscribers = []
-  }
-
-  subscribe(subscriber: Function) {
-    this.#subscribers.push(subscriber)
-    return () => this.unsubscribe(subscriber)
-  }
-
-  unsubscribe(subscriber: Function): void {
-    this.#subscribers = this.#subscribers.filter(fn => fn !== subscriber);
-  }
-
-  next(value: any): void {
-    // Call each subscriber function with value
-    this.#subscribers.forEach((subscriber) => subscriber(value))
   }
 }

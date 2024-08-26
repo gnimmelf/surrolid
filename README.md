@@ -43,9 +43,15 @@
 
 # Roadmap
 
-## Fixes
+## TODO!
 
-- [] Make auto-login (`authenticate` with `localStorage.accessToken`) suspend before first render of login-form
+- [x] Make auto-login (`authenticate` with `localStorage.accessToken`) suspend before first render of login-form
+
+- [ ] Replace Service-classes obersevable reactivity pattern. Use of SolidJs' `from` and the `Observable` abstract class is:
+
+  -  Cumbersome, and type definitions are hard to implement
+
+  - [ ] Use `createStore` instead? - Maybe inject into each service from `ServiceProvider`?
 
 ## Libs
 
@@ -53,62 +59,65 @@
 
   - [x] Works clientside?
 
-- [] Replace Vite with Bun?
+- [ ] Replace Vite with Bun? - I hate Vite & love Bun... but:
 
   - Wait for better SolidJs support in bun: https://bun.sh/guides/ecosystem/solidstart
 
 - [x] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
 
-- [] I18n (@solid-primitives/i18n) - Return key if no translation found!
+- [ ] I18n (@solid-primitives/i18n) - Return key if no translation found!
 
   - Check alternative https://github.com/the-cookbook/solid-intl
 
 
 ## Styling
 
-- [] Get rid of Unocss. Overkill for this scope.
+- [ ] Get rid of Unocss. Overkill for this scope.
 
-  - [] Try [Material components](https://suid.io/getting-started/installation) ?
+  - [ ] Try [Material components](https://suid.io/getting-started/installation) ?
 
-- [] Remove halfbacked custom-styling rules
+- [ ] Remove halfbacked custom-styling rules
 
-  - [] Use dark theme by default
+- [x] Use Shoelace-style dark theme by default
 
-  - [] Create proper shoelace theme
+  - [ ] Create proper shoelace theme
 
 ## Forms
 
-- [] Form: slot (renderprop) for buttons, include `errors.formErros` in Form component
+- [ ] Form: slot (renderprop) for buttons, include `errors.formErros` in Form component
 
-- [] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity?)
+- [ ] Form: Success feedback, eg. last updated / saved (Maybe use this to "trigger" whole-store-change reactivity?)
 
-- [] Form: Feedback translation
+  - [ ] Try Shoelace-style Toast?
+
+- [x] Form: Feedback translation
+
 
 ## Surreal
 
 - [x] Split table user into account + profile
 
-- [] Maybe a db event table => Account history
+- [ ] Maybe a db event table => Account history
 
-- [] Make a ping call once db-connection is set up
+- [ ] Make a ping call once db-connection is set up
 
-  - [] Check session timeout. - How?
+  - [ ] Check session timeout. - How?
 
-- [] transactional email w/ magic link
+- [ ] transactional email w/ magic link
 
-  -[] Reset password
-  -[] Change e-mail
+  -[ ] Reset password
+  -[ ] Change e-mail
 
-- [] Use arguments to surql statements instead of concatenating string-snippets
+- [ ] Use arguments to surql statements instead of concatenating string-snippets
 
   - Is this really moot, because the sql enpoint is always open...?
 
 ## Other
 
-- [] Solid POD for account info?
-- [] Payment integrations (stripe/klarna/vipps)
-- [] Contact
-- [] Subcription
+- [ ] Solid POD for account info?
+- [ ] Payment integrations (stripe/klarna/vipps)
+- [ ] Contact
+- [ ] Subcription
 
 # Notes
 
