@@ -1,12 +1,12 @@
 import { Surreal } from "surrealdb";
-import { Observable, unpackResult } from "../lib/utils";
+import { awaitCondition, Observable, unpackResult } from "../lib/utils";
 
 class DbService extends Observable {
   #db: Surreal;
   #url: string
   #namespace: string
   #database: string
-  #isConnected: boolean = false
+  #isConnected: boolean
 
   constructor(datapoint: string, namespace: string, database: string) {
     super();
@@ -19,6 +19,7 @@ class DbService extends Observable {
 
   async connect(): Promise<DbService> {
     try {
+      console.info("Connecting Surrealdb...")
       await this.#db.connect(this.#url, {
         namespace: this.#namespace,
         database: this.#database,
@@ -32,14 +33,15 @@ class DbService extends Observable {
     return this
   }
 
-  disconnect(): void {
-    if (this.#db) {
-      this.#db.close();
+  async disconnect(): Promise<void> {
+    if (this.#db.status === 'connected') {
+      await this.#db.close();
     }
     this.#isConnected = false
   }
 
-  getDb(): Surreal {
+  async getDb(): Promise<Surreal> {
+    await awaitCondition(() => this.#db.status === 'connected')
     return this.#db
   }
 
@@ -58,7 +60,7 @@ class DbService extends Observable {
 
   async setAccountDetails<T>(details: T) {
     try {
-      const result = await this.#db.query('UPDATE account CONTENT $content;', {content: details})
+      const result = await this.#db.merge('account', details)
     } catch (err) {
       throw err;
     }

@@ -47,10 +47,7 @@ export const ServiceProvider: Component<{
   const [connectDb] = createResource(
     () => !(dbService.isConnected),
     async () => {
-      if (!dbService.isConnected) {
-        await dbService.connect()
-        await authService.authenticate()
-      }
+      await dbService.connect()
     }
   );
 

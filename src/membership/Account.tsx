@@ -38,7 +38,6 @@ export const Account: Component = () => {
   const accountState: Accessor<{ email: string }  | undefined> = from(account)
   createRenderEffect(() => {
     const state = accountState() as TAccount
-    console.log({ state })
     if (state) {
       setStore(state)
     }
@@ -52,7 +51,6 @@ export const Account: Component = () => {
 
   createEffect(async () => {
     if (saveData.error) {
-      console.log(saveData.error);
       setErrors({
         formErrors: [t('Error saving')],
       });
