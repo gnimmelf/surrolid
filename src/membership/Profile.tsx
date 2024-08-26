@@ -24,7 +24,7 @@ export const Profile: Component = () => {
   const { auth, profile } = useService();
 
   const [onSave, doSave] = createSignal<TProfile>();
-  const [store, setStore] = createStore(profile.initialState);
+  const [store, setStore] = createStore(profile.state);
 
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];

@@ -25,7 +25,7 @@ export const Account: Component = () => {
   const { auth, account } = useService();
 
   const [onSave, doSave] = createSignal<TAccount>();
-  const [store, setStore] = createStore<TAccount>(account.initialState);
+  const [store, setStore] = createStore<TAccount>(account.state);
 
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];

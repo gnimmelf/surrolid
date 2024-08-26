@@ -31,10 +31,6 @@ class ProfileService extends Observable{
     this.#dbService = dbService
   }
 
-  get initialState() {
-    return initialState()
-  }
-
   get state() {
     return structuredClone(this.#state)
   }
@@ -48,6 +44,8 @@ class ProfileService extends Observable{
 
   async saveData(details: TProfile): Promise<void> {
     await this.#dbService.setProfileDetails(details)
+    this.#state = details as unknown as TProfile
+    this.next(this.state)
   }
 }
 

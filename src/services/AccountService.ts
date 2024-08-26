@@ -27,10 +27,6 @@ class AccountService extends Observable {
     this.#dbService = dbService
   }
 
-  get initialState() {
-    return initialState()
-  }
-
   get state() {
     return structuredClone(this.#state)
   }
@@ -44,6 +40,8 @@ class AccountService extends Observable {
 
   async saveData(details: TAccount): Promise<void> {
     await this.#dbService.setAccountDetails(details)
+    this.#state = details as unknown as TAccount
+    this.next(this.state)
   }
 }
 
