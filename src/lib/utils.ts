@@ -18,8 +18,7 @@ export const createVoidSignal = createSignal<void>(undefined, {
 });
 
 export const unpackResult = <T>(result: T[]): T => {
-  console.log({ result })
-  return result.pop()?.result.pop()
+  return result.pop().pop()
 }
 
 

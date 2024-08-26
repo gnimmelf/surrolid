@@ -38,6 +38,7 @@ export const Account: Component = () => {
   const accountState: Accessor<{ email: string }  | undefined> = from(account)
   createRenderEffect(() => {
     const state = accountState() as TAccount
+    console.log({ state })
     if (state) {
       setStore(state)
     }

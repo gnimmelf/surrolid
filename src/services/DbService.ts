@@ -1,4 +1,4 @@
-import Surreal from "surrealdb"
+import { Surreal } from "surrealdb";
 import { Observable, unpackResult } from "../lib/utils";
 
 class DbService extends Observable {
@@ -28,7 +28,7 @@ class DbService extends Observable {
       throw error;
     }
     this.#isConnected = true
-    console.info(`DbService connected: ${this.#url} => ${this.#namespace}:${this.#database}`)
+    console.info(`DbService connected: ${this.#database}@${this.#namespace}:${this.#url}`)
     return this
   }
 
@@ -39,31 +39,12 @@ class DbService extends Observable {
     this.#isConnected = false
   }
 
-
-
   getDb(): Surreal {
     return this.#db
   }
 
   get isConnected(): boolean {
     return this.#isConnected
-  }
-
-  async getProfileDetails() {
-    try {
-      const result = await this.#db.query('SELECT firstName, lastName, address, phone FROM profile;')
-      return unpackResult(result)
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async setProfileDetails(details: any) {
-    try {
-      await this.#db.merge('profile', details)
-    } catch (err) {
-      throw err;
-    }
   }
 
   async getAccountDetails() {
@@ -77,13 +58,30 @@ class DbService extends Observable {
 
   async setAccountDetails<T>(details: T) {
     try {
-      const result = await this.#db.query('UPDATE firstName, lastName, address, phone FROM profile;', details)
-      // TODO! Unpack result
-      return result
+      const result = await this.#db.query('UPDATE account CONTENT $content;', {content: details})
     } catch (err) {
       throw err;
     }
   }
+
+  async getProfileDetails() {
+    try {
+      const result = await this.#db.query('SELECT firstName, lastName, address, phone  FROM profile;')
+      return unpackResult(result)
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async setProfileDetails<T>(details: T) {
+    try {
+      await this.#db.merge('profile', details)
+    } catch (err) {
+      throw err;
+    }
+  }
+
+
 }
 
 export default DbService

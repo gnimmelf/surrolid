@@ -16,9 +16,6 @@ export default defineConfig({
   preview: {
     port: 8080,
   },
-  build: {
-    target: 'esnext', // you can also use 'es2020' here
-  },
   optimizeDeps: {
     esbuildOptions: {
       target: 'esnext', // you can also use 'es2020' here
@@ -36,6 +33,7 @@ export default defineConfig({
     }),
   ],
   build: {
+    target: 'esnext', // you can also use 'es2020' here
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: resolve(__dirname, 'src/main.ts'),

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { name, address, phone, validateValues } from '../lib/fields';
+import { name, address, phone, checkLoadedData } from '../lib/fields';
 import DbService from './DbService';
 import { Observable } from '../lib/utils';
 
@@ -10,6 +10,8 @@ export const ProfileSchema = z.object({
   address,
   phone,
 });
+
+const DataSchema = ProfileSchema
 
 export type TProfile = z.infer<typeof ProfileSchema>;
 
@@ -39,12 +41,13 @@ class ProfileService extends Observable{
 
   async loadData(): Promise<void> {
     const details = await  this.#dbService.getProfileDetails()
+    checkLoadedData(DataSchema, details)
     this.#state = details as unknown as TProfile
     this.next(this.state)
   }
 
   async saveData(details: TProfile): Promise<void> {
-    const db = await this.#dbService.setProfileDetails(details)
+    await this.#dbService.setProfileDetails(details)
   }
 }
 

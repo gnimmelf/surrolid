@@ -30,6 +30,7 @@ export const phone = z.preprocess(
     .or(z.literal(''))
 );
 
+
 export const validateValues = (
   Schema: ZodSchema,
   values: z.infer<typeof Schema>,
@@ -39,12 +40,22 @@ export const validateValues = (
   }>
 ) => {
   const res = Schema.safeParse(values);
-  console.log('validateValues', values, res)
   if (res.success) {
     setErrors({});
     return res.data;
   } else {
-    // Remember to flatten
+    // @ts-ignore - Zod:flatten errors
     setErrors(res.error.flatten());
   }
 };
+
+export const checkLoadedData = (
+  Schema: ZodSchema,
+  values: z.infer<typeof Schema>,
+) => {
+  const res = Schema.safeParse(values);
+  if (!res.success) {
+    // @ts-ignore - Zod:flatten errors
+    console.warn('Incompatible data loaded:', res.error.flatten())
+  }
+}

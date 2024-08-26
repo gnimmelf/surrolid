@@ -2,9 +2,10 @@
 
 REMOVE TABLE account;
 
-LET $account = DEFINE TABLE account SCHEMAFULL
+DEFINE TABLE account SCHEMAFULL
   PERMISSIONS
-    FOR select, update WHERE id = $auth.id,
+    FOR select, update
+        WHERE id = $auth.id,
     FOR create, delete NONE;
 
 DEFINE FIELD email
@@ -29,17 +30,17 @@ DEFINE SCOPE account
   SESSION 24h
   SIGNUP {
     LET $account = array::first(CREATE account CONTENT {
-      email: $email,
-      pass: $pass
+        email: $email,
+        pass: $pass
     });
     IF ($account.id) THEN {
-      CREATE profile CONTENT {
-        owner: $account.id,
-        firstName: "",
-        lastName: "",
-        address: "",
-        phone: ""
-      };
+        CREATE profile CONTENT {
+            owner: $account.id,
+            firstName: "",
+            lastName: "",
+            address: "",
+            phone: ""
+        };
     } END;
 
     RETURN $account;

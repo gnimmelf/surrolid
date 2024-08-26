@@ -19,7 +19,7 @@ declare module 'solid-js' {
 customElement(
   'membership-widget',
   {
-    datapoint: 'http://localhost:8055/',
+    datapoint: 'wss://localhost:8055/',
     title: 'Membership portal',
     namespace: 'test',
     database: 'test',
