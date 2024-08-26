@@ -18,9 +18,16 @@ export const createVoidSignal = createSignal<void>(undefined, {
 });
 
 export const unpackResult = <T>(result: T[]): T => {
+  // @ts-ignore
   return result.pop().pop()
 }
 
+
+export const awaitCondition = async (conditionCheck: Function, ms = 10) => {
+  while (!conditionCheck()) {
+    await new Promise((resolve) => setTimeout(resolve, ms));
+  }
+}
 
 /**
  * Class extension to make instances observable

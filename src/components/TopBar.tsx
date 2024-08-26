@@ -17,9 +17,10 @@ export const TopBar: Component<{ title: string }> = (props) => {
   const { profile, auth } = useService();
 
   const authState: Accessor<{ isAuthenticated: boolean } | undefined> = from(auth)
-  const isAuthenticated = () => authState()?.isAuthenticated
+  const profileState: Accessor<{ isAuthenticated: boolean } | undefined> = from(profile)
 
-  const initials = createMemo(() => parseInitials(profile.state));
+  const isAuthenticated = () => authState()?.isAuthenticated
+  const initials = createMemo(() => profileState() && parseInitials(profileState()));
 
   return (
     <div class="top-bar">

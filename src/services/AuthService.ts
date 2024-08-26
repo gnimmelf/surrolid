@@ -29,9 +29,25 @@ class AuthService extends Observable {
     localStorage.accessToken = this.#accessToken
   }
 
+  async authenticate() {
+    if (localStorage.accessToken) {
+      const db = await this.#dbService.getDb()
+      this.#accessToken = localStorage.accessToken
+      try {
+        console.info('Authenticating token from localStorage...')
+        await db.authenticate(this.#accessToken)
+      } catch (error) {
+        console.error(error)
+        return this.signout();
+      }
+      this.next({
+        isAuthenticated: this.isAuthenticated
+      })
+    }
+  }
+
   async signup(credentials: TCredentials) {
-    console.log('signup', this.#dbService, credentials)
-    const db = this.#dbService.getDb()
+    const db = await this.#dbService.getDb()
     try {
       this.#accessToken = await db.signup({
         namespace: this.#authParams.namespace,
@@ -50,8 +66,7 @@ class AuthService extends Observable {
   }
 
   async signin(credentials: TCredentials) {
-    console.log('signin', this.#dbService, credentials)
-    const db = this.#dbService.getDb()
+    const db = await this.#dbService.getDb()
     try {
       this.#accessToken = await db.signin({
         namespace: this.#authParams.namespace,
@@ -69,25 +84,10 @@ class AuthService extends Observable {
     })
   }
 
-  async authenticate() {
-    if (localStorage.accessToken) {
-      this.#accessToken = localStorage.accessToken
-      const db = this.#dbService.getDb()
-      try {
-        await db.authenticate(this.#accessToken)
-      } catch (err) {
-        return this.signout();
-      }
-      this.next({
-        isAuthenticated: this.isAuthenticated
-      })
-    }
-  }
-
   async signout() {
     this.#accessToken = ''
     this.#storeAccessToken()
-    const db = this.#dbService.getDb()
+    const db = await this.#dbService.getDb()
     await db.invalidate()
     this.next({
       isAuthenticated: this.isAuthenticated
