@@ -25,12 +25,6 @@ export default defineConfig({
     devtools({ locator: true }),
     solidPlugin(),
     basicSsl(),
-    UnoCSS({
-      mode: 'shadow-dom',
-      presets: [unoPreset(), presetTypography()],
-      transformers: [transformerDirectives()],
-      rules: [],
-    }),
   ],
   build: {
     target: 'esnext', // you can also use 'es2020' here

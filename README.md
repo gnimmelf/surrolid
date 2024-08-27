@@ -9,21 +9,24 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/themes/light.css"
 />
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/themes/dark.css"
+/>
+
 <script
   type="module"
   src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/shoelace.js"
 ></script>
 <script type="module" src="https://intergate.io/cdn/social-widgets.js"></script>
 ```
-
 2. Set css vars
 
 ```html
 <style>
   :root {
     --bg-color: var(--sl-color-emerald-950);
-    --fg-color: var(--sl-color-emerald-100);
-    --accent-color: var(--sl-color-emerald-400);
     --border-color: var(--sl-color-emerald-100);
   }
 </style>
@@ -65,18 +68,15 @@
 
 - [x] Require a zod-schema per fetch to parse `result.data` against (`safeParse` / `parse`)
 
-- [ ] I18n (@solid-primitives/i18n) - Return key if no translation found!
+- [x] I18n (@solid-primitives/i18n) - Return key if no translation found!
 
   - Check alternative https://github.com/the-cookbook/solid-intl
 
 
 ## Styling
 
-- [ ] Get rid of Unocss. Overkill for this scope.
+- [x] Get rid of Unocss. Overkill for this scope.
 
-  - [ ] Try [Material components](https://suid.io/getting-started/installation) ?
-
-- [ ] Remove halfbacked custom-styling rules
 
 - [x] Use Shoelace-style dark theme by default
 

@@ -24,6 +24,7 @@ import { TBD } from '../components/TBD';
 import { Profile } from './Profile';
 import { Account } from './Account';
 import { AuthenticationError } from '../lib/errors';
+import { SlTabGroup } from '../../types/shoelace';
 
 const App: Component<{
   title: string;
@@ -57,8 +58,6 @@ const App: Component<{
 
   return (
     <main class="app">
-      {/* <style data-name="reset">{resetStyles}</style> */}
-      <style data-name="unocss">@unocss-placeholder</style>
       <style data-name="custom">{customStyles}</style>
       <div>
         <TopBar title={props.title} />
