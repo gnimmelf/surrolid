@@ -15,13 +15,13 @@ import ProfileService from '../services/ProfileService';
 import { Loading } from './Loading';
 import { noop } from '../lib/utils';
 
-type ServiceProvider = {
+type TServiceProvider = {
   auth: AuthService
   account: AccountService
   profile: ProfileService
 }
 
-const ServiceContext = createContext<ServiceProvider>();
+const ServiceContext = createContext<TServiceProvider>();
 
 export const ServiceProvider: Component<{
   namespace: string;
@@ -63,5 +63,5 @@ export const ServiceProvider: Component<{
 };
 
 export const useService = () => {
-  return useContext(ServiceContext) as ServiceProvider;
+  return useContext(ServiceContext) as TServiceProvider;
 };

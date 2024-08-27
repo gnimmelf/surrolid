@@ -10,13 +10,11 @@ import * as i18n from "@solid-primitives/i18n";
 
 import noTexts from '../locale/no-nb.json';
 
-type I18nProvider = {
+type TI18nProvider = {
   t: (key: string) => string
   locale: () => string
   setLocale: (langCode: string) => void
 }
-
-type Dictionary = Record<string, object>
 
 const LOCALES = [
   {
@@ -39,11 +37,13 @@ const dictionaries = LOCALES.reduce(
   {}
 );
 
-const I18nContext = createContext<I18nProvider>();
+const I18nContext = createContext<TI18nProvider>();
 
 export const i18nLangs = LOCALES.map(({ code, name }) => ({ code, name }));
 
-export const I18nProvider: Component<{ children: JSXElement }> = (props) => {
+export const I18nProvider: Component<{
+  children: JSXElement
+}> = (props) => {
 
   const [locale, setLocale] = createSignal<string>('en')
   const [dictionary] = createResource<i18n.BaseRecordDict, string>(
@@ -78,7 +78,7 @@ export const I18nProvider: Component<{ children: JSXElement }> = (props) => {
 };
 
 export const useI18n = () => {
-  return useContext(I18nContext) as I18nProvider;
+  return useContext(I18nContext) as TI18nProvider;
 }
 
 
