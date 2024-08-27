@@ -1,12 +1,18 @@
-import { Component, createEffect, JSX, Show, splitProps } from 'solid-js';
-import { useI18n } from '@solid-primitives/i18n';
+import {
+  Component,
+  JSX,
+  Show,
+  splitProps
+} from 'solid-js';
+
+import { useI18n } from './I18nProvider';
 
 export const Input: Component<{
   errors?: string[];
   isSubmiting: boolean;
   [x: string]: unknown;
 }> = (props) => {
-  const [t] = useI18n();
+  const { t } = useI18n();
   const [local, rest] = splitProps(props, ['isSubmiting', 'errors']);
 
   return (

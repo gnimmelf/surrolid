@@ -10,8 +10,8 @@ import {
   Suspense,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { useI18n } from '@solid-primitives/i18n';
 
+import { useI18n } from '../components/I18nProvider';
 import { useService } from '../components/ServiceProvider';
 import { Input, Form, FetchButton } from '../components/FormControls';
 import { AccountSchema, TAccount } from '../services/AccountService';
@@ -21,7 +21,7 @@ import { noop } from '../lib/utils';
 
 
 export const Account: Component = () => {
-  const [t] = useI18n();
+  const { t } = useI18n();
   const { auth, account } = useService();
 
   const [onSave, doSave] = createSignal<TAccount>();

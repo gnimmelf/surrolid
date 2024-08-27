@@ -1,10 +1,9 @@
 import { Component, createMemo, For } from 'solid-js';
-import { useI18n } from '@solid-primitives/i18n';
-import { i18nLangs } from './I18nProvider';
+import { i18nLangs, useI18n } from './I18nProvider';
 
 const getBrowserLocales = (options = {}): Array<string> => {
   const defaultOptions = {
-    languageCodeOnly: false,
+    languageCodeOnly: true,
   };
   const opt = {
     ...defaultOptions,
@@ -24,20 +23,21 @@ const getBrowserLocales = (options = {}): Array<string> => {
 };
 
 export const Locale: Component = (props) => {
-  const [_t, { locale, dict }] = useI18n();
+  const { locale, setLocale } = useI18n();
 
-  const setLocale = (langCode: string) => {
+  const setSelectedLocale = (langCode: string) => {
     localStorage.langCode = langCode;
-    locale(langCode);
+    setLocale(langCode);
   };
 
-  let langCode = localStorage.langCode;
-  if (!langCode) {
-    const langCodes = getBrowserLocales({ languageCodeOnly: true });
-    langCode = dict(langCodes[0] || '') ? langCodes[0] : 'no';
+  let defaultLocale = localStorage.langCode;
+  if (!defaultLocale) {
+    const browserLocales = getBrowserLocales();
+    defaultLocale = browserLocales[0] ?? locale()
   }
-
-  setLocale(langCode);
+  if (defaultLocale !== locale()) {
+    setSelectedLocale(defaultLocale);
+  }
 
   const selectedLang = createMemo(() =>
     i18nLangs.find(({ code }) => code === locale())
@@ -48,7 +48,7 @@ export const Locale: Component = (props) => {
       <sl-select
         attr:value={selectedLang()?.code}
         on:sl-change={(evt: DOMEvent<HTMLSelectElement>) =>
-          setLocale(evt.target.value)
+          setSelectedLocale(evt.target.value)
         }
       >
         <For each={i18nLangs}>

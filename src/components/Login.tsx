@@ -7,9 +7,9 @@ import {
   Suspense,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { useI18n } from '@solid-primitives/i18n';
 import { z } from 'zod';
 
+import { useI18n } from './I18nProvider';
 import { useService } from './ServiceProvider';
 
 import { Form, Input, FetchButton } from './FormControls';
@@ -30,7 +30,7 @@ const defaultCredentials = {
 };
 
 export const Login: Component<{ title: string }> = () => {
-  const [t] = useI18n();
+  const { t } = useI18n();
   const { auth } = useService();
 
   const [store, setStore] = createStore<TSchema>(defaultCredentials);

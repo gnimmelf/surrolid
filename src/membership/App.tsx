@@ -1,10 +1,17 @@
-import { Accessor, Component, createEffect, createRenderEffect, createSignal, from, onError, Show } from 'solid-js';
-import { useI18n } from '@solid-primitives/i18n';
+import {
+  Accessor,
+  Component,
+  createEffect,
+  createSignal,
+  from,
+  catchError,
+  Show,
+  ErrorBoundary
+} from 'solid-js';
 
-import resetStyles from '@unocss/reset/normalize.css?inline';
 import customStyles from './app.css?inline';
 
-import { I18nProvider } from '../components/I18nProvider';
+import { I18nProvider, useI18n } from '../components/I18nProvider';
 import {
   ServiceProvider,
   useService,
@@ -21,7 +28,7 @@ import { AuthenticationError } from '../lib/errors';
 const App: Component<{
   title: string;
 }> = (props) => {
-  const [t] = useI18n();
+  const { t } = useI18n();
   const { auth } = useService();
   const [slTabGroupEl, setSlTabGroupEl] = createSignal<HTMLElement>();
 
@@ -39,7 +46,7 @@ const App: Component<{
     }
   });
 
-  onError((error) => {
+  catchError(() => {}, (error) => {
     if (error instanceof AuthenticationError) {
       console.warn('Session expired, signing out');
       auth.signout();
@@ -50,7 +57,7 @@ const App: Component<{
 
   return (
     <main class="app">
-      <style data-name="reset">{resetStyles}</style>
+      {/* <style data-name="reset">{resetStyles}</style> */}
       <style data-name="unocss">@unocss-placeholder</style>
       <style data-name="custom">{customStyles}</style>
       <div>
@@ -103,19 +110,19 @@ const AppProvider: Component<{
   database: string;
   scope: string;
 }> = (props) => {
-  onError((error) => console.error(`App::onError: ${error}`));
-
   return (
-    <I18nProvider>
-      <ServiceProvider
-        namespace={props.namespace}
-        database={props.database}
-        scope={props.scope}
-        datapoint={props.datapoint}
-      >
-        <App title={props.title} />
-      </ServiceProvider>
-    </I18nProvider>
+    <ErrorBoundary fallback={(error) => <h1>Fail!</h1>}>
+      <I18nProvider>
+        <ServiceProvider
+          namespace={props.namespace}
+          database={props.database}
+          scope={props.scope}
+          datapoint={props.datapoint}
+        >
+          <App title={props.title} />
+        </ServiceProvider>
+      </I18nProvider>
+    </ErrorBoundary>
   );
 };
 

@@ -1,7 +1,22 @@
-import { Component, JSXElement } from 'solid-js';
-import { I18nContext, createI18nContext } from '@solid-primitives/i18n';
+import {
+  Component,
+  JSXElement,
+  createContext,
+  createResource,
+  createSignal,
+  useContext
+} from 'solid-js';
+import * as i18n from "@solid-primitives/i18n";
 
 import noTexts from '../locale/no-nb.json';
+
+type I18nProvider = {
+  t: (key: string) => string
+  locale: () => string
+  setLocale: (langCode: string) => void
+}
+
+type Dictionary = Record<string, object>
 
 const LOCALES = [
   {
@@ -19,17 +34,51 @@ const LOCALES = [
   },
 ];
 
-const i18nDict = LOCALES.reduce(
+const dictionaries = LOCALES.reduce(
   (acc, { code, dict }) => ({ ...acc, [code]: dict }),
   {}
 );
 
-const i18nLangs = LOCALES.map(({ code, name }) => ({ code, name }));
+const I18nContext = createContext<I18nProvider>();
 
-const I18nProvider: Component<{ children: JSXElement }> = (props) => (
-  <I18nContext.Provider value={createI18nContext(i18nDict)}>
-    {props.children}
-  </I18nContext.Provider>
-);
+export const i18nLangs = LOCALES.map(({ code, name }) => ({ code, name }));
 
-export { I18nProvider, i18nLangs };
+export const I18nProvider: Component<{ children: JSXElement }> = (props) => {
+
+  const [locale, setLocale] = createSignal<string>('en')
+  const [dictionary] = createResource<i18n.BaseRecordDict, string>(
+    locale,
+    (langCode: string) => {
+      console.log({ langCode })
+      //@ts-ignore
+      return dictionaries[langCode]
+    }
+  );
+
+  const translate = (key: string) => {
+    const t = i18n.translator(dictionary)
+    const text = t(key)
+    if (!text) {
+      console.info(`i18nProvider: Missing text for '${key}'(${locale()})`)
+    }
+    return text
+  }
+
+  const provided = {
+    t: translate,
+    setLocale,
+    locale
+  }
+
+  return (
+    <I18nContext.Provider value={provided}>
+      {props.children}
+    </I18nContext.Provider>
+  )
+};
+
+export const useI18n = () => {
+  return useContext(I18nContext) as I18nProvider;
+}
+
+

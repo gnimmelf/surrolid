@@ -1,6 +1,12 @@
-import { Component, Show, createMemo, createEffect, from, Accessor } from 'solid-js';
-import { useI18n } from '@solid-primitives/i18n';
+import {
+  Component,
+  Show,
+  createMemo,
+  from,
+  Accessor
+} from 'solid-js';
 
+import { useI18n } from './I18nProvider';
 import { useService } from './ServiceProvider';
 
 import { Logout } from './Logout';
@@ -15,7 +21,7 @@ const parseInitials = ({ firstName, lastName }: any) =>
   }, '');
 
 export const TopBar: Component<{ title: string }> = (props) => {
-  const [t] = useI18n();
+  const { t } = useI18n();
   const { profile, auth } = useService();
 
   // Subscribe to service-updates
