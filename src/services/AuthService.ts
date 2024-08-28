@@ -1,6 +1,7 @@
 import { boolean, z } from 'zod';
 import { Observable } from '../lib/Observable';
 import DbService from './DbService';
+import { logError } from '../lib/utils';
 
 type TAuthParams = {
   namespace: string
@@ -47,7 +48,7 @@ class AuthService extends Observable {
         console.info('Authenticating token from localStorage...')
         await db.authenticate(this.#accessToken)
       } catch (error) {
-        console.error(error)
+        logError(error as Error)
         return this.signout();
       }
       this.setState({

@@ -10,8 +10,23 @@
 </head>
 
 <body>
-  <membership-widget datapoint="wss://data.intergate.io" title="My membership" namespace="intergate" database="test"
-    scope="account"></membership-widget>
+
+  <!-- <accountlist-widget
+    title="Accounts"
+    datapoint="wss://data.intergate.io"
+    namespace="intergate"
+    database="demo"
+  ></accountlist-widget>
+
+  <hr /> -->
+
+  <portal-widget
+    title="Member Portal"
+    datapoint="wss://data.intergate.io"
+    namespace="intergate"
+    database="demo"
+    scope="account"
+  ></portal-widget>
 
   <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/shoelace.js"></script>
   <script type="module" src="/src/main.ts"></script>

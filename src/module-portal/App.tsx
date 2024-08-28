@@ -15,16 +15,17 @@ import { I18nProvider, useI18n } from '../components/I18nProvider';
 import {
   ServiceProvider,
   useService,
-} from '../components/ServiceProvider';
+} from './ServiceProvider';
 
-import { Login } from '../components/Login';
-import { TopBar } from '../components/TopBar';
+import { Login } from './Login';
+import { TopBar } from './TopBar';
 import { TBD } from '../components/TBD';
 
 import { Profile } from './Profile';
 import { Account } from './Account';
 import { AuthenticationError } from '../lib/errors';
-import { SlTabGroup } from '../../types/shoelace';
+import { ErrorFallback } from '../components/ErrorFallback';
+import { logError } from '../lib/utils';
 
 const App: Component<{
   title: string;
@@ -49,7 +50,7 @@ const App: Component<{
 
   catchError(() => {}, (error) => {
     if (error instanceof AuthenticationError) {
-      console.warn('Session expired, signing out');
+      logError(error);
       auth.signout();
     } else {
       throw error;
@@ -102,7 +103,7 @@ const App: Component<{
   );
 };
 
-const AppProvider: Component<{
+const AppRoot: Component<{
   datapoint: string;
   title: string;
   namespace: string;
@@ -110,7 +111,7 @@ const AppProvider: Component<{
   scope: string;
 }> = (props) => {
   return (
-    <ErrorBoundary fallback={(error) => <h1>Fail!</h1>}>
+    <ErrorBoundary fallback={(error) => <ErrorFallback moduleName={props.title} error={error} />}>
       <I18nProvider>
         <ServiceProvider
           namespace={props.namespace}
@@ -125,4 +126,4 @@ const AppProvider: Component<{
   );
 };
 
-export default AppProvider;
+export default AppRoot;

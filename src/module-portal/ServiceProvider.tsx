@@ -12,7 +12,7 @@ import DbService from '../services/DbService';
 import AuthService from '../services/AuthService';
 import AccountService from '../services/AccountService';
 import ProfileService from '../services/ProfileService';
-import { Loading } from './Loading';
+import { Loading } from '../components/Loading';
 import { noop } from '../lib/utils';
 
 type TServiceProvider = {
@@ -26,7 +26,7 @@ const ServiceContext = createContext<TServiceProvider>();
 export const ServiceProvider: Component<{
   namespace: string;
   database: string;
-  scope: string;
+  scope: string
   datapoint: string;
   children: JSXElement;
 }> = (props) => {

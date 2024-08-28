@@ -9,12 +9,12 @@ import {
 import { createStore } from 'solid-js/store';
 import { z } from 'zod';
 
-import { useI18n } from './I18nProvider';
+import { useI18n } from '../components/I18nProvider';
 import { useService } from './ServiceProvider';
 
-import { Form, Input, FetchButton } from './FormControls';
+import { Form, Input, FetchButton } from '../components/FormControls';
 import { email, pass, validateValues } from '../lib/fields';
-import { Loading } from './Loading';
+import { Loading } from '../components/Loading';
 import { noop } from '../lib/utils';
 
 const Schema = z.object({
@@ -50,6 +50,7 @@ export const Login: Component<{ title: string }> = () => {
 
   createEffect(async () => {
     if (signin.error) {
+      console.warn(signin.error?.message)
       setErrors({
         formErrors: [
           t('Failed signing in'),
@@ -59,6 +60,7 @@ export const Login: Component<{ title: string }> = () => {
     }
 
     if (signup.error) {
+      console.warn(signup.error?.message)
       setErrors({
         formErrors: [t('Failed signing up'), t('Did you already sign up?')],
       });

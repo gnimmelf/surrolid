@@ -1,6 +1,7 @@
 /* @refresh reload */
 import { customElement } from 'solid-element';
-import Membership from './membership/App';
+import Portal from './module-portal/App';
+import Accountlist from './module-accountlist/App'
 
 declare module 'solid-js' {
   namespace JSX {
@@ -17,13 +18,25 @@ declare module 'solid-js' {
 }
 
 customElement(
-  'membership-widget',
+  'portal-widget',
   {
-    datapoint: 'wss://localhost:8055/',
     title: 'Membership portal',
+    datapoint: 'wss://localhost:8055/',
     namespace: 'test',
     database: 'test',
     scope: 'test',
   },
-  Membership
+  Portal
 );
+
+customElement(
+  'accountlist-widget',
+  {
+    title: 'Membership portal',
+    datapoint: 'wss://localhost:8055/',
+    namespace: 'test',
+    database: 'test',
+    scope: 'test',
+  },
+  Accountlist
+)

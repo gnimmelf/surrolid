@@ -1,5 +1,5 @@
 import { Surreal } from "surrealdb";
-import { awaitCondition, unpackResult } from "../lib/utils";
+import { awaitCondition, logError, unpackResult } from "../lib/utils";
 
 class DbService {
   #db: Surreal;
@@ -24,11 +24,12 @@ class DbService {
         database: this.#database,
       });
     } catch (error) {
-      console.error(error)
+      logError(error as Error)
       throw error;
     }
     this.#isConnected = true
     console.info(`DbService connected: ${this.#database}@${this.#namespace}:${this.#url}`)
+    console.log(this.#db)
     return this
   }
 
@@ -40,7 +41,7 @@ class DbService {
   }
 
   async getDb(): Promise<Surreal> {
-    await awaitCondition(() => this.#db.status === 'connected')
+    await awaitCondition(() => this.#isConnected && this.#db.status === 'connected')
     return this.#db
   }
 

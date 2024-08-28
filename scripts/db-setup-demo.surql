@@ -1,10 +1,11 @@
-# ACCOUNT
-
+// Remove pass encryption
 REMOVE TABLE account;
+DELETE FROM profile;
 
 DEFINE TABLE account SCHEMAFULL
   PERMISSIONS
-    FOR select, update
+    FOR select FULL
+    FOR update
         WHERE id = $auth.id
     FOR create, delete NONE;
 
@@ -16,11 +17,13 @@ DEFINE FIELD email
 DEFINE FIELD pass
     ON account
     TYPE string
-    VALUE crypto::argon2::generate($after);
+    VALUE $after;
 
 DEFINE INDEX idx_account
     ON account
     COLUMNS email UNIQUE;
+
+REMOVE SCOPE account;
 
 DEFINE SCOPE account
   SESSION 24h
@@ -40,36 +43,5 @@ DEFINE SCOPE account
     } END;
     RETURN $account; // <= Important
   }
-  SIGNIN ( SELECT * FROM account WHERE email = $email AND crypto::argon2::compare(pass, $pass)	);
+  SIGNIN (SELECT * FROM account WHERE email = $email AND pass = $pass);
 
-# PROFILE
-
-REMOVE TABLE profile;
-
-DEFINE TABLE profile SCHEMAFULL
-    PERMISSIONS
-        FOR select, update
-            WHERE owner = $auth.id
-        FOR create, delete NONE;
-
-DEFINE FIELD owner
-    ON TABLE profile
-    TYPE record(account)
-    PERMISSIONS
-        FOR update NONE;
-
-DEFINE FIELD firstName
-    ON profile
-    TYPE string;
-
-DEFINE FIELD lastName
-    ON profile
-    TYPE string;
-
-DEFINE FIELD address
-    ON profile
-    TYPE string;
-
-DEFINE FIELD phone
-    ON profile
-    TYPE string;

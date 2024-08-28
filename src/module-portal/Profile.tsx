@@ -12,7 +12,7 @@ import {
 import { createStore } from 'solid-js/store';
 
 import { useI18n } from '../components/I18nProvider';
-import { useService } from '../components/ServiceProvider';
+import { useService } from './ServiceProvider';
 import { Input, Form, FetchButton } from '../components/FormControls';
 import { ProfileSchema, TProfile } from '../services/ProfileService';
 import { validateValues } from '../lib/fields';

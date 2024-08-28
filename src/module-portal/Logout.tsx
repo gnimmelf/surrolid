@@ -4,7 +4,7 @@ import {
   createSignal
 } from 'solid-js';
 
-import { useI18n } from './I18nProvider';
+import { useI18n } from '../components/I18nProvider';
 import { useService } from './ServiceProvider';
 
 import { FetchButton } from '../components/FormControls';

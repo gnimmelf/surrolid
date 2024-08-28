@@ -22,6 +22,12 @@ export const unpackResult = <T>(result: T[]): T => {
   return result.pop().pop()
 }
 
+export const logError = (error: Error) => {
+  const key = [error.name, error.message]
+    .filter(x => x)
+    .join('::')
+  console.warn(key, error)
+}
 
 export const awaitCondition = async (conditionCheck: Function, ms = 10) => {
   while (!conditionCheck()) {
