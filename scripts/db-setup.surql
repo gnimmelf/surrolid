@@ -4,9 +4,9 @@ REMOVE TABLE account;
 
 DEFINE TABLE account SCHEMAFULL
   PERMISSIONS
-    FOR select, update
+    FOR select, update, delete
         WHERE id = $auth.id
-    FOR create, delete NONE;
+    FOR create NONE;
 
 DEFINE FIELD email
     ON account
