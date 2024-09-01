@@ -12,7 +12,7 @@ import { z } from 'zod';
 import { useI18n } from '../components/I18nProvider';
 import { useService } from './ServiceProvider';
 
-import { Form, Input, FetchButton } from '../components/FormControls';
+import { Form, Input, FetchButton, FormError } from '../components/FormControls';
 import { email, pass, validateValues } from '../lib/fields';
 import { Loading } from '../components/Loading';
 import { noop } from '../lib/utils';
@@ -25,7 +25,7 @@ const Schema = z.object({
 type TSchema = z.infer<typeof Schema>;
 
 const defaultCredentials = {
-  email: 'flemming@intergate.io',
+  email: 'flemming8@intergate.io',
   pass: 'flemming8',
 };
 
@@ -109,9 +109,11 @@ export const Login: Component<{ title: string }> = () => {
             isSubmiting={isSubmiting()}
           />
 
-          <Show when={errors().formErrors?.length}>
-            <div class="form-error">{errors().formErrors?.join('. ')}</div>
-          </Show>
+          <FormError
+            open={!!errors().formErrors?.length}
+            message={errors().formErrors?.join('. ')}
+          />
+
 
           <div>
             <FetchButton

@@ -6,14 +6,19 @@ import {
   createResource,
   createSignal,
   from,
-  Show,
   Suspense,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 import { useI18n } from '../components/I18nProvider';
 import { useService } from './ServiceProvider';
-import { Input, Form, FetchButton } from '../components/FormControls';
+import {
+  Input,
+  Form,
+  FetchButton,
+  FormError,
+  FormSuccess
+} from '../components/FormControls';
 import { ProfileSchema, TProfile } from '../services/ProfileService';
 import { validateValues } from '../lib/fields';
 import { noop } from '../lib/utils';
@@ -51,13 +56,21 @@ export const Profile: Component = () => {
   );
   const [saveData] = createResource(onSave, (data: TProfile) => {
     profile.saveData(data)
-});
+  });
 
   createEffect(async () => {
+    if (saveData.loading) {
+      setErrors({})
+    }
+
     if (saveData.error) {
       setErrors({
         formErrors: [t('Error saving')],
       });
+    }
+
+    if (saveData.state === 'ready') {
+      console.log("!")
     }
   });
 
@@ -127,9 +140,15 @@ export const Profile: Component = () => {
             errors={errors().fieldErrors?.phone}
           />
 
-          <Show when={errors().formErrors?.length}>
-            <div class="form-error">{errors().formErrors?.join('. ')}.</div>
-          </Show>
+          <FormError
+            open={!!errors().formErrors?.length}
+            message={errors().formErrors?.join('. ')}
+          />
+
+          <FormSuccess
+            open={saveData.state === 'ready'}
+            message={`Succesfulluy saved at ${new Date()}`}
+            />
 
           <FetchButton
             type="submit"

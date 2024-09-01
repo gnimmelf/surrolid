@@ -10,8 +10,6 @@ import { createStore } from "solid-js/store"
 
 import DbService from '../services/DbService';
 import AuthService from '../services/AuthService';
-import AccountService from '../services/AccountService';
-import ProfileService from '../services/ProfileService';
 import { Loading } from '../components/Loading';
 import { noop } from '../lib/utils';
 
@@ -27,11 +25,13 @@ export const ServiceProvider: Component<{
   datapoint: string;
   children: JSXElement;
 }> = (props) => {
+  console.log({ props })
+  // Requires Surreal to be started with --allow-guests
   const dbService = new DbService(props.datapoint, props.namespace, props.database)
   const authService = new AuthService(dbService, {
     namespace: props.namespace,
     database: props.database,
-    scope: props.scope,
+    scope: ''
   })
 
   const services = {
@@ -43,9 +43,6 @@ export const ServiceProvider: Component<{
     () => !(dbService.isConnected),
     async () => {
       await dbService.connect()
-      await authService.signin({
-
-      })
     }
   );
 

@@ -1,11 +1,50 @@
 import {
+  children,
   Component,
   JSX,
+  JSXElement,
   Show,
   splitProps
 } from 'solid-js';
 
 import { useI18n } from './I18nProvider';
+
+
+const FormFeedback: Component<{
+  isOpen: boolean
+  message: string[]
+  children: JSXElement
+  [x: string]: unknown;
+}> = (props) => {
+  const { t } = useI18n();
+  const [local, rest] = splitProps(props, ['isOpen', ]);
+
+  return (
+    <sl-alert attr:open={local.isOpen} {...rest}>
+      {props.children}
+      {props.message}
+    </sl-alert>
+
+  )
+}
+
+export const FormSuccess: Component<{
+  [x: string]: unknown
+}> = (props) => (
+  //@ts-ignore
+  <FormFeedback {...props} variant="success">
+    <sl-icon slot="icon" attr:name="info-circle"></sl-icon>
+  </FormFeedback>
+)
+
+export const FormError: Component<{
+  [x: string]: unknown
+}> = (props) => (
+  //@ts-ignore
+  <FormFeedback {...props} variant="warning">
+    <sl-icon slot="icon" attr:name="exclamation-triangle"></sl-icon>
+  </FormFeedback>
+)
 
 export const Input: Component<{
   errors?: string[];
