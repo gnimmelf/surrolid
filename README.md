@@ -35,13 +35,13 @@
 3. Use custom- / web-component
 
 ```html
-<membership-widget
+<membership-portal
   datapoint="https://data.intergate.io/"
   title="My membership"
   namespace="intergate"
   database="test"
   scope="account"
-></membership-widget>
+></membership-portal>
 ```
 
 # Roadmap
