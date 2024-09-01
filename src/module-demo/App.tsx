@@ -16,9 +16,13 @@ import { noop } from '../lib/utils';
 import { Uuid } from 'surrealdb';
 import { createStore } from 'solid-js/store';
 
-const TABLE_ACCOUNTS = 'account'
+const TABLE_ACCOUNTS = 'demo_accounts'
 
-type TAccount = Record<string, unknown>
+type TAccount = {
+  email: string
+  pass: string
+  id: string
+}
 
 
 const App: Component<{
@@ -28,40 +32,55 @@ const App: Component<{
 
   const [liveId, setLiveId] = createSignal<Uuid>()
   const [state, setState] = createStore<{
-    accounts: TAccount[]
+    accounts: Record<string, TAccount>
   }>({
-    accounts: []
+    accounts: {}
   })
 
-  createEffect(() => console.log(state))
+  const __setupLiveQuery = async () => {
+    // TODO! Needs newer version of SurrealDb to trigger on `SIGNUP` with `$values`
+    const _db = await db.getDb()
+    const uuid = await _db.live<TAccount>(TABLE_ACCOUNTS, (action, result) => {
+      console.log(`LiveQuery recieved ${action}`)
+      if (action === 'CLOSE') return;
+      setState('accounts', (prev): Record<string, TAccount> => {
+        console.log({ prev })
+        return {
+          ...prev,
+          [result.email]: result
+        }
+      })
+    })
+    setLiveId(uuid)
+  }
 
-  const [initLiveQuery] = createResource(
+  const getAccounts = async() => {
+    const _db = await db.getDb()
+    const result = await _db.select<TAccount>(TABLE_ACCOUNTS)
+    setState('accounts', result.reduce((acc, result) => {
+      return {
+        ...acc,
+        [result.id]: result
+      }
+    }, {}))
+  }
+
+  const [loadData] = createResource(
     async () => true,
     async () => {
       const _db = await db.getDb()
-      const result = await _db.select(TABLE_ACCOUNTS)
-      setState('accounts', result)
-
-      const uuid = await _db.live(TABLE_ACCOUNTS, (action, result) => {
-        console.log(`LiveQuery recieved ${action}`)
-        if (action === 'CLOSE') return;
-        setState('accounts', (prev) => [
-          ...prev,
-          result
-        ])
-      })
-      setLiveId(uuid)
+      const id = getAccounts()
+      setLiveId(id as unknown as Uuid)
     }
   )
 
   return (
     <main class="app">
-      {noop(initLiveQuery)}
+      {noop(loadData)}
       <style data-name="custom">{customStyles}</style>
       <section>
         <div class="heading">
           <h1>{props.title}</h1>
-          <p>{liveId()?.toString()}</p>
         </div>
         <table>
           <caption>
@@ -74,11 +93,11 @@ const App: Component<{
             </tr>
           </thead>
           <tbody>
-            <For each={state.accounts}>
-              {({ email, pass }) => (
+            <For each={Object.values(state.accounts)}>
+              {(account: TAccount) => (
                 <tr>
-                  <td>{email}</td>
-                  <td>{pass}</td>
+                  <td>{account.email}</td>
+                  <td>{account.pass}</td>
                 </tr>
               )}
             </For>
