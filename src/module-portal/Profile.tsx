@@ -1,11 +1,9 @@
 import {
-  Accessor,
   Component,
   createEffect,
   createRenderEffect,
   createResource,
   createSignal,
-  from,
   Suspense,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
@@ -19,18 +17,18 @@ import {
   FormError,
   FormSuccess
 } from '../components/FormControls';
-import { ProfileSchema, TProfile } from '../services/ProfileService';
 import { validateValues } from '../lib/fields';
 import { noop } from '../lib/utils';
 import { Loading } from '../components/Loading';
+import { ProfileState, ProfileSchema } from '../services/ProfileService';
 
 export const Profile: Component = () => {
   const { t } = useI18n();
   const { auth, profile } = useService();
 
-  const [onSave, doSave] = createSignal<TProfile>();
-  const [store, setStore] = createStore(profile.state as TProfile);
+  const [store, setStore] = createStore(profile.state());
 
+  const [onSave, doSave] = createSignal<ProfileState>();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -41,22 +39,19 @@ export const Profile: Component = () => {
     };
   }>({});
 
-  // Subscribe to service-updates
-  const profileState: Accessor<TProfile  | undefined> = from(profile)
   createRenderEffect(() => {
-    const state = profileState()
-    if (state) {
-      setStore(state)
-    }
+    setStore(profile.state())
   })
 
   const [loadData] = createResource(
-    () => auth.isAuthenticated,
+    () => auth.state().isAuthenticated,
     () => profile.loadData()
   );
-  const [saveData] = createResource(onSave, (data: TProfile) => {
-    profile.saveData(data)
-  });
+
+  const [saveData] = createResource(
+    () => onSave(),
+    (data: ProfileState) => profile.saveData(data)
+  );
 
   createEffect(async () => {
     if (saveData.loading) {
@@ -75,7 +70,7 @@ export const Profile: Component = () => {
   });
 
   const updateValue =
-    (key: keyof TProfile) => (evt: DOMEvent<HTMLInputElement>) => {
+    (key: keyof ProfileState) => (evt: DOMEvent<HTMLInputElement>) => {
       setStore(key, evt.target.value);
     };
 

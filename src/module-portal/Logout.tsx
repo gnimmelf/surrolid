@@ -14,11 +14,11 @@ const Logout: Component = () => {
   const { auth } = useService();
 
   const [onSignout, doSignout] = createSignal();
-  const [signoutData] = createResource(onSignout, () => auth.signout());
+  const [signout] = createResource(onSignout, () => auth.signout());
 
   return (
     <FetchButton
-      isSubmiting={signoutData.loading}
+      isSubmiting={signout.loading}
       onClick={() => doSignout(true)}
       variant="primary"
     >

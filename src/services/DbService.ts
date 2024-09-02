@@ -1,19 +1,43 @@
+import { boolean, z } from 'zod';
 import { Surreal } from "surrealdb";
-import { awaitCondition, logError, unpackResult } from "../lib/utils";
+import { awaitCondition, logError, unpackResult, zodSchemaDefaults } from "../lib/utils";
+import { StateCreator, StateGetter, StateSetter } from './types';
 
+export const DbSchema = z.object({
+  isConnected: z.boolean().default(false),
+});
+
+export type DbParams = {
+  datapoint: string
+  namespace: string
+  database: string
+}
+
+export type DbState = z.infer<typeof DbSchema>;
+
+/**
+ * Class
+ */
 class DbService {
   #db: Surreal;
   #url: string
   #namespace: string
   #database: string
-  #isConnected: boolean
+  #setState: StateSetter<DbState>
+  state: StateGetter<DbState>
 
-  constructor(datapoint: string, namespace: string, database: string) {
+  constructor(
+    dbParams: DbParams,
+    useState:StateCreator<DbState>
+  ) {
     this.#db = new Surreal()
-    this.#url = new URL(`${datapoint}/rpc`).toString()
-    this.#namespace = namespace
-    this.#database = database
-    this.#isConnected = false
+    this.#url = new URL(`${dbParams.datapoint}/rpc`).toString()
+    this.#namespace = dbParams.namespace
+    this.#database = dbParams.database
+
+    const [state, setState] = useState(zodSchemaDefaults(DbSchema))
+    this.#setState = setState
+    this.state = state
   }
 
   async connect(): Promise<DbService> {
@@ -27,7 +51,10 @@ class DbService {
       logError(error as Error)
       throw error;
     }
-    this.#isConnected = true
+    this.#setState((prev) => ({
+      ...prev,
+      isConnected: true
+    }))
     console.info(`DbService connected: ${this.#database}@${this.#namespace}:${this.#url}`)
     console.log(this.#db)
     return this
@@ -37,16 +64,15 @@ class DbService {
     if (this.#db.status === 'connected') {
       await this.#db.close();
     }
-    this.#isConnected = false
+    this.#setState((prev) => ({
+      ...prev,
+      isConnected: false
+    }))
   }
 
   async getDb(): Promise<Surreal> {
-    await awaitCondition(() => this.#isConnected && this.#db.status === 'connected')
+    await awaitCondition(() => this.state().isConnected && this.#db.status === 'connected')
     return this.#db
-  }
-
-  get isConnected(): boolean {
-    return this.#isConnected
   }
 
   async getAccountDetails() {

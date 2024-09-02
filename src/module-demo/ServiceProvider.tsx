@@ -6,12 +6,12 @@ import {
   useContext,
   createResource,
 } from 'solid-js';
-import { createStore } from "solid-js/store"
 
 import DbService from '../services/DbService';
 import AuthService from '../services/AuthService';
 import { Loading } from '../components/Loading';
 import { noop } from '../lib/utils';
+import { createSignal } from 'solid-js';
 
 type TServiceProvider = {
   db: DbService
@@ -27,12 +27,17 @@ export const ServiceProvider: Component<{
 }> = (props) => {
   console.log({ props })
   // Requires Surreal to be started with --allow-guests
-  const dbService = new DbService(props.datapoint, props.namespace, props.database)
+  const dbService = new DbService({
+    datapoint: props.datapoint,
+    namespace: props.namespace,
+    database: props.database
+  }, createSignal)
+
   const authService = new AuthService(dbService, {
     namespace: props.namespace,
     database: props.database,
     scope: ''
-  })
+  }, createSignal)
 
   const services = {
     db: dbService,
@@ -40,7 +45,7 @@ export const ServiceProvider: Component<{
   };
 
   const [connectDb] = createResource(
-    () => !(dbService.isConnected),
+    () => !(dbService.state().isConnected),
     async () => {
       await dbService.connect()
     }

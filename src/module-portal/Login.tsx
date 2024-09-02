@@ -7,35 +7,28 @@ import {
   Suspense,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { z } from 'zod';
 
 import { useI18n } from '../components/I18nProvider';
 import { useService } from './ServiceProvider';
 
-import { Form, Input, FetchButton, FormError } from '../components/FormControls';
-import { email, pass, validateValues } from '../lib/fields';
+import { validateValues } from '../lib/fields';
+import { noop, zodSchemaDefaults } from '../lib/utils';
 import { Loading } from '../components/Loading';
-import { noop } from '../lib/utils';
+import { Form, Input, FetchButton, FormError } from '../components/FormControls';
+import { Credentials, CredentialsSchema } from '../services/AuthService';
 
-const Schema = z.object({
-  email,
-  pass,
-});
-
-type TSchema = z.infer<typeof Schema>;
-
-const defaultCredentials = {
-  email: 'flemming8@intergate.io',
-  pass: 'flemming8',
-};
-
+/**
+ * Login
+ * @returns Component
+ */
 export const Login: Component<{ title: string }> = () => {
   const { t } = useI18n();
   const { auth } = useService();
 
-  const [store, setStore] = createStore<TSchema>(defaultCredentials);
-  const [onSignup, doSignup] = createSignal<TSchema>();
-  const [onSignin, doSignin] = createSignal<TSchema>();
+  const [store, setStore] = createStore<Credentials>(zodSchemaDefaults(CredentialsSchema));
+
+  const [onSignup, doSignup] = createSignal<Credentials>();
+  const [onSignin, doSignin] = createSignal<Credentials>();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -68,7 +61,7 @@ export const Login: Component<{ title: string }> = () => {
   });
 
   const updateValue =
-    (key: keyof TSchema) => (evt: DOMEvent<HTMLInputElement>) => {
+    (key: keyof Credentials) => (evt: DOMEvent<HTMLInputElement>) => {
       setStore(key, evt.target.value);
     };
 
@@ -80,7 +73,7 @@ export const Login: Component<{ title: string }> = () => {
       <Suspense fallback={<Loading />}>
         {noop(authenticate())}
         <Form
-          onSubmit={() => doSignin(validateValues(Schema, store, setErrors))}
+          onSubmit={() => doSignin(validateValues(CredentialsSchema, store, setErrors))}
         >
           <Input
             label={t('Email')}
@@ -118,7 +111,7 @@ export const Login: Component<{ title: string }> = () => {
           <div>
             <FetchButton
               onClick={() =>
-                doSignup(validateValues(Schema, store, setErrors))
+                doSignup(validateValues(CredentialsSchema, store, setErrors))
               }
               isSubmiting={isSubmiting()}
               variant="neutral"

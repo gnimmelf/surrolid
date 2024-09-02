@@ -34,9 +34,6 @@ const App: Component<{
   const { auth } = useService();
   const [slTabGroupEl, setSlTabGroupEl] = createSignal<HTMLElement>();
 
-  // Subscribe to service-updates
-  const authState: Accessor<{ isAuthenticated: boolean } | undefined> = from(auth)
-  const isAuthenticated = () => authState()?.isAuthenticated
 
   createEffect(() => {
     const { activePanel } = localStorage;
@@ -53,6 +50,7 @@ const App: Component<{
       logError(error);
       auth.signout();
     } else {
+
       throw error;
     }
   });
@@ -63,10 +61,10 @@ const App: Component<{
       <div>
         <TopBar title={props.title} />
 
-        <Show when={!isAuthenticated()}>
+        <Show when={!auth.state().isAuthenticated}>
           <Login title="Login" />
         </Show>
-        <Show when={isAuthenticated()}>
+        <Show when={auth.state().isAuthenticated}>
           <sl-tab-group
             on:sl-tab-show={({ detail }: any) => {
               localStorage.activePanel = detail.name;

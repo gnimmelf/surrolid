@@ -4,6 +4,9 @@ export const ErrorFallback: Component<{
     moduleName: string
     error: Error
 }> = (props) => {
+
+    console.error(props.error)
+
     return (
         <>
             <h1>Fail {props.moduleName}!</h1>

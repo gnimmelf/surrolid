@@ -1,11 +1,9 @@
 import {
-  Accessor,
   Component,
   createEffect,
   createRenderEffect,
   createResource,
   createSignal,
-  from,
   Suspense,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';
@@ -19,19 +17,19 @@ import {
   FormError,
   FormSuccess
 } from '../components/FormControls';
-import { AccountSchema, TAccount } from '../services/AccountService';
 import { validateValues } from '../lib/fields';
 import { Loading } from '../components/Loading';
 import { noop } from '../lib/utils';
+import { AccountState, AccountSchema } from '../services/AccountService';
 
 
 export const Account: Component = () => {
   const { t } = useI18n();
   const { auth, account } = useService();
 
-  const [onSave, doSave] = createSignal<TAccount>();
-  const [store, setStore] = createStore(account.state as TAccount);
+  const [store, setStore] = createStore(account.state());
 
+  const [onSave, doSave] = createSignal<AccountState>();
   const [errors, setErrors] = createSignal<{
     formErrors?: string[];
     fieldErrors?: {
@@ -40,27 +38,19 @@ export const Account: Component = () => {
     };
   }>({});
 
-  // Subscribe to service-updates
-  const accountState: Accessor<Omit<TAccount, "pass">  | undefined> = from(account)
   createRenderEffect(() => {
-    const state = accountState()
-    if (state) {
-      setStore(state)
-    }
+    setStore(account.state())
   })
 
   const [loadData] = createResource(
-    () => auth.isAuthenticated,
+    () => auth.state().isAuthenticated,
     () => account.loadData()
   );
 
-  createEffect(() => {
-    if (!auth.isAuthenticated) {
-      console.log("clear accountData")
-    }
-  })
-
-  const [saveData] = createResource(onSave, (data: TAccount) => account.saveData(data));
+  const [saveData] = createResource(
+    () => onSave(),
+    (data: AccountState) => account.saveData(data)
+  );
 
   createEffect(async () => {
     if (saveData.error) {
@@ -74,7 +64,7 @@ export const Account: Component = () => {
   });
 
   const updateValue =
-    (key: keyof TAccount) => (evt: DOMEvent<HTMLInputElement>) => {
+    (key: keyof AccountState) => (evt: DOMEvent<HTMLInputElement>) => {
       setStore(key, evt.target.value);
     };
 
@@ -121,6 +111,7 @@ export const Account: Component = () => {
             open={saveData.state === 'ready'}
             message={`Succesfulluy saved at ${new Date()}`}
             />
+
           <FetchButton
             type="submit"
             variant="primary"
