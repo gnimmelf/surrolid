@@ -1,9 +1,7 @@
 import {
-  Accessor,
   Component,
   createEffect,
   createSignal,
-  from,
   catchError,
   Show,
   ErrorBoundary
@@ -26,6 +24,7 @@ import { Account } from './Account';
 import { AuthenticationError } from '../lib/errors';
 import { ErrorFallback } from '../components/ErrorFallback';
 import { logError } from '../lib/utils';
+import { Version } from '../components/Version';
 
 const App: Component<{
   title: string;
@@ -72,15 +71,15 @@ const App: Component<{
             ref={(el: HTMLElement) => setSlTabGroupEl(el)}
           >
             <sl-tab slot="nav" attr:panel="account">
-              <sl-icon attr:name="person-lock" />
+              <sl-icon attr:name="person-lock"></sl-icon>
               {t('Account')}
             </sl-tab>
             <sl-tab slot="nav" attr:panel="subscription">
-              <sl-icon attr:name="journal" />
+              <sl-icon attr:name="journal"></sl-icon>
               {t('Subscription')}
             </sl-tab>
             <sl-tab slot="nav" attr:panel="contact">
-              <sl-icon attr:name="person-hearts" />
+              <sl-icon attr:name="person-hearts"></sl-icon>
               {t('Contact')}
             </sl-tab>
 
@@ -97,6 +96,7 @@ const App: Component<{
           </sl-tab-group>
         </Show>
       </div>
+      <Version />
     </main>
   );
 };

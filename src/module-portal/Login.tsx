@@ -3,7 +3,6 @@ import {
   createEffect,
   createSignal,
   createResource,
-  Show,
   Suspense,
 } from 'solid-js';
 import { createStore } from 'solid-js/store';

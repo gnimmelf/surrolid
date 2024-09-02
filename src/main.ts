@@ -1,7 +1,11 @@
 /* @refresh reload */
 import { customElement } from 'solid-element';
+
+import './lib/shoelace-setup'
+
 import Portal from './module-portal/App';
 import DemoAccounts from './module-demo/App'
+
 
 declare module 'solid-js' {
   namespace JSX {
@@ -30,7 +34,7 @@ customElement(
 );
 
 customElement(
-  'demoaccounts-widget',
+  'demo-accounts',
   {
     title: 'Demo accounts portal',
     datapoint: 'wss://localhost:8055/',

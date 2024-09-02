@@ -9,14 +9,11 @@ importers:
   .:
     dependencies:
       '@shoelace-style/shoelace':
-        specifier: ^2.1.0
+        specifier: ^2.16.0
         version: 2.16.0(@types/react@18.3.4)
       '@solid-primitives/i18n':
         specifier: ^2.1.1
         version: 2.1.1(solid-js@1.8.21)
-      solid-element:
-        specifier: ^1.8.1
-        version: 1.8.1(solid-js@1.8.21)
       solid-js:
         specifier: ^1.8.21
         version: 1.8.21
@@ -30,15 +27,6 @@ importers:
         specifier: ^3.20.6
         version: 3.23.8
     devDependencies:
-      '@unocss/preset-mini':
-        specifier: ^0.48.5
-        version: 0.48.5
-      '@unocss/preset-typography':
-        specifier: ^0.50.3
-        version: 0.50.8
-      '@unocss/transformer-directives':
-        specifier: ^0.48.4
-        version: 0.48.5
       '@vitejs/plugin-basic-ssl':
         specifier: ^1.0.1
         version: 1.1.0(vite@3.2.10(terser@5.31.6))
@@ -48,6 +36,9 @@ importers:
       solid-devtools:
         specifier: ^0.30.1
         version: 0.30.1(solid-js@1.8.21)(vite@3.2.10(terser@5.31.6))
+      solid-element:
+        specifier: ^1.8.1
+        version: 1.8.1(solid-js@1.8.21)
       typescript:
         specifier: ^5.0.0
         version: 5.5.4
@@ -570,12 +561,6 @@ packages:
     resolution: {integrity: sha512-zYOvFE0HfGIbnP/AvsbAlJpPRx9CQyXzL11m/8zgsHW5SGlJIYxuTll83l/xu026G5mPiksy7quoEOEgCLslqw==}
     engines: {node: '>=14'}
 
-  '@unocss/core@0.48.5':
-    resolution: {integrity: sha512-goidlxqDEW14yYzLIqyUsoVPvrq3BuxvzY+87tulfHtiHWXd7fITSjHu80Bn0J6LZm1bVn2/D5nfE7ZLU/uW8g==}
-
-  '@unocss/core@0.50.8':
-    resolution: {integrity: sha512-rWmyeNE0Na8dJPDynLVar0X22qMHFNhO+/F2FZDpG4tubTavXJJo9uvhZr/D381kiWxt+XZ38y6EAD4UMdBqMA==}
-
   '@unocss/core@0.62.3':
     resolution: {integrity: sha512-Pfyrj8S7jq9K1QXD6Z5BCeiQavaHpbMN5q958/kmdbNGp57hOg1e346fMJAvgPjLBR+lE/hgZEsDrijtRiZXnw==}
 
@@ -597,20 +582,11 @@ packages:
   '@unocss/preset-icons@0.62.3':
     resolution: {integrity: sha512-Ie+5RTyac1Q5CNB/s/4aB4VTHAQgQqsI5hshMNLkJ0Jj1lWxodUdEbCRKjXDalRjAXOS9vsLjfJ35ozJ1RSTIQ==}
 
-  '@unocss/preset-mini@0.48.5':
-    resolution: {integrity: sha512-jMKUCkbKsgLkEAeaB7qV/ExZ1W9yAnRQ/PwrnGnxbIIAxDIylfPDBL2bR2w2TucHblpqCf6Twb09r1F6qfy3yQ==}
-
-  '@unocss/preset-mini@0.50.8':
-    resolution: {integrity: sha512-/4sbOdyaqJMvFkw1xzo2+h6bZJHw6WCYw1mF+f0ydHzj8ruvwaj9ClDDOweW5cdrk3wzDzRZ6NPRahKqLwv6/Q==}
-
   '@unocss/preset-mini@0.62.3':
     resolution: {integrity: sha512-dn/8ubeW2ry/ZF3iKxdQHnS0l3EBibt0rIOE/XVwx24ub6pRzclU4r7xHnXeqvAFOO9PoiKDGgFR92m6R2MxyQ==}
 
   '@unocss/preset-tagify@0.62.3':
     resolution: {integrity: sha512-8BpUCZ5sjOZOzBKtu7ecfhRggwwPF78IqeqeNjI+XYRs8r7TBBcUVeF6zUkwhlX/TbtREkw2OZj0Iusa9CBO+A==}
-
-  '@unocss/preset-typography@0.50.8':
-    resolution: {integrity: sha512-jraHusTmbJq9UHgQ43ifzVJobTyoJLuGzeGqBzgLNac+V4BltzqHghup6obA09asQio7xe+crFkTV4IXWNK1lA==}
 
   '@unocss/preset-typography@0.62.3':
     resolution: {integrity: sha512-GjtDgQ1Jec/5RNmnyGMWMgyPdStWcFG/S+NUfOuroRsGSI8PDxihVOwFu5CwvOB2J2r6mRNLeUYMluE05jW3sw==}
@@ -642,9 +618,6 @@ packages:
 
   '@unocss/transformer-compile-class@0.62.3':
     resolution: {integrity: sha512-1hf+99wJXzQXQPz9xR0AiTB3vBXT5RiEyugIX95HFx7EvSE/P17RP90yKEKZtDZRUwGiz2vIyySlxcKTFak9Vg==}
-
-  '@unocss/transformer-directives@0.48.5':
-    resolution: {integrity: sha512-pl8SekJvkXEBzUbXDaYexeOpT3UWzS/YS4nVzN6gEisLGSpbD5a/yfI3iAA3GVWCH8HrmzUl0FpL3cY5yf44rg==}
 
   '@unocss/transformer-directives@0.62.3':
     resolution: {integrity: sha512-HqHwFOA7DfxD/A1ROZIp8Dr8iZcE0z4w3VQtViWPQ89Fqmb7p2wCPGekk+8yW5PAltpynvHE4ahJEto5xjdg6w==}
@@ -1913,10 +1886,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@unocss/core@0.48.5': {}
-
-  '@unocss/core@0.50.8': {}
-
   '@unocss/core@0.62.3': {}
 
   '@unocss/extractor-arbitrary-variants@0.62.3':
@@ -1954,14 +1923,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@unocss/preset-mini@0.48.5':
-    dependencies:
-      '@unocss/core': 0.48.5
-
-  '@unocss/preset-mini@0.50.8':
-    dependencies:
-      '@unocss/core': 0.50.8
-
   '@unocss/preset-mini@0.62.3':
     dependencies:
       '@unocss/core': 0.62.3
@@ -1971,11 +1932,6 @@ snapshots:
   '@unocss/preset-tagify@0.62.3':
     dependencies:
       '@unocss/core': 0.62.3
-
-  '@unocss/preset-typography@0.50.8':
-    dependencies:
-      '@unocss/core': 0.50.8
-      '@unocss/preset-mini': 0.50.8
 
   '@unocss/preset-typography@0.62.3':
     dependencies:
@@ -2025,11 +1981,6 @@ snapshots:
   '@unocss/transformer-compile-class@0.62.3':
     dependencies:
       '@unocss/core': 0.62.3
-
-  '@unocss/transformer-directives@0.48.5':
-    dependencies:
-      '@unocss/core': 0.48.5
-      css-tree: 2.3.1
 
   '@unocss/transformer-directives@0.62.3':
     dependencies:

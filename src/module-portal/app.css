@@ -17,6 +17,7 @@ main.app {
   text-align: center;
 }
 .top-bar menu {
+  padding-inline-start: 0px;
   display: flex;
   justify-content: space-around;
   column-gap: 10px;
@@ -43,27 +44,6 @@ sl-button {
   margin-right: 1rem;
 }
 
-/* sl-avatar {
-  --sl-color-neutral-0: var(--bg-color);
-  --sl-color-neutral-400: var(--fg-color)
-}
-
-sl-button::part(base) {
-  color: var(--fg-color);
-  background: var(--bg-color);
-  border: solid 1px var(--border-color);
-}
-
-sl-tab-group::part(base) {
-  color: var(--fg-color);
-  --track-color: var(--border-color);
-  --indicator-color: var(--accent-color);
-}
-
-sl-tab::part(base) {
-  color: var(--fg-color);
-} */
-
 sl-tab > sl-icon {
   margin-right: 0.5rem;
 }
@@ -83,4 +63,8 @@ form .field > .error {
   column-gap: 0.2rem;
   padding: 0.5rem 0;
   color: var(--sl-color-danger-600);
+}
+
+small.app-version {
+  float: right;
 }

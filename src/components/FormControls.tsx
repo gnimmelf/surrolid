@@ -1,5 +1,4 @@
 import {
-  children,
   Component,
   JSX,
   JSXElement,
@@ -59,7 +58,7 @@ export const Input: Component<{
       <sl-input {...rest} disabled={local.isSubmiting}></sl-input>
       <Show when={local.errors}>
         <div class="error">
-          <sl-icon class="icon" name="exclamation-circle" />
+          <sl-icon class="icon" name="exclamation-circle"></sl-icon>
           <span>{local.errors?.map((str) => t(str) || str).join('. ')}.</span>
         </div>
       </Show>

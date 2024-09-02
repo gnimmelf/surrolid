@@ -1,9 +1,6 @@
 import {
   Component,
   Show,
-  createMemo,
-  from,
-  Accessor
 } from 'solid-js';
 
 import { useI18n } from '../components/I18nProvider';
@@ -26,7 +23,7 @@ export const TopBar: Component<{ title: string }> = (props) => {
     <div class="top-bar">
       <menu>
         <Show when={auth.state().isAuthenticated}>
-          <sl-avatar attr:initials={parseInitials(profile.state())} />
+          <sl-avatar attr:initials={parseInitials(profile.state())}></sl-avatar>
         </Show>
         <Locale />
         <Show when={(auth.state().isAuthenticated)}>

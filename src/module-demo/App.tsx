@@ -54,7 +54,7 @@ const App: Component<{
     setLiveId(uuid)
   }
 
-  const getAccounts = async() => {
+  const getAccounts = async () => {
     const _db = await db.getDb()
     const result = await _db.select<TAccount>(TABLE_ACCOUNTS)
     setState('accounts', result.reduce((acc, result) => {
@@ -83,9 +83,6 @@ const App: Component<{
           <h1>{props.title}</h1>
         </div>
         <table>
-          <caption>
-            Available logins
-          </caption>
           <thead>
             <tr>
               <th>Email</th>
@@ -96,8 +93,17 @@ const App: Component<{
             <For each={Object.values(state.accounts)}>
               {(account: TAccount) => (
                 <tr>
-                  <td>{account.email}</td>
-                  <td>{account.pass}</td>
+                  <td>
+                    <sl-copy-button
+                      value={account.email}
+                      copy-label="Click to copy"
+                      success-label="Copied to clipboard!"
+                      error-label="Whoops, your browser doesn't support this!"
+                    ></sl-copy-button>
+                  </td>
+                  <td>
+                    {account.pass}
+                  </td>
                 </tr>
               )}
             </For>

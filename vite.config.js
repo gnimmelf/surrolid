@@ -2,12 +2,9 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import basicSsl from '@vitejs/plugin-basic-ssl';
 import solidPlugin from 'vite-plugin-solid';
-import UnoCSS from 'unocss/vite';
-import unoPreset from '@unocss/preset-mini'
-import presetTypography from '@unocss/preset-typography'
 import devtools from 'solid-devtools/vite'
 
-import transformerDirectives from '@unocss/transformer-directives';
+import packageJson from './package.json';
 
 export default defineConfig({
   server: {
@@ -26,6 +23,9 @@ export default defineConfig({
     solidPlugin(),
     basicSsl(),
   ],
+  define: {
+    '__APP_VERSION__': JSON.stringify(packageJson.version),
+  },
   build: {
     target: 'esnext', // you can also use 'es2020' here
     lib: {

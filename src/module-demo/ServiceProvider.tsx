@@ -25,7 +25,6 @@ export const ServiceProvider: Component<{
   datapoint: string;
   children: JSXElement;
 }> = (props) => {
-  console.log({ props })
   // Requires Surreal to be started with --allow-guests
   const dbService = new DbService({
     datapoint: props.datapoint,
