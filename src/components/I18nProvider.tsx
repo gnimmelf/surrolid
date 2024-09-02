@@ -60,6 +60,7 @@ export const I18nProvider: Component<{
     const text = t(key)
     if (!text) {
       console.info(`i18nProvider: Missing text for '${key}'(${locale()})`)
+      return key
     }
     return text
   }

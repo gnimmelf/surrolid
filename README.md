@@ -5,11 +5,14 @@
 1. Include files
 
 ```html
+
+<!-- Light theme  -->
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/themes/light.css"
 />
 
+<!-- Dark theme -->
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/themes/dark.css"
@@ -19,7 +22,9 @@
   type="module"
   src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.3.0/dist/shoelace.js"
 ></script>
-<script type="module" src="https://intergate.io/cdn/social-widgets.js"></script>
+
+<!-- After `npm run build` -->
+<script type="module" src="/dist/surrolid.umd"></script>
 ```
 2. Set css vars
 
